@@ -1,0 +1,63 @@
+from __future__ import annotations
+
+from copy import deepcopy
+
+from markdown import markdown
+
+
+def render_markdown(value: str | None) -> str:
+    if not value:
+        return ""
+    return markdown(value, extensions=["extra", "sane_lists"])
+
+
+def phone_href(phone: str | None) -> str:
+    if not phone:
+        return ""
+    return "".join(ch for ch in phone if ch.isdigit() or ch == "+")
+
+
+def hydrate_blocks(blocks: list[dict], shared: dict) -> list[dict]:
+    hydrated = []
+    for block in blocks:
+        clone = deepcopy(block)
+        data = clone.setdefault("data", {})
+        source = data.get("source")
+        if source == "all_programs":
+            data["programs"] = shared["programs"]
+        elif source == "featured_programs":
+            data["programs"] = shared["programs"][: data.get("limit", 3)]
+        elif source == "all_teachers":
+            data["teachers"] = shared["teachers"]
+        elif source == "featured_reviews":
+            data["reviews"] = shared["reviews"][: data.get("limit", 3)]
+        elif source == "program_reviews":
+            current_program = shared.get("current_program")
+            data["reviews"] = (
+                [review for review in shared["reviews"] if review.program_id == current_program.id]
+                if current_program
+                else []
+            )
+        elif source == "all_events":
+            data["events"] = shared["events"]
+        elif source == "all_articles":
+            data["articles"] = shared["articles"]
+        elif source == "all_prices":
+            data["programs"] = shared["programs"]
+        elif source == "contact_data":
+            data["settings"] = shared["settings"]
+        elif source == "current_program" and shared.get("current_program"):
+            program = shared["current_program"]
+            data.setdefault("title", program.name)
+            data.setdefault("subtitle", program.tagline)
+            data.setdefault("cta_text", "Записаться на пробное занятие")
+            data.setdefault(
+                "stats",
+                [
+                    {"value": program.age_label, "label": "Возраст"},
+                    {"value": f"{program.duration_min} мин", "label": "Занятие"},
+                    {"value": program.price_label, "label": "Стоимость"},
+                ],
+            )
+        hydrated.append(clone)
+    return hydrated

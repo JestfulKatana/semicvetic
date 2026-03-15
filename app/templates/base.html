@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title or site_settings.get('site_name', 'Семицветик') }}</title>
+    <meta name="description" content="{{ page_description or site_settings.get('site_description', '') }}">
+    <meta property="og:title" content="{{ page_title or site_settings.get('site_name', 'Семицветик') }}">
+    <meta property="og:description" content="{{ page_description or site_settings.get('site_description', '') }}">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="{{ request.base_url }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% if page_schema %}
+    <script type="application/ld+json">{{ page_schema|tojson }}</script>
+    {% endif %}
+</head>
+<body>
+    <div class="site-shell">
+        <header class="site-header">
+            <div class="container header-row">
+                <a href="{{ url_for('main.home') }}" class="brand">
+                    <span class="brand-mark">✿</span>
+                    <span>
+                        <strong>{{ site_settings.get('site_name', 'Семицветик') }}</strong>
+                        <small>коробочный сайт центра</small>
+                    </span>
+                </a>
+                <button class="nav-toggle" type="button" data-nav-toggle aria-label="Открыть меню">Меню</button>
+                <nav class="site-nav" data-nav>
+                    <a href="{{ url_for('main.home') }}">Главная</a>
+                    {% for item in nav_pages %}
+                    <a href="/{{ item.slug }}/">{{ item.title }}</a>
+                    {% endfor %}
+                </nav>
+                <a class="header-phone" href="tel:{{ site_settings.get('phone_1')|phone_href }}">{{ site_settings.get('phone_1') }}</a>
+            </div>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <div class="container footer-grid">
+                <div>
+                    <strong>{{ site_settings.get('site_name', 'Семицветик') }}</strong>
+                    <p>{{ site_settings.get('site_description', '') }}</p>
+                </div>
+                <div>
+                    <strong>Контакты</strong>
+                    <p>{{ site_settings.get('phone_1') }}</p>
+                    <p>{{ site_settings.get('address') }}</p>
+                </div>
+                <div>
+                    <strong>Что проверить</strong>
+                    <p><a href="/admin/">Админка</a></p>
+                    <p><a href="{{ url_for('main.sitemap') }}">Sitemap</a></p>
+                    <p><a href="{{ url_for('main.health') }}">Health</a></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

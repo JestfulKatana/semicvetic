@@ -1,0 +1,19 @@
+<form class="lead-form" data-lead-form>
+    <input type="hidden" name="source_page" value="{{ request.path }}">
+    <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
+    <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+    <label>
+        Телефон
+        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+    </label>
+    <label>
+        Имя
+        <input type="text" name="name" placeholder="Как к вам обращаться">
+    </label>
+    <label>
+        Возраст ребёнка
+        <input type="text" name="child_age" placeholder="Например, 5 лет">
+    </label>
+    <button class="button button-primary" type="submit">Отправить заявку</button>
+    <p class="form-status" data-form-status></p>
+</form>

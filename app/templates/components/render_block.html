@@ -1,0 +1,388 @@
+{% set data = block.data %}
+
+{% if block.component == "hero" %}
+<section class="section hero">
+    <div class="container hero-grid">
+        <div>
+            {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+            <h1>{{ data.title }}</h1>
+            <p class="lead-text">{{ data.subtitle }}</p>
+            {% if data.stats %}
+            <div class="stat-grid">
+                {% for stat in data.stats %}
+                <div class="stat-card">
+                    <strong>{{ stat.value }}</strong>
+                    <span>{{ stat.label }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if data.cta_text %}
+            <div class="action-row">
+                <a class="button button-primary" href="#{{ data.cta_target or 'lead-form' }}">{{ data.cta_text }}</a>
+                <a class="button button-secondary" href="/kontakty/">Посмотреть контакты</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="hero-panel">
+            <div class="hero-panel-inner">
+                <strong>Что уже есть</strong>
+                <ul class="bullet-list">
+                    <li>Страницы рендерятся с сервера</li>
+                    <li>Контент живёт в SQLite</li>
+                    <li>Есть админка на `/admin/`</li>
+                    <li>Форма заявки работает через AJAX</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% elif block.component == "trust_bar" %}
+<section class="section trust-strip">
+    <div class="container compact-grid compact-grid-4">
+        {% for item in data["items"] %}
+        <article class="mini-card">
+            <strong>{{ item.icon }}</strong>
+            <span>{{ item.text }}</span>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% elif block.component == "form_strip" %}
+<section class="section strip strip-{{ data.color or 'mint' }}">
+    <div class="container strip-grid">
+        <div>
+            <h2>{{ data.title }}</h2>
+            <p>{{ data.subtitle }}</p>
+        </div>
+        {% include "components/_lead_form.html" %}
+    </div>
+</section>
+{% elif block.component == "programs_grid" %}
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Программы</p>
+            <h2>{{ data.title }}</h2>
+            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+        </div>
+        <div class="card-grid">
+            {% for program in data.programs %}
+            <article class="program-card" style="--accent: {{ program.color or '#7cc4a8' }}">
+                <div class="program-top">
+                    <span class="program-emoji">{{ program.emoji or "🌈" }}</span>
+                    <span class="program-age">{{ program.age_label }}</span>
+                </div>
+                <h3>{{ program.name }}</h3>
+                <p>{{ program.tagline }}</p>
+                <ul class="meta-list">
+                    <li>{{ program.duration_min }} минут</li>
+                    <li>{{ program.frequency }}</li>
+                    <li>{{ program.price_label }}</li>
+                </ul>
+                <a class="button button-ghost" href="/{{ program.slug }}/">Открыть страницу программы</a>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "advantages" %}
+<section class="section alt-bg">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Преимущества</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="compact-grid compact-grid-2">
+            {% for item in data["items"] %}
+            <article class="feature-card">
+                <span class="feature-icon">{{ item.icon }}</span>
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.text }}</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "results_banner" %}
+<section class="section banner-dark">
+    <div class="container banner-grid">
+        <blockquote>{{ data.quote }}</blockquote>
+        <div class="compact-grid compact-grid-3">
+            {% for stat in data.stats %}
+            <div class="stat-card stat-card-dark">
+                <strong>{{ stat.value }}</strong>
+                <span>{{ stat.label }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "teachers_grid" %}
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Педагоги</p>
+            <h2>{{ data.title }}</h2>
+            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+        </div>
+        <div class="card-grid">
+            {% for teacher in data.teachers %}
+            <article class="teacher-card">
+                <div class="teacher-avatar">{{ teacher.emoji or "👩‍🏫" }}</div>
+                <h3>{{ teacher.name }}</h3>
+                <p class="teacher-role">{{ teacher.role }}</p>
+                <p>{{ teacher.specialization }}</p>
+                <p class="teacher-bio">{{ teacher.bio }}</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "reviews_grid" %}
+<section class="section alt-bg">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Отзывы</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="card-grid">
+            {% for review in data.reviews %}
+            <article class="review-card">
+                <div class="review-top">
+                    <span class="review-initials">{{ review.author_initials }}</span>
+                    <div>
+                        <strong>{{ review.author_name }}</strong>
+                        <p>{{ review.child_info }}</p>
+                    </div>
+                </div>
+                <p>{{ review.text }}</p>
+            </article>
+            {% else %}
+            <article class="review-card">
+                <p>Отзывы появятся после наполнения базы.</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "how_it_works" %}
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Сценарий</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="steps-grid">
+            {% for step in data.steps %}
+            <article class="step-card">
+                <span>{{ step.icon }}</span>
+                <h3>{{ step.title }}</h3>
+                <p>{{ step.text }}</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "faq" %}
+<section class="section alt-bg">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">FAQ</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="faq-list">
+            {% for item in data["items"] %}
+            <details class="faq-item">
+                <summary>{{ item.q }}</summary>
+                <p>{{ item.a }}</p>
+            </details>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "timeline" %}
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Прогресс</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="timeline">
+            {% for item in data["items"] %}
+            <article class="timeline-item">
+                <span class="timeline-marker">{{ item.icon }}</span>
+                <div>
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.text }}</p>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "compare_table" %}
+<section class="section alt-bg">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Сравнение</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="table-wrap">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        {% for column in data.columns %}
+                        <th>{{ column }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data.rows %}
+                    <tr>
+                        {% for cell in row %}
+                        <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% elif block.component == "cta_final" %}
+<section class="section strip strip-{{ data.color or 'peach' }}" id="lead-form">
+    <div class="container strip-grid">
+        <div>
+            <p class="eyebrow">CTA</p>
+            <h2>{{ data.title }}</h2>
+            <p>{{ data.subtitle }}</p>
+            {% if data.phone %}
+            <a class="button button-secondary" href="tel:{{ data.phone|phone_href }}">{{ data.phone }}</a>
+            {% endif %}
+        </div>
+        {% include "components/_lead_form.html" %}
+    </div>
+</section>
+{% elif block.component == "gallery" %}
+<section class="section alt-bg">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Галерея</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="compact-grid compact-grid-4">
+            {% for image in data.images %}
+            <article class="gallery-card">
+                <span>{{ image.emoji or "🖼️" }}</span>
+                <strong>{{ image.label }}</strong>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "events_grid" %}
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">События</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="card-grid">
+            {% for event in data.events %}
+            <article class="event-card">
+                <p class="event-date">{{ event.display_date }}{% if event.event_time %} · {{ event.event_time }}{% endif %}</p>
+                <h3>{{ event.title }}</h3>
+                <p>{{ event.excerpt }}</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "articles_grid" %}
+<section class="section alt-bg">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Статьи</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="card-grid">
+            {% for article in data.articles %}
+            <article class="event-card">
+                <p class="event-date">{{ article.display_date }}</p>
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.excerpt }}</p>
+                <a class="button button-ghost" href="/blog/{{ article.slug }}/">Открыть статью</a>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif block.component == "prices_table" %}
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <p class="eyebrow">Тарифы</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <div class="table-wrap">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Программа</th>
+                        <th>Возраст</th>
+                        <th>Формат</th>
+                        <th>Цена</th>
+                        <th>Расписание</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for program in data.programs %}
+                    <tr>
+                        <td>{{ program.name }}</td>
+                        <td>{{ program.age_label }}</td>
+                        <td>{{ program.frequency }}</td>
+                        <td>{{ program.price_label }}</td>
+                        <td>
+                            {% for slot in program.schedule_slots %}
+                            <div>{{ slot.day_of_week }} · {{ slot.time_start }}-{{ slot.time_end }}</div>
+                            {% else %}
+                            <div>По запросу</div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% elif block.component == "contact_panel" %}
+<section class="section alt-bg">
+    <div class="container contact-grid">
+        <div class="contact-card">
+            <p class="eyebrow">Контакты</p>
+            <h2>{{ data.title }}</h2>
+            <ul class="meta-list">
+                <li>Телефон 1: {{ data.settings.get('phone_1') }}</li>
+                <li>Телефон 2: {{ data.settings.get('phone_2') }}</li>
+                <li>Адрес: {{ data.settings.get('address') }}</li>
+                <li>Часы: {{ data.settings.get('hours') }}</li>
+            </ul>
+        </div>
+        <div class="contact-card">
+            <p>Эту секцию потом можно заменить картой, мессенджерами, реальными фото входа и транспортной схемой, не трогая backend-архитектуру.</p>
+        </div>
+    </div>
+</section>
+{% elif block.component == "rich_text" %}
+<section class="section">
+    <div class="container article-shell">
+        <div class="section-head">
+            <p class="eyebrow">Контент</p>
+            <h2>{{ data.title }}</h2>
+        </div>
+        <article class="prose">{{ data.content|markdown|safe }}</article>
+    </div>
+</section>
+{% endif %}

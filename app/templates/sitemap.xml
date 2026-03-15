@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{{ request.url_root.rstrip('/') }}/</loc>
+  </url>
+  {% for page in pages %}
+  <url>
+    <loc>{{ request.url_root.rstrip('/') }}/{{ '' if page.slug == 'home' else page.slug ~ '/' }}</loc>
+  </url>
+  {% endfor %}
+  {% for program in programs %}
+  <url>
+    <loc>{{ request.url_root.rstrip('/') }}/{{ program.slug }}/</loc>
+  </url>
+  {% endfor %}
+  {% for article in articles %}
+  <url>
+    <loc>{{ request.url_root.rstrip('/') }}/blog/{{ article.slug }}/</loc>
+  </url>
+  {% endfor %}
+</urlset>

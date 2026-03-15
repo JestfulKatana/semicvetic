@@ -1,0 +1,13 @@
+__pycache__/
+.pytest_cache/
+.venv/
+instance/
+data/*.db
+data/backups/
+.env
+*.pyc
+/id_*
+/id_ruvds_deploy
+/*.ppk
+/*.log
+/*.tar.gz

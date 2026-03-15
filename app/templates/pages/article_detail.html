@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section article-section">
+    <div class="container article-shell">
+        <p class="eyebrow">Статья</p>
+        <h1>{{ article.title }}</h1>
+        <p class="article-meta">{{ article.display_date }}{% if article.category %} · {{ article.category }}{% endif %}</p>
+        {% if article.excerpt %}
+        <p class="lead-text">{{ article.excerpt }}</p>
+        {% endif %}
+        <article class="prose">{{ article.content|markdown|safe }}</article>
+    </div>
+</section>
+{% endblock %}
