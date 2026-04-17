@@ -188,38 +188,10 @@ function initReviewsCarousel() {
   });
 }
 
-function initRevealOnScroll() {
-  if (!("IntersectionObserver" in window)) return;
-  const vh = window.innerHeight || 800;
-  const targets = Array.from(document.querySelectorAll(".section"));
-  // Hide only sections that are initially below the viewport
-  targets.forEach((el) => {
-    const rect = el.getBoundingClientRect();
-    if (rect.top > vh * 0.85) {
-      el.classList.add("will-reveal");
-    } else {
-      el.classList.add("is-revealed");
-    }
-  });
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-revealed");
-        entry.target.classList.remove("will-reveal");
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
-  targets.forEach((el) => {
-    if (el.classList.contains("will-reveal")) io.observe(el);
-  });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   initProgramFilters();
   initTeacherFilters();
   initReviewsCarousel();
-  initRevealOnScroll();
 });
 
 document.querySelectorAll("[data-lead-form]").forEach((form) => {
