@@ -92,12 +92,10 @@
 
 {% elif block.component == "trust_bar" %}
 <section class="section trust-section">
-    <div class="trust-head">
-        <h2>{{ data.title or "15 лет растим счастливых детей" }}</h2>
-    </div>
+    <h2 class="trust-title">{{ data.title or "15 лет растим счастливых детей" }}</h2>
     <div class="trust-stage">
         <img class="trust-grass" src="{{ url_for('static', filename='img/figma/brand/grass-oval.png') }}" alt="" aria-hidden="true">
-        {% set petal_colors = ['b', 'c', 'd', 'a', 'e', 'g', 'f'] %}
+        {% set petal_colors = ['red', 'green', 'orange', 'purple', 'blue', 'pinkdark', 'pink'] %}
         {% for item in data.get("items", [])[:7] %}
         <div class="trust-drop trust-drop-pos-{{ loop.index }} trust-drop-color-{{ petal_colors[loop.index0] }}">
             <strong>{{ item.value }}</strong>
@@ -106,86 +104,105 @@
         {% endfor %}
         <img class="trust-flower" src="{{ url_for('static', filename='img/figma/brand/seven-flower.png') }}" alt="Пушистый Семицветик">
     </div>
-    {% if data.footer_note %}<p class="trust-footer">{{ data.footer_note }}</p>{% endif %}
+    <div class="trust-notes">
+        <p class="trust-note trust-note-left"><span class="trust-note-line" aria-hidden="true"></span>Программа обучения разработана методистами с&nbsp;15-ти летним опытом работы</p>
+        <p class="trust-note trust-note-right"><span class="trust-note-line" aria-hidden="true"></span>С&nbsp;2010 года сохраняем традиции качественного образования и&nbsp;преемственность методик</p>
+    </div>
 </section>
 
 {% elif block.component == "top_programs" %}
 <section class="section top-programs-section">
-    <div class="section-head split-head">
+    <div class="top-programs-head">
         <div>
             <h2>{{ data.title or "Топ-программы" }}</h2>
             {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
         </div>
-        <a class="soft-button" href="/programmy/">Все программы →</a>
+        <a class="soft-button soft-button-arrow" href="/programmy/">Все программы <span class="soft-arrow">→</span></a>
     </div>
     <div class="top-programs-stage">
         <nav class="top-programs-tabs" aria-label="Выбор программы">
             {% for tab in data.get("tabs", []) %}
-            <a class="top-programs-tab {{ 'is-active' if loop.first else '' }}" href="/{{ tab.slug }}/">{{ tab.name }}</a>
+            {% set is_active = loop.first %}
+            {% set is_accent = tab.get("accent") %}
+            <a class="top-programs-tab{% if is_active %} is-active{% endif %}{% if is_accent %} is-accent{% endif %}" href="/{{ tab.slug }}/">{{ tab.name }}</a>
             {% endfor %}
         </nav>
         {% set active = data.tabs[0] if data.get("tabs") else none %}
         {% if active %}
         <article class="top-programs-card">
-            <header>
+            <div class="top-programs-card-head">
                 <h3>{{ active.name }}</h3>
                 <div class="tag-row tag-row-orange">
                     {% for tag in active.tags %}<span>{{ tag }}</span>{% endfor %}
                 </div>
                 <p class="top-programs-desc">{{ active.description }}</p>
-            </header>
+            </div>
             <div class="top-programs-columns">
-                <div>
-                    <strong class="col-label">Расписание занятий</strong>
-                    {% for group in active.groups %}
-                    <p class="group-label">{{ group.title }}</p>
-                    {% for slot in group.slots %}
-                    <div class="schedule-row"><span>{{ slot.day }}</span><span>{{ slot.time }}</span></div>
-                    {% endfor %}
-                    {% endfor %}
-                </div>
-                <div>
-                    <strong class="col-label">Преподаватели</strong>
-                    <div class="teacher-mini">
-                        <span class="teacher-avatars" aria-hidden="true">
-                            {% for avatar in active.teachers[:3] %}<i style="background: {{ avatar }};"></i>{% endfor %}
-                        </span>
-                        <div>
-                            <strong>{{ active.teachers_count }}</strong>
-                            <small>{{ active.teachers_role }}</small>
+                <div class="top-programs-schedule">
+                    <p class="col-label">Расписание занятий</p>
+                    <div class="schedule-scroll">
+                        {% for group in active.groups %}
+                        <div class="schedule-group">
+                            <p class="group-label">{{ group.title }}</p>
+                            <div class="schedule-list">
+                                {% for slot in group.slots %}
+                                <div class="schedule-row"><span>{{ slot.day }}</span><span>{{ slot.time }}</span></div>
+                                {% endfor %}
+                            </div>
                         </div>
+                        {% endfor %}
+                        <div class="schedule-fade" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <div class="top-programs-side">
+                    <div class="top-programs-teachers">
+                        <p class="col-label">Преподаватели</p>
+                        <div class="teacher-mini">
+                            <span class="teacher-avatars" aria-hidden="true">
+                                {% for avatar in active.teachers[:2] %}<i style="background: {{ avatar }};"></i>{% endfor %}
+                                {% if active.teachers|length > 2 %}<b class="teacher-more">+{{ active.teachers|length - 2 }}</b>{% endif %}
+                            </span>
+                            <div class="teacher-mini-text">
+                                <strong>{{ active.teachers_count }}</strong>
+                                <small>{{ active.teachers_role }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-programs-footer">
+                        <strong>{{ active.price }}</strong>
+                        <a class="button button-dark" href="#lead-form">Записаться</a>
                     </div>
                 </div>
             </div>
-            <footer class="top-programs-footer">
-                <strong>{{ active.price }}</strong>
-                <a class="button button-dark" href="#lead-form">Записаться</a>
-            </footer>
         </article>
         {% endif %}
     </div>
 </section>
 
 {% elif block.component == "form_strip" %}
-<section class="section cta-band cta-band-purple">
-    <div class="cta-content">
-        <h2>Давайте знакомиться!</h2>
-        <p>Оставьте телефон, и мы расскажем, какая программа подойдёт ребёнку.</p>
-        <form class="lead-inline" data-lead-form>
+<section class="section meet-strip">
+    <div class="meet-copy">
+        <h2>{{ data.title or "Давайте знакомиться!" }}</h2>
+        <p class="meet-sub">Оставьте телефон, и&nbsp;убедитесь сами, почему <span class="meet-sub-accent">нам доверяют</span> более 3000 семей</p>
+        <form class="lead-inline meet-lead" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
             <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
-            <label class="sr-only" for="strip-phone">Телефон</label>
-            <input id="strip-phone" type="tel" name="phone" placeholder="Введите телефон" required>
-            <button class="button button-acid" type="submit">Получить консультацию</button>
+            <div class="meet-lead-row">
+                <label class="sr-only" for="strip-phone">Телефон</label>
+                <input id="strip-phone" type="tel" name="phone" placeholder="Введите телефон" required>
+                <button class="button button-acid" type="submit">Получить консультацию</button>
+            </div>
+            <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
             <p class="form-status" data-form-status></p>
         </form>
     </div>
-    <div class="cta-visual">
-        <img src="{{ url_for('static', filename='img/mockup/hero-home.png') }}" alt="">
-        <span>Запишем и подберём время</span>
-        <span>Дадим скидку после пробного урока</span>
-        <span>Расскажем о программе курса</span>
+    <div class="meet-visual" aria-hidden="true">
+        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
+        <span class="meet-badge meet-badge-1">✦ Запишем к&nbsp;логопеду</span>
+        <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Дадим скидку при&nbsp;оплате курса после&nbsp;пробного урока</span>
+        <span class="meet-badge meet-badge-3">✦ Подберем школу</span>
+        <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Расскажем о&nbsp;программе курса</span>
     </div>
 </section>
 
@@ -364,16 +381,20 @@
                  data-search="{{ (teacher.name ~ ' ' ~ teacher.role ~ ' ' ~ (teacher.specialization or ''))|lower }}">
             <img src="{{ teacher.photo_url or url_for('static', filename='img/mockup/teacher-' ~ ((loop.index0 % 3) + 1) ~ '.png') }}" alt="">
             <div class="teacher-body">
-                <span class="experience">{{ 'Более 10 лет опыта' if loop.index < 4 else 'Опытный специалист' }}</span>
-                <h3>{{ teacher.name }}</h3>
-                <p class="teacher-role">{{ teacher.role }}</p>
-                <p>{{ teacher.specialization }}</p>
-                <div class="tag-row">
-                    {% for program in teacher.programs[:2] %}
-                    <span>{{ program.name }}</span>
-                    {% else %}
-                    <span>{{ teacher.specialization or 'Развитие детей' }}</span>
-                    {% endfor %}
+                <div>
+                    <span class="experience">{{ 'Более 10 лет опыта' if loop.index < 4 else 'Опытный специалист' }}</span>
+                    <h3>{{ teacher.name }}</h3>
+                    <p class="teacher-role">{{ teacher.role }}</p>
+                </div>
+                <div class="teacher-subjects">
+                    <p class="teacher-subjects-label">Предметы</p>
+                    <div class="tag-row">
+                        {% for program in teacher.programs[:2] %}
+                        <span>{{ program.name }}</span>
+                        {% else %}
+                        <span>{{ teacher.specialization or 'Развитие детей' }}</span>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </article>
@@ -386,54 +407,74 @@
 
 {% elif block.component == "reviews_grid" %}
 <section class="section reviews-section">
-    <div class="section-head centered-head">
+    <div class="reviews-head">
         <h2>{{ data.title }}</h2>
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
     </div>
-    <div class="review-stage">
-        <div class="review-side">
-            <strong>«В школе выпускников Семицветика видно сразу»</strong>
-            <span>>80% родителей рекомендуют нас друзьям</span>
-        </div>
-        {% for review in data.reviews[:1] %}
-        <article class="review-card">
-            <div class="stars">★★★★★ <span>Отзыв из 2ГИС</span></div>
-            <p>{{ review.text }}</p>
-            <div class="review-author">
-                <span>{{ review.author_initials }}</span>
-                <div>
-                    <strong>{{ review.author_name }}</strong>
-                    <small>{{ review.child_info }}</small>
-                </div>
+    <div class="reviews-stage">
+        <aside class="review-side">
+            <div class="review-side-quote">
+                <span class="review-side-icon" aria-hidden="true">❞</span>
+                <p>«В&nbsp;школе выпускников Семицветика видно сразу»</p>
+                <small>— учителя начальных классов о&nbsp;наших детях</small>
             </div>
-        </article>
-        {% else %}
-        <article class="review-card">
-            <p>Отзывы появятся после наполнения базы.</p>
-        </article>
-        {% endfor %}
+            <div class="review-side-stat">
+                <strong>&gt;80%</strong>
+                <span>родителей рекомендуют нас друзьям и&nbsp;приводят младших братьев и&nbsp;сестер</span>
+            </div>
+        </aside>
+        <div class="review-slot">
+            {% for review in data.reviews[:1] %}
+            <article class="review-card">
+                <div class="review-card-head">
+                    <div class="review-stars" aria-label="5 звёзд">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <span class="review-source">
+                        <i class="review-source-dot" aria-hidden="true"></i>
+                        Отзыв из 2ГИС
+                    </span>
+                </div>
+                <p class="review-text">{{ review.text }}</p>
+                <div class="review-author">
+                    <span class="review-avatar">{{ review.author_initials }}</span>
+                    <div class="review-author-text">
+                        <strong>{{ review.author_name }}</strong>
+                        <small>{{ review.child_info }}</small>
+                    </div>
+                </div>
+            </article>
+            {% else %}
+            <article class="review-card">
+                <p>Отзывы появятся после наполнения базы.</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="reviews-nav">
+        <button class="review-nav-btn" type="button" aria-label="Предыдущий отзыв">←</button>
+        <button class="review-nav-btn is-active" type="button" aria-label="Следующий отзыв">→</button>
     </div>
 </section>
 
 {% elif block.component == "how_it_works" %}
 <section class="section place-section">
-    <div class="section-head">
+    <div class="place-head">
         <h2>{{ data.title }}</h2>
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
     </div>
-    <div class="steps-grid">
+    <div class="place-grid">
         {% for step in data.steps %}
-        <article class="step-card {{ 'step-card-photo' if step.image else '' }}">
-            {% if step.image %}
-            <div class="step-photo">
-                <img src="{{ url_for('static', filename=step.image) }}" alt="">
-                <span class="step-number">{{ step.icon }}</span>
+        <article class="place-card">
+            <div class="place-text">
+                <h3>{{ step.title }}</h3>
+                <p>{{ step.text }}</p>
             </div>
-            {% else %}
-            <span>{{ step.icon }}</span>
+            {% if step.image %}
+            <div class="place-photo">
+                <img src="{{ url_for('static', filename=step.image) }}" alt="">
+            </div>
             {% endif %}
-            <h3>{{ step.title }}</h3>
-            <p>{{ step.text }}</p>
         </article>
         {% endfor %}
     </div>
@@ -441,20 +482,25 @@
 
 {% elif block.component == "faq" %}
 <section class="section faq-section">
-    <div class="section-head">
+    <div class="faq-head">
         <h2>{{ data.title }}</h2>
     </div>
-    <div class="filter-row">
-        <span class="chip is-active">Общие вопросы</span>
-        <span class="chip">Подготовка к школе</span>
-        <span class="chip">Раннее развитие</span>
-        <span class="chip">Стоимость и запись</span>
+    <div class="faq-filters">
+        <span class="faq-chip is-active">Общие вопросы</span>
+        <span class="faq-chip">Подготовка к&nbsp;школе</span>
+        <span class="faq-chip">Раннее развитие</span>
+        <span class="faq-chip">Логопедия и&nbsp;психология</span>
+        <span class="faq-chip">Творчество и&nbsp;английский язык</span>
+        <span class="faq-chip">Стоимость и&nbsp;запись</span>
     </div>
     <div class="faq-list">
         {% for item in data.get("items", []) %}
         <details class="faq-item" {% if loop.first %}open{% endif %}>
-            <summary>{{ item.q }}</summary>
-            <p>{{ item.a }}</p>
+            <summary>
+                <span class="faq-question">{{ item.q }}</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <p class="faq-answer">{{ item.a }}</p>
         </details>
         {% endfor %}
     </div>
@@ -620,38 +666,61 @@
 </section>
 
 {% elif block.component == "cta_final" %}
-<section class="section cta-band cta-band-green" id="lead-form">
-    <div class="cta-content">
-        <h2>{{ data.title }}</h2>
-        <p>{{ data.subtitle }}</p>
-        <form class="lead-inline" data-lead-form>
+<section class="section meet-strip meet-strip-green" id="lead-form">
+    <div class="meet-copy">
+        <h2>{{ data.title or "Записаться на\u00a0личную экскурсию" }}</h2>
+        <p class="meet-sub"><span class="meet-sub-accent-yellow">Ответим на&nbsp;вопросы</span> по&nbsp;телефону, и&nbsp;пригласим в&nbsp;детский клуб на&nbsp;экскурсию</p>
+        <form class="lead-inline meet-lead" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
             <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
-            <label class="sr-only" for="final-phone-{{ loop.index if loop is defined else 'x' }}">Телефон</label>
-            <input id="final-phone-{{ loop.index if loop is defined else 'x' }}" type="tel" name="phone" placeholder="Введите телефон" required>
-            <button class="button button-acid" type="submit">Получить консультацию</button>
+            <div class="meet-lead-row">
+                <label class="sr-only" for="final-phone">Телефон</label>
+                <input id="final-phone" type="tel" name="phone" placeholder="Введите телефон" required>
+                <button class="button button-yellow" type="submit">Получить консультацию</button>
+            </div>
+            <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
             <p class="form-status" data-form-status></p>
         </form>
     </div>
-    <div class="cta-visual">
-        <img src="{{ url_for('static', filename='img/mockup/cta-kids.png') }}" alt="">
-        <span>Познакомим с педагогами</span>
-        <span>Покажем клуб и расписание</span>
-        <span>Подберём направление</span>
+    <div class="meet-visual" aria-hidden="true">
+        <img class="meet-photo" src="{{ url_for('static', filename='img/mockup/cta-kids.png') }}" alt="">
+        <span class="meet-badge meet-badge-1">✦ Познакомим с&nbsp;вашими педагогами</span>
+        <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Многие наши педагоги работают в&nbsp;клубе с&nbsp;момента его основания</span>
+        <span class="meet-badge meet-badge-3 meet-badge-orange">✦ Наши учителя и&nbsp;психологи — это специалисты школ</span>
+        <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Каждый предмет ведет профильный специалист</span>
     </div>
 </section>
 
 {% elif block.component == "gallery" %}
 {% if data.variant == "video" or is_home %}
 <section class="section video-section">
-    <div class="section-head centered-head">
+    <div class="video-head">
         <h2>{{ data.title or "Жизнь нашего центра в одном видео" }}</h2>
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
     </div>
-    <div class="video-cover">
-        <img src="{{ url_for('static', filename='img/figma/place/video-cover.png') }}" alt="">
-        <button class="video-play" type="button" aria-label="Смотреть видео"></button>
+    <div class="video-stage">
+        <div class="video-cover">
+            <img class="video-cover-img" src="{{ url_for('static', filename='img/figma/place/video-cover.png') }}" alt="">
+            <div class="video-overlay" aria-hidden="true"></div>
+            <button class="video-play" type="button" aria-label="Смотреть видео"><span>▶</span></button>
+            <p class="video-caption">Загляните в&nbsp;атмосферу нашего детского центра глазами вашего ребёнка</p>
+        </div>
+    </div>
+</section>
+{% elif data.variant == "strip" %}
+<section class="photo-strip" aria-label="Фотографии центра">
+    <div class="photo-strip-row photo-strip-row-1">
+        {% set photos_top = data.photos_top or ['img/figma/gallery/pumpkins.png', 'img/figma/gallery/balloons.png', 'img/figma/gallery/girl-paints.png', 'img/figma/gallery/mums-phones.png', 'img/figma/gallery/letters.png', 'img/figma/gallery/graduation.png'] %}
+        {% for photo in photos_top %}
+        <img src="{{ url_for('static', filename=photo) }}" alt="" loading="lazy">
+        {% endfor %}
+    </div>
+    <div class="photo-strip-row photo-strip-row-2">
+        {% set photos_bottom = data.photos_bottom or ['img/figma/gallery/croc-family.png', 'img/figma/gallery/bear.png', 'img/figma/gallery/girl-xmas.png', 'img/figma/gallery/kids-xmas.png', 'img/figma/gallery/pumpkin-kids.png', 'img/figma/gallery/girl-gift.png'] %}
+        {% for photo in photos_bottom %}
+        <img src="{{ url_for('static', filename=photo) }}" alt="" loading="lazy">
+        {% endfor %}
     </div>
 </section>
 {% else %}
@@ -738,20 +807,26 @@
     {% endif %}
     <div class="contact-shell contact-shell-{{ variant }}">
         <div class="contact-info">
-            <h2>{{ data.title }}</h2>
-            <span class="contact-hours-badge">{{ data.settings.get('hours', 'Работаем с 9:00 до 21:00') }}</span>
+            <div>
+                <h2>{{ data.title or "Ждем вас в Семицветике" }}</h2>
+                <div style="height:12px"></div>
+                <span class="contact-hours-badge">{{ data.settings.get('hours', 'Работаем с 9:00 до 21:00') }}</span>
+            </div>
             <p class="contact-address">{{ data.settings.get('address') }}</p>
-            <a class="button button-dark contact-map-btn" href="#contact-map">📍 Показать на карте</a>
+            <a class="button contact-map-btn" href="#contact-map">Связаться с нами</a>
             <div class="contact-meta">
-                <div class="qr-code" aria-hidden="true"></div>
                 <div>
-                    <strong>Связь с нами</strong>
+                    <div class="qr-code" aria-hidden="true"></div>
+                    <span class="qr-caption">Мы в телеграмме</span>
+                </div>
+                <div>
+                    <strong>Социальные сети</strong>
                     <p class="contact-socials-line">
-                        <a href="{{ vk_href }}" target="_blank" rel="noopener"><span class="soc-icon soc-vk" aria-hidden="true"></span>ВКонтакте</a>
+                        <a href="{{ vk_href }}" target="_blank" rel="noopener"><span class="soc-icon soc-vk" aria-hidden="true"></span>Вконтакте</a>
                         <a href="{{ tg_href }}" target="_blank" rel="noopener"><span class="soc-icon soc-tg" aria-hidden="true"></span>Телеграм</a>
                     </p>
                     <strong>Телефоны</strong>
-                    <p>{{ data.settings.get('phone_1') }} · {{ data.settings.get('phone_2') }}</p>
+                    <p>{{ data.settings.get('phone_1') }}&nbsp;&nbsp;&nbsp;{{ data.settings.get('phone_2') }}</p>
                 </div>
             </div>
         </div>

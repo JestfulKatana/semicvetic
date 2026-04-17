@@ -66,15 +66,20 @@
         <footer class="site-footer">
             <div class="footer-grid">
                 <nav class="footer-column" aria-label="Разделы сайта">
-                    <strong>Главная</strong>
+                    <strong class="footer-column-title">Главная</strong>
                     <a href="/programmy/">Все программы</a>
                     <a href="/o-centre/">О нас</a>
                     <a href="/pedagogi/">Педагоги</a>
+                    <a href="/o-centre/#preimushchestva">Преимущества</a>
+                    <a href="/#lead-form">Баннер экскурсия</a>
+                    <a href="/#lead-form">Чем отличаемся от сада</a>
+                    <a href="/#reviews">Отзывы</a>
                     <a href="/kontakty/">Контакты</a>
-                    <a href="/meropriyatiya/">События</a>
+                    <a href="/#video">Видео</a>
+                    <a href="/#faq">Вопросы</a>
                 </nav>
                 <nav class="footer-column" aria-label="Программы">
-                    <strong>Наши программы</strong>
+                    <strong class="footer-column-title">Наши программы</strong>
                     {% for program in programs[:4] if programs is defined %}
                     <a href="/{{ program.slug }}/">{{ program.name }}</a>
                     {% else %}
@@ -83,28 +88,30 @@
                     <a class="footer-large-link" href="/o-centre/">О центре</a>
                     <a class="footer-large-link" href="/pedagogi/">Педагоги</a>
                 </nav>
-                <div class="footer-column">
+                <div class="footer-column footer-column-contacts">
                     <a class="footer-contact-button" href="/kontakty/">Связаться с нами</a>
-                    <strong>Контакты</strong>
-                    <p>{{ phone }}</p>
-                    <p>{{ site_settings.get('phone_2') }}</p>
+                    <strong class="footer-column-title footer-column-title-sm">Контакты</strong>
+                    <p class="footer-phone">{{ phone }}</p>
+                    <p class="footer-phone">{{ site_settings.get('phone_2') }}</p>
                     <small>{{ site_settings.get('hours', 'Работаем с 9:00 до 21:00') }}</small>
-                    <strong>Адрес</strong>
-                    <p>{{ address }}</p>
+                    <strong class="footer-column-title footer-column-title-sm">Адрес</strong>
+                    <p class="footer-address">{{ address }}</p>
                 </div>
                 <div class="footer-qr">
                     <div class="qr-code" aria-hidden="true"></div>
-                    <span>Мы в телеграме</span>
+                    <span>Мы в&nbsp;телеграмме</span>
                     <div class="footer-socials">
-                        <a href="#" aria-label="ВКонтакте">VK</a>
-                        <a href="#" aria-label="Telegram">TG</a>
+                        <a href="#" aria-label="ВКонтакте"><span class="soc-icon soc-vk" aria-hidden="true"></span></a>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
                 <span>Политика использования файлов cookie</span>
                 <span>Политика обработки персональных данных</span>
-                <span>Социальное предприятие</span>
+                <span class="footer-badge-social">
+                    <span class="footer-badge-heart" aria-hidden="true">💚</span>
+                    Социальное предприятие
+                </span>
             </div>
         </footer>
     </div>

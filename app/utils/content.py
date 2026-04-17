@@ -28,7 +28,9 @@ def hydrate_blocks(blocks: list[dict], shared: dict) -> list[dict]:
         elif source == "featured_programs":
             data["programs"] = shared["programs"][: data.get("limit", 3)]
         elif source == "all_teachers":
-            data["teachers"] = shared["teachers"]
+            teachers = shared["teachers"]
+            limit = data.get("limit")
+            data["teachers"] = teachers[:limit] if limit else teachers
         elif source == "featured_reviews":
             data["reviews"] = shared["reviews"][: data.get("limit", 3)]
         elif source == "program_reviews":
