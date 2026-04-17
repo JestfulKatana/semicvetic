@@ -47,16 +47,20 @@
     </div>
     {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
     <h1>{{ data.title }}</h1>
-    {% if data.subtitle %}<p class="page-hero-text">{{ data.subtitle }}</p>{% endif %}
+    {% if data.subtitle %}<p class="page-hero-text{% if data.subtitle_accent %} page-hero-text-accent{% endif %}">{{ data.subtitle }}</p>{% endif %}
     {% if data.cta_text %}
     <div class="action-row centered">
         <a class="button button-dark" href="#{{ data.cta_target or 'lead-form' }}">{{ data.cta_text }}</a>
+        {% if data.cta_secondary_text %}
+        <a class="button button-light" href="#{{ data.cta_secondary_target or 'schedule' }}">{{ data.cta_secondary_text }}</a>
+        {% else %}
         <a class="button button-light" href="/programmy/">Смотреть программы</a>
+        {% endif %}
     </div>
     {% endif %}
     {% if page_slug == 'o-centre' or is_program_detail %}
     <div class="wide-photo">
-        <img src="{{ url_for('static', filename='img/mockup/hero-about.png') }}" alt="">
+        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
     </div>
     {% endif %}
@@ -247,7 +251,7 @@
         </article>
         {% endfor %}
     </div>
-    <p class="filter-empty" data-filter-empty hidden>Повашему запросу ничего ненашлось. Сбросьте фильтры— имыпокажем все программы.</p>
+    <p class="filter-empty" data-filter-empty hidden>По&nbsp;вашему запросу ничего не&nbsp;нашлось. Сбросьте фильтры&nbsp;— и&nbsp;мы&nbsp;покажем все программы.</p>
     {% else %}
     <div class="program-card-grid">
         {% for program in data.programs %}
@@ -305,27 +309,31 @@
 
 {% elif block.component == "teachers_grid" %}
 {% set teacher_categories = [
-    ('all', 'Всепедагоги'),
-    ('school', 'Подготовка кшколе'),
+    ('all', 'Все педагоги'),
+    ('school', 'Подготовка к\u00a0школе'),
     ('english', 'Английский язык'),
-    ('early', 'Раннее развитие'),
+    ('early', 'Комплексное развитие'),
     ('speech', 'Логопедия'),
-    ('art', 'Творчество'),
-    ('psychology', 'Психология'),
-    ('camp', 'Лагерь'),
+    ('art', 'Изостудия и\u00a0Лепка'),
+    ('psychology', 'Программа «Отличник»'),
+    ('camp', 'Детский лагерь'),
 ] %}
 <section class="section teachers-section">
+    {% if data.title or data.subtitle %}
     <div class="section-head split-head">
         <div>
             {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
             {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
         </div>
+        {% if page_slug != 'pedagogi' %}
         <a class="soft-button" href="/pedagogi/">Все преподаватели →</a>
+        {% endif %}
     </div>
+    {% endif %}
     {% if data.show_search or data.show_chips %}
     <div class="teacher-search">
         {% if data.show_search %}
-        <input type="search" placeholder="Найти учителя илипредмет" data-teacher-search>
+        <input type="search" placeholder="Найти учителя или предмет" data-teacher-search>
         {% endif %}
         <div class="filter-row" data-teacher-filters>
             {% for key, label in teacher_categories %}
@@ -357,7 +365,7 @@
         {% endfor %}
     </div>
     {% if data.show_search or data.show_chips %}
-    <p class="filter-empty" data-teacher-empty hidden>Позапросу ничего ненашлось. Попробуйте сбросить фильтры.</p>
+    <p class="filter-empty" data-teacher-empty hidden>По&nbsp;запросу ничего не&nbsp;нашлось. Попробуйте сбросить фильтры.</p>
     {% endif %}
 </section>
 
@@ -489,38 +497,93 @@
 </section>
 
 {% elif block.component == "program_schedule" %}
-<section class="section schedule-section">
+<section class="section schedule-section" id="schedule">
     <div class="section-head split-head">
         <div>
             <h2>{{ data.title or "Программа подготовки" }}</h2>
             {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
         </div>
-        <a class="soft-button" href="#lead-form">Записаться →</a>
     </div>
+    {% if data.age_filters or data.price_toggle %}
+    <div class="schedule-controls">
+        {% if data.age_filters %}
+        <div class="schedule-age-filters" role="tablist">
+            {% for f in data.age_filters %}
+            <button type="button" class="age-chip {{ 'is-active' if loop.first else '' }}" data-age-filter="{{ f.slug }}">
+                <span>{{ f.label }}</span>
+                {% if f.hint %}<small>{{ f.hint }}</small>{% endif %}
+            </button>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if data.price_toggle %}
+        <div class="schedule-price-toggle">
+            <span class="schedule-price-label">Цена за:</span>
+            <div class="toggle-pill" role="tablist">
+                {% for p in data.price_toggle %}
+                <button type="button" class="toggle-pill-btn {{ 'is-active' if p.active else '' }}" data-price-mode="{{ p.slug }}">{{ p.label }}</button>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
     <div class="schedule-groups">
         {% for group in data.get("groups", []) %}
         <article class="schedule-group">
             <header class="schedule-group-head">
                 <h3>{{ group.title }}</h3>
-                <span class="schedule-tag">{{ data.program.age_label if data.program else '' }}</span>
+                <div class="schedule-group-price">
+                    <strong>{{ data.program.price_label if data.program else '' }}</strong>
+                    <a class="button button-dark button-compact" href="#lead-form">Записаться</a>
+                </div>
             </header>
-            <div class="schedule-group-body">
-                <div class="schedule-teacher">
-                    <span class="teacher-chip">{{ data.program.emoji if data.program else '★' }}</span>
-                    <div>
-                        <strong>{{ data.program.teacher.name if data.program and data.program.teacher else 'Педагог центра' }}</strong>
-                        <small>{{ data.program.teacher.role if data.program and data.program.teacher else 'Специалист' }}</small>
+            {% set subjects = group.subjects or data.default_subjects or [] %}
+            {% if subjects %}
+            <div class="schedule-subjects">
+                <span class="schedule-field-label">Предметы</span>
+                <div class="schedule-subjects-grid">
+                    {% for s in subjects %}
+                    <div class="subject-card">
+                        <strong>{{ s.name }}</strong>
+                        {% if s.freq %}<small>{{ s.freq }}</small>{% endif %}
                     </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <div class="schedule-group-body">
+                <div class="schedule-left">
+                    {% set attrs = group.attributes or data.default_attributes or [] %}
+                    {% if attrs %}
+                    <div class="schedule-attrs">
+                        {% for a in attrs %}<span class="attr-chip">{{ a }}</span>{% endfor %}
+                    </div>
+                    {% endif %}
+                    {% set t = group.teachers or data.default_teachers or {} %}
+                    {% if t %}
+                    <div class="schedule-teachers">
+                        <span class="schedule-field-label">Педагоги</span>
+                        <div class="teacher-avatars">
+                            {% for c in (t.colors or [])[:3] %}
+                            <span class="teacher-avatar" style="background: {{ c }}"></span>
+                            {% endfor %}
+                            {% if (t.colors or [])|length > 3 %}
+                            <span class="teacher-avatar teacher-avatar-plus">+{{ (t.colors|length) - 3 }}</span>
+                            {% endif %}
+                            <div class="teacher-avatars-label">
+                                <strong>{{ t.count }}</strong>
+                                <small>{{ t.role }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="schedule-slots">
-                    <strong class="col-label">Расписание</strong>
+                    <span class="schedule-field-label">Расписание занятий</span>
                     {% for slot in group.slots %}
                     <div class="schedule-row"><span>{{ slot.day }}</span><span>{{ slot.time }}</span></div>
                     {% endfor %}
-                </div>
-                <div class="schedule-price">
-                    <strong>{{ data.program.price_label if data.program else '' }}</strong>
-                    <a class="button button-dark" href="#lead-form">Записаться</a>
                 </div>
             </div>
         </article>
@@ -695,7 +758,7 @@
 </section>
 
 {% elif block.component == "rich_text" %}
-<section class="section rich-text-section">
+<section class="section rich-text-section{% if data.variant %} rich-text-{{ data.variant }}{% endif %}">
     <div class="article-shell">
         <article class="prose">{{ data.content|markdown|safe }}</article>
     </div>

@@ -157,13 +157,11 @@ def about_blocks() -> list[dict]:
         {
             "component": "rich_text",
             "data": {
+                "variant": "about-lead",
                 "content": (
-                    "Сегодня «Семицветик»\u00a0— это\u00a0команда **профессиональных педагогов**, современные "
-                    "программы обучения и\u00a0доказанные результаты. Но\u00a0главное\u00a0— по-прежнему **любовь "
-                    "к\u00a0детям** и\u00a0вера в\u00a0их\u00a0безграничные возможности.\n\nМы\u00a0работаем в\u00a0"
-                    "малых группах, сочетаем академические предметы с\u00a0творчеством и\u00a0психологической "
-                    "поддержкой, и\u00a0каждый год выпускаем десятки ребят\u00a0— многие из\u00a0них оканчивают "
-                    "школу с\u00a0медалями."
+                    "Сегодня «Семицветик»\u00a0— это\u00a0<span class=\"accent-violet\">команда профессиональных педагогов</span>, "
+                    "современные программы обучения и\u00a0доказанные результаты. Но\u00a0главное\u00a0— это\u00a0по-прежнему "
+                    "<span class=\"accent-orange\">любовь к\u00a0детям</span> и\u00a0вера в\u00a0их\u00a0безграничные возможности."
                 ),
             },
         },
@@ -173,10 +171,10 @@ def about_blocks() -> list[dict]:
                 "title": "Наши ценности",
                 "subtitle": "Принципы, которыми мы\u00a0руководствуемся в\u00a0работе с\u00a0детьми",
                 "items": [
-                    {"icon": "♥", "title": "Индивидуальный подход", "text": "Маленькие группы и\u00a0внимание к\u00a0каждому ребёнку. Педагог знает сильные и\u00a0слабые стороны."},
-                    {"icon": "✦", "title": "Мини-группы до\u00a08\u00a0детей", "text": "В\u00a0отличие от\u00a025–30 детей в\u00a0садиках, у\u00a0нас хватает времени на\u00a0каждого."},
-                    {"icon": "✪", "title": "Комплексное развитие", "text": "Академические и\u00a0творческие занятия, психология и\u00a0логопедия\u00a0— в\u00a0одном месте."},
-                    {"icon": "★", "title": "Профессионализм", "text": "Педагоги с\u00a0опытом и\u00a0регулярным повышением квалификации. Учителя школ, а\u00a0не\u00a0воспитатели."},
+                    {"icon": "♥", "title": "Индивидуальный подход в\u00a0группе", "text": "Педагоги высшей категории с\u00a0многолетним опытом работы."},
+                    {"icon": "✦", "title": "Мини-группы", "text": "Каждый ребёнок\u00a0— уникальная личность со\u00a0своими талантами и\u00a0особенностями: дисциплина, внимание."},
+                    {"icon": "✪", "title": "Комплексное развитие", "text": "До\u00a08\u00a0детей в\u00a0группе\u00a0— каждому достаётся внимание педагога."},
+                    {"icon": "★", "title": "Профессионализм", "text": "Развиваем интеллект, творчество, социальные навыки и\u00a0эмоциональный интеллект."},
                 ],
             },
         },
@@ -199,11 +197,14 @@ def program_landing_blocks(name: str, tagline: str) -> list[dict]:
             "component": "hero",
             "data": {
                 "source": "current_program",
-                "eyebrow": "Программа центра",
+                "eyebrow": "О\u00a0программе",
                 "title": name,
                 "subtitle": tagline,
-                "cta_text": "Записаться на\u00a0пробное",
+                "subtitle_accent": True,
+                "cta_text": "Записаться на\u00a0занятие",
                 "cta_target": "lead-form",
+                "cta_secondary_text": "Смотреть расписание",
+                "cta_secondary_target": "schedule",
             },
         },
         {
@@ -212,6 +213,29 @@ def program_landing_blocks(name: str, tagline: str) -> list[dict]:
                 "title": "Программа занятий",
                 "subtitle": "Группы формируем по\u00a0возрасту и\u00a0уровню подготовки",
                 "source": "program_schedule",
+                "age_filters": [
+                    {"slug": "all", "label": "Все программы", "hint": ""},
+                    {"slug": "age-5-6", "label": "За\u00a02 года до\u00a0школы", "hint": "5\u00a0лет"},
+                    {"slug": "age-6-7", "label": "За\u00a01 год до\u00a0школы", "hint": "6\u00a0лет"},
+                ],
+                "price_toggle": [
+                    {"slug": "per-lesson", "label": "Занятие"},
+                    {"slug": "per-month", "label": "Месяц", "active": True},
+                ],
+                "default_subjects": [
+                    {"name": "Развитие речи", "freq": "2 раза в\u00a0неделю"},
+                    {"name": "Математика", "freq": "2 раза в\u00a0неделю"},
+                    {"name": "Психология", "freq": "1 раз в\u00a0неделю"},
+                    {"name": "Логопедия", "freq": "1 раз в\u00a0неделю"},
+                    {"name": "Английский язык", "freq": "1 раз в\u00a0неделю"},
+                    {"name": "ИЗО", "freq": "1 раз в\u00a0неделю"},
+                ],
+                "default_attributes": ["5–5.5\u00a0лет", "2 часа", "3 занятия в\u00a0неделю"],
+                "default_teachers": {
+                    "count": "4 педагогов",
+                    "role": "Учителя начальной школы, психологи",
+                    "colors": ["#f59e40", "#6359c2", "#db5eb4", "#4a8df5"],
+                },
             },
         },
         {
@@ -319,14 +343,7 @@ def pedagogi_blocks() -> list[dict]:
             "data": {
                 "title": "Учителя, которым доверяют",
                 "subtitle": "",
-                "cta_text": "Записаться на\u00a0консультацию",
-                "cta_target": "contact-panel",
-                "eyebrow": "Команда",
-                "stats_row": [
-                    {"value": "12", "label": "педагогов работают с\u00a0детьми ежедневно"},
-                    {"value": "10+ лет", "label": "средний стаж наших специалистов"},
-                    {"value": "100%", "label": "проходят повышение квалификации"},
-                ],
+                "eyebrow": "Педагоги",
             },
         },
         {"component": "teachers_grid", "data": {"title": "", "source": "all_teachers", "show_search": True, "show_chips": True}},
@@ -420,6 +437,36 @@ def upsert_programs() -> None:
             db.session.add(ScheduleSlot(program_id=program.id, group_name=group, day_of_week=day, time_start=start, time_end=end))
 
 
+LEGACY_TEACHER_MERGE = {
+    # legacy name -> canonical figma name from TEACHER_CATALOG
+    "Ирина Бурова": "Бурова Ирина Михайловна",
+    "Мария Степанова": "Дёмина Ирина Александровна",
+}
+
+
+def merge_legacy_teachers() -> None:
+    """Move programs (and schedule slots if linked) from legacy duplicate teachers
+    to their canonical figma-named counterparts, then delete the legacy rows.
+    Idempotent: no-op once legacy rows are gone."""
+    for legacy_name, canonical_name in LEGACY_TEACHER_MERGE.items():
+        legacy = Teacher.query.filter_by(name=legacy_name).first()
+        if legacy is None:
+            continue
+        canonical = Teacher.query.filter_by(name=canonical_name).first()
+        if canonical is None:
+            # canonical will be inserted in upsert_teachers; defer merge to next run
+            print(f"[merge-defer] no canonical yet for {legacy_name} -> {canonical_name}")
+            continue
+        moved = 0
+        for prog in Program.query.filter_by(teacher_id=legacy.id).all():
+            prog.teacher_id = canonical.id
+            moved += 1
+        # ScheduleSlot has no teacher_id column (ties via program); nothing else to move.
+        db.session.delete(legacy)
+        print(f"[merge] {legacy_name} -> {canonical_name} (programs moved: {moved})")
+    db.session.commit()
+
+
 def upsert_teachers() -> None:
     wanted_names = {item["name"] for item in TEACHER_CATALOG}
     for item in TEACHER_CATALOG:
@@ -492,6 +539,8 @@ def run() -> None:
         upsert_programs()
         upsert_teachers()
         db.session.flush()
+        # run merge after teachers upsert ensures canonical rows exist
+        merge_legacy_teachers()
 
         program_meta = {item["slug"]: item for item in PROGRAM_CATALOG}
         teacher_category_map = {item["name"]: item["category"] for item in TEACHER_CATALOG}

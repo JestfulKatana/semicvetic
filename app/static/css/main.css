@@ -324,6 +324,13 @@ h3 { font-size: 25px; font-weight: 700; }
     margin: 22px auto 0;
     font-size: 18px;
 }
+.page-hero-text.page-hero-text-accent {
+    color: #f59e40;
+    font-weight: 600;
+    font-size: 20px;
+    text-decoration: underline wavy #f59e40 1.5px;
+    text-underline-offset: 6px;
+}
 .wide-photo {
     min-height: 610px;
     margin-top: 58px;
@@ -821,6 +828,24 @@ select {
 .events-section,
 .articles-section,
 .rich-text-section { background: #fbf8f5; }
+.rich-text-about-lead .prose {
+    max-width: 960px;
+    margin: 0 auto;
+    font-size: clamp(26px, 3.2vw, 44px);
+    line-height: 1.25;
+    font-weight: 700;
+    color: #1f1a1a;
+    text-align: center;
+}
+.rich-text-about-lead .prose p { margin: 0; }
+.prose .accent-violet { color: #6359c2; }
+.prose .accent-orange { color: #f59e40; }
+@media (max-width: 860px) {
+    .rich-text-about-lead .prose { font-size: 22px; line-height: 1.3; }
+}
+@media (max-width: 520px) {
+    .rich-text-about-lead .prose { font-size: 19px; }
+}
 .feature-card {
     min-height: 210px;
 }
@@ -1140,6 +1165,163 @@ select {
     justify-items: end;
 }
 .schedule-price strong { font-size: 22px; }
+
+/* Figma-style program schedule */
+.schedule-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 22px 0 28px;
+}
+.schedule-age-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.age-chip {
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: #f4ece8;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    color: #1f1a1a;
+    transition: background 0.15s;
+}
+.age-chip:hover { background: #ebe1dc; }
+.age-chip.is-active { background: #c5ff52; }
+.age-chip small { font-size: 13px; color: #6b6460; font-weight: 500; }
+.age-chip.is-active small { color: #3b5d1c; }
+.schedule-price-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+.schedule-price-label { color: var(--muted); font-size: 15px; }
+.toggle-pill {
+    display: inline-flex;
+    padding: 4px;
+    border-radius: 14px;
+    background: #f4ece8;
+    border: 1px solid #ebe1dc;
+}
+.toggle-pill-btn {
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    font-weight: 600;
+    cursor: pointer;
+    color: #1f1a1a;
+    font-size: 15px;
+}
+.toggle-pill-btn.is-active { background: #c5ff52; }
+.schedule-group-price {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.schedule-group-price strong { font-size: 22px; white-space: nowrap; }
+.button-compact { padding: 10px 18px; font-size: 15px; }
+.schedule-subjects { margin-bottom: 22px; }
+.schedule-field-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 14px;
+}
+.schedule-subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+}
+.subject-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+.subject-card strong { display: block; font-size: 15px; }
+.subject-card small { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.schedule-left {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.schedule-attrs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.attr-chip {
+    padding: 7px 14px;
+    border-radius: 10px;
+    background: var(--orange);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+}
+.schedule-teachers { display: block; }
+.teacher-avatars {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.teacher-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    display: inline-block;
+    border: 2px solid #fff;
+    margin-left: -8px;
+}
+.teacher-avatar:first-child { margin-left: 0; }
+.teacher-avatar-plus {
+    background: var(--orange) !important;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    font-weight: 600;
+}
+.teacher-avatars-label {
+    margin-left: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.teacher-avatars-label strong { font-size: 15px; }
+.teacher-avatars-label small { color: var(--muted); font-size: 12px; }
+/* figma schedule body: 2-col (left meta + right schedule slots) */
+.schedule-section .schedule-group-body {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr);
+}
+/* slot row: white bg pill-style */
+.schedule-section .schedule-row {
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+.schedule-slots { display: grid; gap: 6px; }
+@media (max-width: 860px) {
+    .schedule-controls { flex-direction: column; align-items: stretch; gap: 14px; }
+    .schedule-age-filters { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; scrollbar-width: none; }
+    .schedule-age-filters::-webkit-scrollbar { display: none; }
+    .age-chip { flex: 0 0 auto; }
+    .schedule-price-toggle { justify-content: space-between; }
+    .schedule-section .schedule-group-body { grid-template-columns: 1fr; gap: 22px; }
+    .schedule-subjects-grid { grid-template-columns: repeat(2, 1fr); }
+    .schedule-group-price { flex-direction: column; align-items: flex-end; gap: 8px; }
+    .schedule-group-head { flex-direction: column; align-items: flex-start; }
+}
 
 .photo-strip {
     width: min(1580px, calc(100% - 12px));
@@ -1656,6 +1838,8 @@ select {
         min-height: 330px;
         padding: 30px 24px;
     }
+    .program-bottom strong { font-size: 22px; }
+    .program-object-img { width: 100px; height: 100px; right: 12px; bottom: 12px; }
     .petal-stats {
         grid-template-columns: 1fr;
         min-height: auto;
@@ -1968,29 +2152,55 @@ select {
         aspect-ratio: auto;
         min-height: 0;
         padding: 16px 0 8px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
     }
-    .trust-grass { position: relative; width: 100%; aspect-ratio: 1280/820; }
-    .trust-flower {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 180px;
-        height: 180px;
-    }
+    .trust-grass { display: none; }
+    .trust-flower { display: none; }
     .trust-drop {
-        position: static;
+        position: static !important;
         width: 100%;
         height: auto;
         transform: none !important;
-        border-radius: 18px;
-        padding: 18px 22px;
-        margin-top: 10px;
+        border-radius: 22px;
+        padding: 22px 18px 24px;
+        margin: 0;
+        min-height: 140px;
     }
-    .trust-drop strong { font-size: 24px; }
-    .trust-drop span { max-width: 100%; font-size: 13px; }
+    .trust-drop strong { font-size: 28px; }
+    .trust-drop span { max-width: 100%; font-size: 13px; line-height: 1.3; }
+    .trust-drop-pos-7 { grid-column: 1 / span 2; }
     .contact-gallery { grid-template-columns: repeat(3, 1fr); }
     .contact-gallery img:nth-child(n+4) { display: none; }
     .program-object-img { width: 140px; height: 140px; right: 14px; bottom: 14px; }
+}
+@media (max-width: 860px) {
+    .top-programs-stage { grid-template-columns: 1fr; gap: 16px; }
+    .top-programs-tabs {
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
+        padding: 8px 0;
+        scrollbar-width: none;
+    }
+    .top-programs-tabs::-webkit-scrollbar { display: none; }
+    .top-programs-tab {
+        flex: 0 0 auto;
+        padding: 10px 16px;
+        border-radius: 999px;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+    .top-programs-card { padding: 24px 20px 22px; }
+    .top-programs-card h3 { font-size: 24px; }
+    .top-programs-columns {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+    .top-programs-footer { flex-direction: column; align-items: stretch; gap: 12px; }
+    .top-programs-footer strong { font-size: 22px; }
 }
 @media (max-width: 520px) {
     .trust-flower { width: 140px; height: 140px; }
