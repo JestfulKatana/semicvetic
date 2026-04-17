@@ -7,36 +7,46 @@
 {% if is_home %}
 <section class="hero-home">
     <div class="hero-copy">
-        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
-        <h1>Детский центр, где главное — развивающая среда и забота о ребёнке</h1>
-        {% if data.stats %}
-        <div class="hero-stats">
-            {% for stat in data.stats %}
-            <div>
-                <strong>{{ stat.value }}</strong>
-                <span>{{ stat.label }}</span>
+        <div class="hero-copy-inner">
+            {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+            <h1>Детский центр, где главное — развивающая среда и забота о ребёнке</h1>
+            {% if data.stats %}
+            <div class="hero-stats">
+                {% for stat in data.stats %}
+                <div>
+                    <strong>{{ stat.value }}</strong>
+                    <span>{{ stat.label }}</span>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            {% endif %}
         </div>
-        {% endif %}
         <form class="lead-inline hero-lead" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or 'hero' }}">
             <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
-            <div>
+            <div class="hero-lead-left">
                 <strong>Оставьте заявку<br>на бесплатную консультацию</strong>
+                <div class="hero-lead-fields">
+                    <label class="sr-only" for="hero-phone">Телефон</label>
+                    <input id="hero-phone" type="tel" name="phone" placeholder="Введите телефон" required>
+                    <button class="button button-acid" type="submit">Записаться</button>
+                </div>
             </div>
-            <label class="sr-only" for="hero-phone">Телефон</label>
-            <input id="hero-phone" type="tel" name="phone" placeholder="Введите телефон" required>
-            <button class="button button-acid" type="submit">Записаться</button>
+            <div class="hero-lead-right">
+                <p class="hero-lead-promise">Узнаем ваши пожелания и подберём подходящее время для пробного занятия</p>
+                <p class="hero-lead-disclaimer">Отправляя заявку вы соглашаетесь на обработку персональных данных и принимаете условия политики конфиденциальности</p>
+            </div>
             <p class="form-status" data-form-status></p>
         </form>
     </div>
     <div class="hero-photo-wrap">
         <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок-фотограф — Семицветик">
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
-        <span class="photo-badge photo-badge-social"><img src="{{ url_for('static', filename='img/figma/brand/badge-social.png') }}" alt="">Социальное предпринимательство</span>
-        <span class="photo-badge photo-badge-horoshee"><img src="{{ url_for('static', filename='img/figma/brand/badge-horoshee-mesto.png') }}" alt="">Яндекс. Хорошее место</span>
+        <div class="hero-photo-badges">
+            <span class="photo-badge photo-badge-social"><img src="{{ url_for('static', filename='img/figma/brand/badge-social.png') }}" alt="">Социальное предприятие</span>
+            <span class="photo-badge photo-badge-horoshee"><img src="{{ url_for('static', filename='img/figma/brand/badge-horoshee-mesto.png') }}" alt="">Яндекс: «Хорошее место»</span>
+        </div>
     </div>
 </section>
 {% else %}
@@ -256,15 +266,20 @@
     <div class="program-card-grid">
         {% for program in data.programs %}
         <article class="program-tile program-tile-{{ loop.index }}" style="--accent: {{ program.color or '#f36f32' }}; background: {{ program.color or '#f36f32' }};">
-            <div class="program-labels">
-                <span>Длительность от {{ program.duration_min or 40 }} минут</span>
-                <span>{{ program.frequency }}</span>
+            <div class="program-copy">
+                <div class="program-labels">
+                    <span class="program-chip">Длительность от {{ program.duration_min or 40 }} минут</span>
+                </div>
+                <p class="program-meta">{{ program.frequency }}</p>
+                <h3>{{ program.name }}</h3>
+                <p class="program-desc">{{ program.tagline }}</p>
             </div>
-            <h3>{{ program.name }}</h3>
-            <p>{{ program.tagline }}</p>
             <div class="program-bottom">
-                <span>{{ program.age_label }}</span>
-                <strong>{{ program.price_label }}</strong>
+                <span class="program-age">{{ program.age_label }}</span>
+                <div class="program-price">
+                    <strong>{{ program.price_label }}</strong>
+                    {% if program.price_unit %}<span class="program-price-unit">в {{ program.price_unit }}</span>{% endif %}
+                </div>
             </div>
             <a class="program-link" href="/{{ program.slug }}/" aria-label="Открыть {{ program.name }}"></a>
             {% if program.image_url %}

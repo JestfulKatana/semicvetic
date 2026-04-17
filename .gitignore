@@ -7,7 +7,6 @@ data/backups/
 .env
 *.pyc
 docs/figma-export/
-app/static/img/figma/
-Макеты/
+design/
 .claude/logs/
 .claude/settings.local.json
