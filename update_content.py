@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from app import create_app
 from app.extensions import db
-from app.models import Page, Program, ScheduleSlot, SiteSetting, Teacher
+from app.models import Page, Program, Review, ScheduleSlot, SiteSetting, Teacher
 
 
 def home_blocks() -> list[dict]:
@@ -122,7 +122,7 @@ def home_blocks() -> list[dict]:
             },
         },
         {"component": "form_strip", "data": {"title": "Давайте знакомиться!", "subtitle": "Оставьте телефон, и\u00a0убедитесь сами, почему нам\u00a0доверяют более 3000\u00a0семей", "color": "purple", "source_block": "cta_strip"}},
-        {"component": "reviews_grid", "data": {"title": "Что говорят родители", "subtitle": "15\u00a0лет истории успеха в\u00a0каждом отзыве", "source": "featured_reviews", "limit": 1}},
+        {"component": "reviews_grid", "data": {"title": "Что говорят родители", "subtitle": "15\u00a0лет истории успеха в\u00a0каждом отзыве", "source": "featured_reviews", "limit": 6}},
         {"component": "gallery", "data": {"title": "Жизнь нашего центра в\u00a0одном видео", "subtitle": "Короткий ролик о\u00a0том, как\u00a0растут наши «маленькие звёздочки»", "variant": "video"}},
         {"component": "cta_final", "data": {"title": "Ответим на\u00a0вопросы по\u00a0телефону и\u00a0пригласим в\u00a0детский клуб на\u00a0экскурсию", "subtitle": "", "color": "green", "source_block": "final_cta"}},
         {"component": "gallery", "data": {"variant": "strip"}},
@@ -578,6 +578,73 @@ def upsert_site_settings() -> None:
     db.session.commit()
 
 
+def upsert_reviews() -> None:
+    """Ensure the home carousel has at least 6 published reviews.
+
+    Adds missing ones by `author_name` without touching admin-edited rows.
+    """
+    programs = {p.slug: p for p in Program.query.all()}
+    catalog = [
+        {
+            "author_name": "Анна М.",
+            "author_initials": "АМ",
+            "child_info": "Мама Маши, выпуск 2024",
+            "text": "Дочка пошла в\u00a0первый класс, и\u00a0учительница сразу сказала: видно, что\u00a0ребёнок подготовлен. Читает бегло, считает, умеет слушать. Спасибо «Семицветику» за\u00a0два\u00a0года работы!",
+            "program_slug": "podgotovka-k-shkole",
+        },
+        {
+            "author_name": "Екатерина С.",
+            "author_initials": "ЕС",
+            "child_info": "сын Артём, 6\u00a0лет",
+            "text": "Ходим на\u00a0логопедию уже\u00a0год. За\u00a0это время Артём заговорил чище, научился слышать звуки и\u00a0не\u00a0боится отвечать у\u00a0доски. Ребёнок идёт к\u00a0педагогу с\u00a0удовольствием — а\u00a0для\u00a0нас это главное.",
+            "program_slug": "logoped",
+        },
+        {
+            "author_name": "Наталья К.",
+            "author_initials": "НК",
+            "child_info": "дочь Лиза, 2\u00a0года",
+            "text": "Пришли на\u00a0раннее развитие по\u00a0рекомендации подруги. Педагоги — огонь: внимательные, тёплые, каждому ребёнку — свой\u00a0подход. Дочка с\u00a0первого занятия спрашивает, когда снова пойдём в\u00a0Семицветик.",
+            "program_slug": "rannee-razvitie",
+        },
+        {
+            "author_name": "Ирина Д.",
+            "author_initials": "ИД",
+            "child_info": "мама Саши, 5\u00a0лет",
+            "text": "Искали место, где ребёнок будет развиваться без\u00a0давления. В\u00a0«Семицветике» нашли именно такое: занятия построены как\u00a0игра, но\u00a0результат — реальный. Сын читает и\u00a0считает, хотя ему ещё год до\u00a0школы.",
+            "program_slug": "podgotovka-k-shkole",
+        },
+        {
+            "author_name": "Ольга В.",
+            "author_initials": "ОВ",
+            "child_info": "двойняшки Кира и\u00a0Миша, 4\u00a0года",
+            "text": "Два\u00a0ребёнка — два\u00a0характера. В\u00a0центре нашли подход к\u00a0каждому: одному — спокойные занятия, другому — активные. Удивительно, что\u00a0команда так\u00a0чутко чувствует детей.",
+            "program_slug": "rannee-razvitie",
+        },
+        {
+            "author_name": "Мария Т.",
+            "author_initials": "МТ",
+            "child_info": "сын Костя, 7\u00a0лет",
+            "text": "Водим на\u00a0английский второй\u00a0год. Педагог живой, играет, поёт, не\u00a0сидит по\u00a0учебнику — и\u00a0в\u00a0этом вся\u00a0магия. Ребёнок заговорил и\u00a0не\u00a0боится делать ошибки.",
+            "program_slug": "anglijskij",
+        },
+    ]
+    for item in catalog:
+        existing = Review.query.filter_by(author_name=item["author_name"]).first()
+        program = programs.get(item["program_slug"])
+        if existing is None:
+            db.session.add(Review(
+                author_name=item["author_name"],
+                author_initials=item["author_initials"],
+                child_info=item["child_info"],
+                text=item["text"],
+                rating=5,
+                is_published=True,
+                program_id=program.id if program else None,
+            ))
+            print(f"[new] review: {item['author_name']}")
+    db.session.commit()
+
+
 def run() -> None:
     app = create_app()
     with app.app_context():
@@ -585,6 +652,7 @@ def run() -> None:
         upsert_site_settings()
         upsert_programs()
         upsert_teachers()
+        upsert_reviews()
         db.session.flush()
         # run merge after teachers upsert ensures canonical rows exist
         merge_legacy_teachers()
