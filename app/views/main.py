@@ -47,7 +47,11 @@ def shared_context(current_program=None) -> dict:
 @bp.app_context_processor
 def inject_global_context():
     ctx = shared_context()
-    return {"site_settings": ctx["settings"], "nav_pages": ctx["nav_pages"]}
+    return {
+        "site_settings": ctx["settings"],
+        "nav_pages": ctx["nav_pages"],
+        "programs": ctx["programs"],
+    }
 
 
 @bp.route("/")

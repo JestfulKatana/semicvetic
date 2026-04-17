@@ -6,8 +6,8 @@ data/*.db
 data/backups/
 .env
 *.pyc
-/id_*
-/id_ruvds_deploy
-/*.ppk
-/*.log
-/*.tar.gz
+docs/figma-export/
+app/static/img/figma/
+Макеты/
+.claude/logs/
+.claude/settings.local.json

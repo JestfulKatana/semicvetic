@@ -9,30 +9,53 @@
     <meta property="og:description" content="{{ page_description or site_settings.get('site_description', '') }}">
     <meta property="og:type" content="website">
     <link rel="canonical" href="{{ request.base_url }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     {% if page_schema %}
     <script type="application/ld+json">{{ page_schema|tojson }}</script>
     {% endif %}
 </head>
 <body>
+    {% set phone = site_settings.get('phone_1') or '8 (926) 366-57-87' %}
+    {% set address = site_settings.get('address') or 'г. Сергиев Посад' %}
     <div class="site-shell">
         <header class="site-header">
-            <div class="container header-row">
-                <a href="{{ url_for('main.home') }}" class="brand">
-                    <span class="brand-mark">✿</span>
-                    <span>
-                        <strong>{{ site_settings.get('site_name', 'Семицветик') }}</strong>
-                        <small>коробочный сайт центра</small>
+            <div class="header-row">
+                <a href="{{ url_for('main.home') }}" class="brand" aria-label="Семицветик">
+                    <span class="brand-flower" aria-hidden="true">
+                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
                     </span>
+                    <strong>{{ site_settings.get('site_name', 'Семицветик') }}</strong>
                 </a>
-                <button class="nav-toggle" type="button" data-nav-toggle aria-label="Открыть меню">Меню</button>
-                <nav class="site-nav" data-nav>
-                    <a href="{{ url_for('main.home') }}">Главная</a>
-                    {% for item in nav_pages %}
-                    <a href="/{{ item.slug }}/">{{ item.title }}</a>
-                    {% endfor %}
+
+                <div class="header-quick" aria-hidden="true">
+                    <span class="quick-icon quick-heart"></span>
+                    <span class="quick-icon quick-pin"></span>
+                </div>
+
+                <nav class="site-nav" data-nav aria-label="Основная навигация">
+                    <a class="{{ 'is-active' if request.path == '/' else '' }}" href="{{ url_for('main.home') }}">Главная</a>
+                    <a class="{{ 'is-active' if request.path.startswith('/programmy') else '' }}" href="/programmy/">Наши программы</a>
+                    <a class="{{ 'is-active' if request.path.startswith('/o-centre') else '' }}" href="/o-centre/">О центре</a>
+                    <a class="{{ 'is-active' if request.path.startswith('/pedagogi') else '' }}" href="/pedagogi/">Педагоги</a>
                 </nav>
-                <a class="header-phone" href="tel:{{ site_settings.get('phone_1')|phone_href }}">{{ site_settings.get('phone_1') }}</a>
+
+                <div class="header-contact">
+                    <a class="header-phone" href="tel:{{ phone|phone_href }}">{{ phone }}</a>
+                    <span class="header-city">{{ address.split(',')[0] if address else 'г. Сергиев Посад' }}</span>
+                </div>
+
+                <div class="header-socials" aria-label="Социальные сети">
+                    <a href="#" aria-label="ВКонтакте">VK</a>
+                    <a href="#" aria-label="Telegram">TG</a>
+                </div>
+
+                <button class="nav-toggle" type="button" data-nav-toggle aria-label="Открыть меню">
+                    <span></span>
+                    Меню
+                </button>
             </div>
         </header>
 
@@ -41,22 +64,47 @@
         </main>
 
         <footer class="site-footer">
-            <div class="container footer-grid">
-                <div>
-                    <strong>{{ site_settings.get('site_name', 'Семицветик') }}</strong>
-                    <p>{{ site_settings.get('site_description', '') }}</p>
-                </div>
-                <div>
+            <div class="footer-grid">
+                <nav class="footer-column" aria-label="Разделы сайта">
+                    <strong>Главная</strong>
+                    <a href="/programmy/">Все программы</a>
+                    <a href="/o-centre/">О нас</a>
+                    <a href="/pedagogi/">Педагоги</a>
+                    <a href="/kontakty/">Контакты</a>
+                    <a href="/meropriyatiya/">События</a>
+                </nav>
+                <nav class="footer-column" aria-label="Программы">
+                    <strong>Наши программы</strong>
+                    {% for program in programs[:4] if programs is defined %}
+                    <a href="/{{ program.slug }}/">{{ program.name }}</a>
+                    {% else %}
+                    <a href="/programmy/">Каталог программ</a>
+                    {% endfor %}
+                    <a class="footer-large-link" href="/o-centre/">О центре</a>
+                    <a class="footer-large-link" href="/pedagogi/">Педагоги</a>
+                </nav>
+                <div class="footer-column">
+                    <a class="footer-contact-button" href="/kontakty/">Связаться с нами</a>
                     <strong>Контакты</strong>
-                    <p>{{ site_settings.get('phone_1') }}</p>
-                    <p>{{ site_settings.get('address') }}</p>
+                    <p>{{ phone }}</p>
+                    <p>{{ site_settings.get('phone_2') }}</p>
+                    <small>{{ site_settings.get('hours', 'Работаем с 9:00 до 21:00') }}</small>
+                    <strong>Адрес</strong>
+                    <p>{{ address }}</p>
                 </div>
-                <div>
-                    <strong>Что проверить</strong>
-                    <p><a href="/admin/">Админка</a></p>
-                    <p><a href="{{ url_for('main.sitemap') }}">Sitemap</a></p>
-                    <p><a href="{{ url_for('main.health') }}">Health</a></p>
+                <div class="footer-qr">
+                    <div class="qr-code" aria-hidden="true"></div>
+                    <span>Мы в телеграме</span>
+                    <div class="footer-socials">
+                        <a href="#" aria-label="ВКонтакте">VK</a>
+                        <a href="#" aria-label="Telegram">TG</a>
+                    </div>
                 </div>
+            </div>
+            <div class="footer-bottom">
+                <span>Политика использования файлов cookie</span>
+                <span>Политика обработки персональных данных</span>
+                <span>Социальное предприятие</span>
             </div>
         </footer>
     </div>
