@@ -94,12 +94,13 @@
 <section class="section trust-section">
     <h2 class="trust-title">{{ data.title or "15 лет растим счастливых детей" }}</h2>
     <div class="trust-stage">
-        <img class="trust-grass" src="{{ url_for('static', filename='img/figma/brand/grass-oval.png') }}" alt="" aria-hidden="true">
         {% set petal_colors = ['red', 'green', 'orange', 'purple', 'blue', 'pinkdark', 'pink'] %}
         {% for item in data.get("items", [])[:7] %}
         <div class="trust-drop trust-drop-pos-{{ loop.index }} trust-drop-color-{{ petal_colors[loop.index0] }}">
-            <strong>{{ item.value }}</strong>
-            <span>{{ item.label }}</span>
+            <div class="trust-drop-inner">
+                <strong>{{ item.value }}</strong>
+                <span>{{ item.label }}</span>
+            </div>
         </div>
         {% endfor %}
         <img class="trust-flower" src="{{ url_for('static', filename='img/figma/brand/seven-flower.png') }}" alt="Пушистый Семицветик">
@@ -406,7 +407,7 @@
 </section>
 
 {% elif block.component == "reviews_grid" %}
-<section class="section reviews-section">
+<section class="section reviews-section" data-reviews-carousel>
     <div class="reviews-head">
         <h2>{{ data.title }}</h2>
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
@@ -424,37 +425,48 @@
             </div>
         </aside>
         <div class="review-slot">
-            {% for review in data.reviews[:1] %}
-            <article class="review-card">
-                <div class="review-card-head">
-                    <div class="review-stars" aria-label="5 звёзд">
-                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            {% if data.reviews %}
+            <div class="review-track" data-review-track>
+                {% for review in data.reviews %}
+                <article class="review-card{% if loop.first %} is-active{% endif %}" data-review-slide aria-hidden="{{ 'false' if loop.first else 'true' }}">
+                    <div class="review-card-head">
+                        <div class="review-stars" aria-label="{{ review.rating or 5 }} из 5">
+                            {% for i in range(review.rating or 5) %}<span>★</span>{% endfor %}
+                        </div>
+                        <span class="review-source">
+                            <i class="review-source-dot" aria-hidden="true"></i>
+                            Отзыв из 2ГИС
+                        </span>
                     </div>
-                    <span class="review-source">
-                        <i class="review-source-dot" aria-hidden="true"></i>
-                        Отзыв из 2ГИС
-                    </span>
-                </div>
-                <p class="review-text">{{ review.text }}</p>
-                <div class="review-author">
-                    <span class="review-avatar">{{ review.author_initials }}</span>
-                    <div class="review-author-text">
-                        <strong>{{ review.author_name }}</strong>
-                        <small>{{ review.child_info }}</small>
+                    <p class="review-text">{{ review.text }}</p>
+                    <div class="review-author">
+                        <span class="review-avatar">{{ review.author_initials }}</span>
+                        <div class="review-author-text">
+                            <strong>{{ review.author_name }}</strong>
+                            <small>{{ review.child_info }}</small>
+                        </div>
                     </div>
-                </div>
-            </article>
+                </article>
+                {% endfor %}
+            </div>
             {% else %}
-            <article class="review-card">
+            <article class="review-card is-active">
                 <p>Отзывы появятся после наполнения базы.</p>
             </article>
-            {% endfor %}
+            {% endif %}
         </div>
     </div>
+    {% if data.reviews and data.reviews|length > 1 %}
     <div class="reviews-nav">
-        <button class="review-nav-btn" type="button" aria-label="Предыдущий отзыв">←</button>
-        <button class="review-nav-btn is-active" type="button" aria-label="Следующий отзыв">→</button>
+        <button class="review-nav-btn" type="button" data-review-prev aria-label="Предыдущий отзыв">←</button>
+        <div class="review-dots" data-review-dots>
+            {% for review in data.reviews %}
+            <button class="review-dot{% if loop.first %} is-active{% endif %}" type="button" data-review-dot="{{ loop.index0 }}" aria-label="Отзыв {{ loop.index }}"></button>
+            {% endfor %}
+        </div>
+        <button class="review-nav-btn is-active" type="button" data-review-next aria-label="Следующий отзыв">→</button>
     </div>
+    {% endif %}
 </section>
 
 {% elif block.component == "how_it_works" %}

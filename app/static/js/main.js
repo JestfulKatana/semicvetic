@@ -136,9 +136,90 @@ function initTeacherFilters() {
   }
 }
 
+function initReviewsCarousel() {
+  document.querySelectorAll("[data-reviews-carousel]").forEach((root) => {
+    const slides = Array.from(root.querySelectorAll("[data-review-slide]"));
+    const dots = Array.from(root.querySelectorAll("[data-review-dot]"));
+    const prevBtn = root.querySelector("[data-review-prev]");
+    const nextBtn = root.querySelector("[data-review-next]");
+    if (slides.length <= 1) return;
+
+    let index = 0;
+    let timer = null;
+
+    const render = () => {
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        slide.classList.toggle("is-active", active);
+        slide.setAttribute("aria-hidden", active ? "false" : "true");
+      });
+      dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
+    };
+
+    const go = (delta) => {
+      index = (index + delta + slides.length) % slides.length;
+      render();
+    };
+
+    const goTo = (i) => {
+      index = ((i % slides.length) + slides.length) % slides.length;
+      render();
+    };
+
+    const resetTimer = () => {
+      if (timer) clearInterval(timer);
+      timer = setInterval(() => go(1), 7000);
+    };
+
+    prevBtn && prevBtn.addEventListener("click", () => { go(-1); resetTimer(); });
+    nextBtn && nextBtn.addEventListener("click", () => { go(1); resetTimer(); });
+    dots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        goTo(Number(dot.dataset.reviewDot) || 0);
+        resetTimer();
+      });
+    });
+
+    root.addEventListener("mouseenter", () => timer && clearInterval(timer));
+    root.addEventListener("mouseleave", resetTimer);
+
+    render();
+    resetTimer();
+  });
+}
+
+function initRevealOnScroll() {
+  if (!("IntersectionObserver" in window)) return;
+  const vh = window.innerHeight || 800;
+  const targets = Array.from(document.querySelectorAll(".section"));
+  // Hide only sections that are initially below the viewport
+  targets.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top > vh * 0.85) {
+      el.classList.add("will-reveal");
+    } else {
+      el.classList.add("is-revealed");
+    }
+  });
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-revealed");
+        entry.target.classList.remove("will-reveal");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+  targets.forEach((el) => {
+    if (el.classList.contains("will-reveal")) io.observe(el);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initProgramFilters();
   initTeacherFilters();
+  initReviewsCarousel();
+  initRevealOnScroll();
 });
 
 document.querySelectorAll("[data-lead-form]").forEach((form) => {
