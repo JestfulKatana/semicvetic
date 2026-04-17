@@ -99,10 +99,10 @@ def home_blocks() -> list[dict]:
                 "title": "Место, где раскрываются таланты",
                 "subtitle": "В\u00a0отличие от\u00a0стандартного присмотра в\u00a0детском саду, Семицветик предлагает системное образование и\u00a0коррекционную поддержку, которые развивают медалистов и\u00a0лицеистов города",
                 "steps": [
-                    {"icon": "1", "title": "До\u00a08\u00a0детей в\u00a0группе", "text": "У\u00a0нас учатся группы по\u00a08\u00a0детей, в\u00a0отличие от\u00a0садов, где занимаются 25–30 детей. Учитель уделяет время каждому."},
-                    {"icon": "2", "title": "Учителя начальных классов", "text": "Базовые знания закладывают школьные учителя с\u00a0наградами и\u00a0опытом. Ребёнок будет заранее готов к\u00a0учёбе в\u00a0школе."},
-                    {"icon": "3", "title": "Психолог\u00a0+ логопед", "text": "Видим ребёнка целиком: развитие, речь, поведение. Если\u00a0заметим особенности\u00a0— скажем сразу и\u00a0поможем."},
-                    {"icon": "4", "title": "Всё\u00a0в\u00a0одном месте", "text": "Чтение, математика, англ.\u00a0яз., изо, психология, логопедия."},
+                    {"icon": "01", "image": "img/figma/place/group-small.png", "title": "До\u00a08\u00a0детей в\u00a0группе", "text": "У\u00a0нас учатся группы по\u00a08\u00a0детей, в\u00a0отличие от\u00a0садов, где занимаются 25–30 детей. Учитель уделяет время каждому."},
+                    {"icon": "02", "image": "img/figma/place/teachers.png", "title": "Учителя начальных классов", "text": "Базовые знания закладывают школьные учителя с\u00a0наградами и\u00a0опытом. Ребёнок будет заранее готов к\u00a0учёбе в\u00a0школе."},
+                    {"icon": "03", "image": "img/figma/place/psycho-speech.png", "title": "Психолог\u00a0+ логопед", "text": "Видим ребёнка целиком: развитие, речь, поведение. Если\u00a0заметим особенности\u00a0— скажем сразу и\u00a0поможем."},
+                    {"icon": "04", "image": "img/figma/place/all-in-one.png", "title": "Всё\u00a0в\u00a0одном месте", "text": "Чтение, математика, англ.\u00a0яз., изо, психология, логопедия."},
                 ],
             },
         },
@@ -118,7 +118,21 @@ def home_blocks() -> list[dict]:
             {"q": "Проводятся\u00a0ли\u00a0в\u00a0центре занятия в\u00a0период школьных каникул или\u00a0летом?", "a": "Да, у\u00a0нас работает летний лагерь и\u00a0проводятся занятия в\u00a0каникулы."},
             {"q": "Предусмотрены\u00a0ли\u00a0льготы для\u00a0семей, где\u00a0занимаются двое детей?", "a": "Да, для\u00a0второго ребёнка в\u00a0семье предоставляется скидка 10%. Также скидка действует для\u00a0детей участников СВО."},
         ]}},
-        {"component": "contact_panel", "data": {"title": "Ждём вас в\u00a0Семицветике", "variant": "compact", "source": "contact_data"}},
+        {
+            "component": "contact_panel",
+            "data": {
+                "title": "Ждём вас в\u00a0Семицветике",
+                "variant": "compact",
+                "source": "contact_data",
+                "gallery": [
+                    "img/figma/gallery/graduation.png",
+                    "img/figma/gallery/balloons.png",
+                    "img/figma/gallery/girl-gift.png",
+                    "img/figma/gallery/girl-paints.png",
+                    "img/figma/gallery/pumpkins.png",
+                ],
+            },
+        },
     ]
 
 
@@ -337,30 +351,34 @@ def kontakty_blocks() -> list[dict]:
 
 
 PROGRAM_CATALOG = [
-    {"slug": "podgotovka-k-shkole", "name": "Подготовка к\u00a0школе", "tagline": "Комплексная программа для\u00a0детей 5–7 лет: чтение, математика, логика, письмо и\u00a0уверенность перед школой.", "description": "Комплексная подготовка к\u00a0школе в\u00a0малых группах. Ребёнок постепенно осваивает чтение, математику, логику и\u00a0учебную дисциплину.", "emoji": "📘", "color": "#f3762f", "age_min": 5, "age_max": 7, "duration_min": 90, "frequency": "2 раза в\u00a0неделю", "price": 6800, "price_unit": "мес", "category": "school", "category_label": "Подготовка к\u00a0школе", "sort_order": 1},
-    {"slug": "logoped", "name": "Логопедия", "tagline": "Индивидуальные и\u00a0мини-групповые занятия для\u00a0постановки звуков и\u00a0развития речи.", "description": "Диагностика речи, постановка звуков, упражнения на\u00a0понимание и\u00a0чистую речь.", "emoji": "🗣️", "color": "#6e65dc", "age_min": 3, "age_max": 8, "duration_min": 45, "frequency": "1–2 раза в\u00a0неделю", "price": 2200, "price_unit": "занятие", "category": "speech", "category_label": "Логопедия и\u00a0коррекция", "sort_order": 2},
-    {"slug": "anglijskij", "name": "Английский", "tagline": "Игровой английский для\u00a0детей 4–9 лет с\u00a0упором на\u00a0речь и\u00a0понимание на\u00a0слух.", "description": "Учим через короткие игровые циклы, песни, карточки и\u00a0небольшие диалоги.", "emoji": "🇬🇧", "color": "#4a8df5", "age_min": 4, "age_max": 9, "duration_min": 60, "frequency": "2 раза в\u00a0неделю", "price": 5400, "price_unit": "мес", "category": "english", "category_label": "Английский язык", "sort_order": 3},
-    {"slug": "rannee-razvitie", "name": "Вместе с\u00a0мамой", "tagline": "Мягкий старт для\u00a0малышей 1–3 лет: сенсорика, движение, внимание, первые слова.", "description": "Формат для\u00a0самых маленьких: короткие смены активности, работа с\u00a0родителями и\u00a0развитие бытовых навыков.", "emoji": "🌈", "color": "#85c88a", "age_min": 1, "age_max": 3, "duration_min": 40, "frequency": "2 раза в\u00a0неделю", "price": 4600, "price_unit": "мес", "category": "early", "category_label": "Раннее развитие", "sort_order": 4},
-    {"slug": "izostudia", "name": "Изостудия и\u00a0Лепка", "tagline": "Рисование, аппликация, лепка и\u00a0декоративно-прикладное искусство для\u00a0детей 4–10 лет.", "description": "Развиваем моторику, вкус и\u00a0фантазию. Работаем с\u00a0красками, глиной, бумагой.", "emoji": "🎨", "color": "#db5eb4", "age_min": 4, "age_max": 10, "duration_min": 60, "frequency": "1 раз в\u00a0неделю", "price": 3400, "price_unit": "мес", "category": "art", "category_label": "Творчество и\u00a0дизайн", "sort_order": 5},
-    {"slug": "otlichnik", "name": "Программа «Отличник»", "tagline": "Углублённая подготовка для\u00a0детей 5–7 лет с\u00a0упором на\u00a0самостоятельность и\u00a0медалистскую траекторию.", "description": "Добавляем олимпиадные задачи, проектную деятельность и\u00a0навыки публичных выступлений.", "emoji": "🏅", "color": "#f59e40", "age_min": 5, "age_max": 7, "duration_min": 90, "frequency": "3 раза в\u00a0неделю", "price": 8900, "price_unit": "мес", "category": "school", "category_label": "Подготовка к\u00a0школе", "sort_order": 6},
-    {"slug": "psiholog", "name": "Психология и\u00a0здоровье", "tagline": "Мини-группы для\u00a0детей 4–10 лет: уверенность, эмоции, дружба.", "description": "Работа в\u00a0парах и\u00a0группах: эмоциональный интеллект, общение, саморегуляция.", "emoji": "🌱", "color": "#4c83f1", "age_min": 4, "age_max": 10, "duration_min": 50, "frequency": "1 раз в\u00a0неделю", "price": 3200, "price_unit": "мес", "category": "psychology", "category_label": "Психология и\u00a0здоровье", "sort_order": 7},
-    {"slug": "detskij-lager", "name": "Детский лагерь", "tagline": "Тематические смены для\u00a0детей 5–12 лет: творчество, спорт, английский, квесты.", "description": "Летние и\u00a0каникулярные смены полного и\u00a0полу-дня. Педагоги центра, активности каждый день.", "emoji": "🏕", "color": "#258c17", "age_min": 5, "age_max": 12, "duration_min": 300, "frequency": "Пн\u00a0– Пт", "price": 8900, "price_unit": "смена", "category": "camp", "category_label": "Летний лагерь", "sort_order": 8},
+    # First four are surfaced on the home page grid (featured, limit=4).
+    # Figma layout: Логопедия (orange), Комплексное развитие (red), Подготовка к школе (purple), Английский (green).
+    {"slug": "logoped", "name": "Логопедия", "tagline": "Индивидуальные и\u00a0мини-групповые занятия для\u00a0постановки звуков и\u00a0развития речи.", "description": "Диагностика речи, постановка звуков, упражнения на\u00a0понимание и\u00a0чистую речь.", "emoji": "🗣️", "color": "#ed7735", "image_url": "img/figma/programs/speech-bubbles.png", "age_min": 3, "age_max": 8, "duration_min": 45, "frequency": "2\u00a0раза в\u00a0неделю", "price": 1200, "price_unit": "день", "category": "speech", "category_label": "Логопедия и\u00a0коррекция", "sort_order": 1},
+    {"slug": "rannee-razvitie", "name": "Комплексное развитие", "tagline": "Развитие речи, общее представление о\u00a0мире, игровая методика для\u00a0малышей 2,5–5 лет.", "description": "Развивающие занятия: сенсорика, первые слова, мелкая моторика, групповая игра.", "emoji": "🧸", "color": "#d14d20", "image_url": "img/figma/programs/cubes-abv.png", "age_min": 2.5, "age_max": 5, "duration_min": 60, "frequency": "2\u00a0раза в\u00a0неделю", "price": 5200, "price_unit": "мес", "category": "early", "category_label": "Раннее развитие", "sort_order": 2},
+    {"slug": "podgotovka-k-shkole", "name": "Подготовка к\u00a0школе", "tagline": "Комплексная программа для\u00a0детей 5–7 лет: чтение, математика, логика, письмо и\u00a0уверенность перед школой.", "description": "Комплексная подготовка к\u00a0школе в\u00a0малых группах. Ребёнок постепенно осваивает чтение, математику, логику и\u00a0учебную дисциплину.", "emoji": "📘", "color": "#6359c2", "image_url": "img/figma/programs/school-desk.png", "age_min": 5, "age_max": 7, "duration_min": 90, "frequency": "2\u00a0раза в\u00a0неделю", "price": 6200, "price_unit": "мес", "category": "school", "category_label": "Подготовка к\u00a0школе", "sort_order": 3},
+    {"slug": "anglijskij", "name": "Английский язык", "tagline": "Игровой английский для\u00a0детей 4–9 лет с\u00a0упором на\u00a0речь и\u00a0понимание на\u00a0слух.", "description": "Учим через короткие игровые циклы, песни, карточки и\u00a0небольшие диалоги.", "emoji": "🇬🇧", "color": "#2d8a3f", "image_url": "img/figma/programs/mic.png", "age_min": 4, "age_max": 9, "duration_min": 60, "frequency": "2\u00a0раза в\u00a0неделю", "price": 1200, "price_unit": "занятие", "category": "english", "category_label": "Английский язык", "sort_order": 4},
+    # Catalog extras (shown on /programmy/)
+    {"slug": "izostudia", "name": "Изостудия и\u00a0Лепка", "tagline": "Рисование, аппликация, лепка и\u00a0декоративно-прикладное искусство для\u00a0детей 4–10 лет.", "description": "Развиваем моторику, вкус и\u00a0фантазию. Работаем с\u00a0красками, глиной, бумагой.", "emoji": "🎨", "color": "#db5eb4", "image_url": "img/figma/gallery/bear.png", "age_min": 4, "age_max": 10, "duration_min": 60, "frequency": "1 раз в\u00a0неделю", "price": 3400, "price_unit": "мес", "category": "art", "category_label": "Творчество и\u00a0дизайн", "sort_order": 5},
+    {"slug": "otlichnik", "name": "Программа «Отличник»", "tagline": "Углублённая подготовка для\u00a0детей 5–7 лет с\u00a0упором на\u00a0самостоятельность и\u00a0медалистскую траекторию.", "description": "Добавляем олимпиадные задачи, проектную деятельность и\u00a0навыки публичных выступлений.", "emoji": "🏅", "color": "#f59e40", "image_url": "img/figma/programs/school-desk.png", "age_min": 5, "age_max": 7, "duration_min": 90, "frequency": "3 раза в\u00a0неделю", "price": 8900, "price_unit": "мес", "category": "school", "category_label": "Подготовка к\u00a0школе", "sort_order": 6},
+    {"slug": "psiholog", "name": "Психология и\u00a0здоровье", "tagline": "Мини-группы для\u00a0детей 4–10 лет: уверенность, эмоции, дружба.", "description": "Работа в\u00a0парах и\u00a0группах: эмоциональный интеллект, общение, саморегуляция.", "emoji": "🌱", "color": "#4c83f1", "image_url": "img/figma/programs/speech-bubbles.png", "age_min": 4, "age_max": 10, "duration_min": 50, "frequency": "1 раз в\u00a0неделю", "price": 3200, "price_unit": "мес", "category": "psychology", "category_label": "Психология и\u00a0здоровье", "sort_order": 7},
+    {"slug": "detskij-lager", "name": "Детский лагерь", "tagline": "Тематические смены для\u00a0детей 5–12 лет: творчество, спорт, английский, квесты.", "description": "Летние и\u00a0каникулярные смены полного и\u00a0полу-дня. Педагоги центра, активности каждый день.", "emoji": "🏕", "color": "#258c17", "image_url": "img/figma/gallery/balloons.png", "age_min": 5, "age_max": 12, "duration_min": 300, "frequency": "Пн\u00a0– Пт", "price": 8900, "price_unit": "смена", "category": "camp", "category_label": "Летний лагерь", "sort_order": 8},
 ]
 
 
 TEACHER_CATALOG = [
-    {"name": "Ирина Бурова", "role": "Педагог подготовки к\u00a0школе", "specialization": "Чтение, математика, развитие логики", "bio": "15 лет помогает детям мягко входить в\u00a0учебную нагрузку и\u00a0формировать уверенность перед школой.", "emoji": "🎓", "category": "school", "sort_order": 1},
-    {"name": "Мария Степанова", "role": "Логопед-дефектолог", "specialization": "Речь, звукопроизношение, фонематический слух", "bio": "Работает с\u00a0речевыми задержками и\u00a0помогает родителям видеть динамику по\u00a0этапам.", "emoji": "🗣️", "category": "speech", "sort_order": 2},
-    {"name": "Ольга Савельева", "role": "Педагог раннего развития", "specialization": "Сенсорика, внимание, запуск речи", "bio": "Собирает занятия так, чтобы ребёнок удерживал интерес и\u00a0не\u00a0уставал от\u00a0формата.", "emoji": "🌱", "category": "early", "sort_order": 3},
-    {"name": "Екатерина Морозова", "role": "Учитель начальных классов", "specialization": "Чтение, прописи, внимательность", "bio": "Работает с\u00a0группами «Лучики» и\u00a0«Звёздочки». Помогает детям полюбить школу ещё до\u00a01 сентября.", "emoji": "📘", "category": "school", "sort_order": 4},
-    {"name": "Анна Карпова", "role": "Преподаватель английского", "specialization": "Игровой английский, речь, Junior Jack", "bio": "Готовит малышей к\u00a0первым международным экзаменам. Дети поют, играют, говорят на\u00a0английском без\u00a0стеснения.", "emoji": "🇬🇧", "category": "english", "sort_order": 5},
-    {"name": "Наталья Кузнецова", "role": "Педагог изостудии", "specialization": "Рисование, лепка, декор", "bio": "Творчество как способ говорить о\u00a0себе. Учит видеть цвет, форму и\u00a0композицию.", "emoji": "🎨", "category": "art", "sort_order": 6},
-    {"name": "Светлана Иванова", "role": "Педагог-психолог", "specialization": "Эмоциональный интеллект, уверенность, общение", "bio": "Помогает детям мягко пройти адаптацию и\u00a0развить социальные навыки.", "emoji": "🌱", "category": "psychology", "sort_order": 7},
-    {"name": "Дарья Николаева", "role": "Преподаватель английского", "specialization": "Старшие группы, подготовка к\u00a0олимпиадам", "bio": "Ведёт группы 2–4 классов. Фокус на\u00a0говорение и\u00a0понимание на\u00a0слух.", "emoji": "🗣️", "category": "english", "sort_order": 8},
-    {"name": "Марина Лебедева", "role": "Учитель начальных классов", "specialization": "Математика и\u00a0логика", "bio": "Наставник олимпиадных групп. Любит задачи «на\u00a0подумать».", "emoji": "🔢", "category": "school", "sort_order": 9},
-    {"name": "Татьяна Орлова", "role": "Воспитатель раннего развития", "specialization": "Ясельная группа, сенсорика", "bio": "Работает с\u00a0малышами 1–2 лет. Мягкий голос и\u00a0бесконечное терпение.", "emoji": "🌸", "category": "early", "sort_order": 10},
-    {"name": "Юлия Васильева", "role": "Вожатая летнего лагеря", "specialization": "Квесты, командные игры, активности", "bio": "Четыре года вожатой в\u00a0«Семицветике». Лагерь\u00a0— её стихия.", "emoji": "🏕", "category": "camp", "sort_order": 11},
-    {"name": "Алёна Сорокина", "role": "Педагог по\u00a0подготовке к\u00a0школе", "specialization": "Письмо, чтение, развитие речи", "bio": "Ведёт «Отличника». Ставит руку, учит усидчивости.", "emoji": "✍️", "category": "school", "sort_order": 12},
+    # Names from Figma slice_03 (top two visible cards): Бурова Ирина Михайловна, Дёмина Ирина Александровна.
+    {"name": "Бурова Ирина Михайловна", "role": "Педагог подготовки к\u00a0школе", "specialization": "Чтение, математика, развитие логики", "bio": "15\u00a0лет помогает детям мягко входить в\u00a0учебную нагрузку и\u00a0формировать уверенность перед школой.", "emoji": "🎓", "photo_url": "/static/img/figma/teachers/burova.png", "category": "school", "sort_order": 1},
+    {"name": "Дёмина Ирина Александровна", "role": "Педагог психологической поддержки", "specialization": "Эмоциональный интеллект, адаптация, коммуникация", "bio": "Работает с\u00a0детьми от\u00a04\u00a0лет. Помогает мягко адаптироваться к\u00a0школе.", "emoji": "🪄", "photo_url": "/static/img/figma/teachers/demina.png", "category": "psychology", "sort_order": 2},
+    {"name": "Ольга Савельева", "role": "Педагог раннего развития", "specialization": "Сенсорика, внимание, запуск речи", "bio": "Собирает занятия так, чтобы ребёнок удерживал интерес и\u00a0не\u00a0уставал от\u00a0формата.", "emoji": "🌱", "photo_url": "/static/img/figma/teachers/woman-forest.png", "category": "early", "sort_order": 3},
+    {"name": "Екатерина Морозова", "role": "Учитель начальных классов", "specialization": "Чтение, прописи, внимательность", "bio": "Работает с\u00a0группами «Лучики» и\u00a0«Звёздочки». Помогает детям полюбить школу ещё до\u00a01\u00a0сентября.", "emoji": "📘", "photo_url": "/static/img/figma/teachers/girl-laptop.png", "category": "school", "sort_order": 4},
+    {"name": "Анна Карпова", "role": "Преподаватель английского", "specialization": "Игровой английский, речь, Junior Jack", "bio": "Готовит малышей к\u00a0первым международным экзаменам. Дети поют, играют, говорят на\u00a0английском без\u00a0стеснения.", "emoji": "🇬🇧", "photo_url": "/static/img/figma/teachers/demina.png", "category": "english", "sort_order": 5},
+    {"name": "Наталья Кузнецова", "role": "Педагог изостудии", "specialization": "Рисование, лепка, декор", "bio": "Творчество как способ говорить о\u00a0себе. Учит видеть цвет, форму и\u00a0композицию.", "emoji": "🎨", "photo_url": "/static/img/figma/teachers/burova.png", "category": "art", "sort_order": 6},
+    {"name": "Светлана Иванова", "role": "Педагог-психолог", "specialization": "Эмоциональный интеллект, уверенность, общение", "bio": "Помогает детям мягко пройти адаптацию и\u00a0развить социальные навыки.", "emoji": "🌱", "photo_url": "/static/img/figma/teachers/woman-forest.png", "category": "psychology", "sort_order": 7},
+    {"name": "Дарья Николаева", "role": "Преподаватель английского", "specialization": "Старшие группы, подготовка к\u00a0олимпиадам", "bio": "Ведёт группы 2–4 классов. Фокус на\u00a0говорение и\u00a0понимание на\u00a0слух.", "emoji": "🗣️", "photo_url": "/static/img/figma/teachers/girl-laptop.png", "category": "english", "sort_order": 8},
+    {"name": "Марина Лебедева", "role": "Учитель начальных классов", "specialization": "Математика и\u00a0логика", "bio": "Наставник олимпиадных групп. Любит задачи «на\u00a0подумать».", "emoji": "🔢", "photo_url": "/static/img/figma/teachers/demina.png", "category": "school", "sort_order": 9},
+    {"name": "Татьяна Орлова", "role": "Воспитатель раннего развития", "specialization": "Ясельная группа, сенсорика", "bio": "Работает с\u00a0малышами 1–2 лет. Мягкий голос и\u00a0бесконечное терпение.", "emoji": "🌸", "photo_url": "/static/img/figma/teachers/burova.png", "category": "early", "sort_order": 10},
+    {"name": "Юлия Васильева", "role": "Вожатая летнего лагеря", "specialization": "Квесты, командные игры, активности", "bio": "Четыре года вожатой в\u00a0«Семицветике». Лагерь\u00a0— её стихия.", "emoji": "🏕", "photo_url": "/static/img/figma/teachers/woman-forest.png", "category": "camp", "sort_order": 11},
+    {"name": "Алёна Сорокина", "role": "Педагог по\u00a0подготовке к\u00a0школе", "specialization": "Письмо, чтение, развитие речи", "bio": "Ведёт «Отличника». Ставит руку, учит усидчивости.", "emoji": "✍️", "photo_url": "/static/img/figma/teachers/girl-laptop.png", "category": "school", "sort_order": 12},
 ]
 
 
@@ -403,6 +421,7 @@ def upsert_programs() -> None:
 
 
 def upsert_teachers() -> None:
+    wanted_names = {item["name"] for item in TEACHER_CATALOG}
     for item in TEACHER_CATALOG:
         teacher = Teacher.query.filter_by(name=item["name"]).first()
         if teacher is None:
@@ -413,12 +432,23 @@ def upsert_teachers() -> None:
             for key, value in item.items():
                 setattr(teacher, key, value)
             print(f"[upd] teacher: {item['name']}")
+    # Clean stale teachers that are no longer in the catalog (rename safety).
+    stale = Teacher.query.filter(~Teacher.name.in_(wanted_names)).all()
+    for teacher in stale:
+        # Keep teachers that are referenced by programs, just blank out photo.
+        if teacher.programs:
+            teacher.photo_url = None
+            print(f"[keep] teacher referenced by program: {teacher.name}")
+            continue
+        db.session.delete(teacher)
+        print(f"[del] teacher: {teacher.name}")
 
 
 def ensure_schema() -> None:
     from sqlalchemy import text
     needed = {
         "teacher": [("category", "VARCHAR(50)")],
+        "program": [("image_url", "VARCHAR(255)")],
     }
     for table, cols in needed.items():
         existing = {row[1] for row in db.session.execute(text(f"PRAGMA table_info({table})"))}
@@ -429,10 +459,36 @@ def ensure_schema() -> None:
     db.session.commit()
 
 
+def upsert_site_settings() -> None:
+    """Merge brand/contacts settings so templates have real URLs for socials/map."""
+    needed = {
+        "social_vk": "https://vk.com/semicvetic_sp",
+        "social_tg": "https://t.me/semicvetic_bot",
+        "yandex_map_iframe": (
+            "https://yandex.ru/map-widget/v1/?ll=38.1356%2C56.3119&z=15"
+            "&pt=38.1356%2C56.3119%2Cpm2rdm&l=map"
+        ),
+        "address": "Московская область, г. Сергиев Посад, ул. Воробьёвская, д. 16А, 2 этаж (вход с проспекта Красной Армии)",
+        "hours": "Работаем с\u00a09:00 до\u00a021:00",
+        "phone_1": "8 (926) 366-57-87",
+        "phone_2": "8 (496) 551-33-85",
+    }
+    for key, default_value in needed.items():
+        row = SiteSetting.query.filter_by(key=key).first()
+        if row is None:
+            db.session.add(SiteSetting(key=key, value=default_value))
+            print(f"[new] setting: {key}")
+        elif not row.value:
+            row.value = default_value
+            print(f"[upd] setting: {key} (empty → default)")
+    db.session.commit()
+
+
 def run() -> None:
     app = create_app()
     with app.app_context():
         ensure_schema()
+        upsert_site_settings()
         upsert_programs()
         upsert_teachers()
         db.session.flush()

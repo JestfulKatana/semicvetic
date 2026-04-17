@@ -33,10 +33,10 @@
         </form>
     </div>
     <div class="hero-photo-wrap">
-        <img src="{{ url_for('static', filename='img/mockup/hero-home.png') }}" alt="">
+        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок-фотограф — Семицветик">
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
-        <span class="photo-note note-heart">Созданы предпринимать</span>
-        <span class="photo-note note-pin">Яндекс: хорошее место</span>
+        <span class="photo-badge photo-badge-social"><img src="{{ url_for('static', filename='img/figma/brand/badge-social.png') }}" alt="">Социальное предпринимательство</span>
+        <span class="photo-badge photo-badge-horoshee"><img src="{{ url_for('static', filename='img/figma/brand/badge-horoshee-mesto.png') }}" alt="">Яндекс. Хорошее место</span>
     </div>
 </section>
 {% else %}
@@ -78,21 +78,21 @@
 
 {% elif block.component == "trust_bar" %}
 <section class="section trust-section">
-    <div class="section-head centered-head">
+    <div class="trust-head">
         <h2>{{ data.title or "15 лет растим счастливых детей" }}</h2>
     </div>
-    <div class="petal-stats">
+    <div class="trust-stage">
+        <img class="trust-grass" src="{{ url_for('static', filename='img/figma/brand/grass-oval.png') }}" alt="" aria-hidden="true">
         {% set petal_colors = ['b', 'c', 'd', 'a', 'e', 'g', 'f'] %}
         {% for item in data.get("items", [])[:7] %}
-        <div class="petal petal-pos-{{ loop.index }} petal-color-{{ petal_colors[loop.index0] }}">
+        <div class="trust-drop trust-drop-pos-{{ loop.index }} trust-drop-color-{{ petal_colors[loop.index0] }}">
             <strong>{{ item.value }}</strong>
             <span>{{ item.label }}</span>
         </div>
         {% endfor %}
-        <div class="petal-center">
-            <span class="petal-flower" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-        </div>
+        <img class="trust-flower" src="{{ url_for('static', filename='img/figma/brand/seven-flower.png') }}" alt="Пушистый Семицветик">
     </div>
+    {% if data.footer_note %}<p class="trust-footer">{{ data.footer_note }}</p>{% endif %}
 </section>
 
 {% elif block.component == "top_programs" %}
@@ -247,11 +247,11 @@
         </article>
         {% endfor %}
     </div>
-    <p class="filter-empty" data-filter-empty hidden>По\u00a0вашему запросу ничего не\u00a0нашлось. Сбросьте фильтры\u00a0— и\u00a0мы\u00a0покажем все программы.</p>
+    <p class="filter-empty" data-filter-empty hidden>Повашему запросу ничего ненашлось. Сбросьте фильтры— имыпокажем все программы.</p>
     {% else %}
     <div class="program-card-grid">
         {% for program in data.programs %}
-        <article class="program-tile program-tile-{{ loop.index }}" style="--accent: {{ program.color or '#f36f32' }}">
+        <article class="program-tile program-tile-{{ loop.index }}" style="--accent: {{ program.color or '#f36f32' }}; background: {{ program.color or '#f36f32' }};">
             <div class="program-labels">
                 <span>Длительность от {{ program.duration_min or 40 }} минут</span>
                 <span>{{ program.frequency }}</span>
@@ -263,7 +263,11 @@
                 <strong>{{ program.price_label }}</strong>
             </div>
             <a class="program-link" href="/{{ program.slug }}/" aria-label="Открыть {{ program.name }}"></a>
+            {% if program.image_url %}
+            <img class="program-object-img" src="{{ url_for('static', filename=program.image_url) }}" alt="">
+            {% else %}
             <span class="program-object">{{ program.emoji or "✦" }}</span>
+            {% endif %}
         </article>
         {% endfor %}
     </div>
@@ -301,8 +305,8 @@
 
 {% elif block.component == "teachers_grid" %}
 {% set teacher_categories = [
-    ('all', 'Все\u00a0педагоги'),
-    ('school', 'Подготовка к\u00a0школе'),
+    ('all', 'Всепедагоги'),
+    ('school', 'Подготовка кшколе'),
     ('english', 'Английский язык'),
     ('early', 'Раннее развитие'),
     ('speech', 'Логопедия'),
@@ -321,7 +325,7 @@
     {% if data.show_search or data.show_chips %}
     <div class="teacher-search">
         {% if data.show_search %}
-        <input type="search" placeholder="Найти учителя или\u00a0предмет" data-teacher-search>
+        <input type="search" placeholder="Найти учителя илипредмет" data-teacher-search>
         {% endif %}
         <div class="filter-row" data-teacher-filters>
             {% for key, label in teacher_categories %}
@@ -337,7 +341,7 @@
                  data-search="{{ (teacher.name ~ ' ' ~ teacher.role ~ ' ' ~ (teacher.specialization or ''))|lower }}">
             <img src="{{ teacher.photo_url or url_for('static', filename='img/mockup/teacher-' ~ ((loop.index0 % 3) + 1) ~ '.png') }}" alt="">
             <div class="teacher-body">
-                <span class="experience">{{ 'Более 10\u00a0лет опыта' if loop.index < 4 else 'Опытный специалист' }}</span>
+                <span class="experience">{{ 'Более 10 лет опыта' if loop.index < 4 else 'Опытный специалист' }}</span>
                 <h3>{{ teacher.name }}</h3>
                 <p class="teacher-role">{{ teacher.role }}</p>
                 <p>{{ teacher.specialization }}</p>
@@ -353,7 +357,7 @@
         {% endfor %}
     </div>
     {% if data.show_search or data.show_chips %}
-    <p class="filter-empty" data-teacher-empty hidden>По\u00a0запросу ничего не\u00a0нашлось. Попробуйте сбросить фильтры.</p>
+    <p class="filter-empty" data-teacher-empty hidden>Позапросу ничего ненашлось. Попробуйте сбросить фильтры.</p>
     {% endif %}
 </section>
 
@@ -396,8 +400,15 @@
     </div>
     <div class="steps-grid">
         {% for step in data.steps %}
-        <article class="step-card">
+        <article class="step-card {{ 'step-card-photo' if step.image else '' }}">
+            {% if step.image %}
+            <div class="step-photo">
+                <img src="{{ url_for('static', filename=step.image) }}" alt="">
+                <span class="step-number">{{ step.icon }}</span>
+            </div>
+            {% else %}
             <span>{{ step.icon }}</span>
+            {% endif %}
             <h3>{{ step.title }}</h3>
             <p>{{ step.text }}</p>
         </article>
@@ -561,7 +572,7 @@
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
     </div>
     <div class="video-cover">
-        <img src="{{ url_for('static', filename='img/mockup/video-cover.png') }}" alt="">
+        <img src="{{ url_for('static', filename='img/figma/place/video-cover.png') }}" alt="">
         <button class="video-play" type="button" aria-label="Смотреть видео"></button>
     </div>
 </section>
@@ -637,20 +648,29 @@
 
 {% elif block.component == "contact_panel" %}
 {% set variant = data.variant or ('compact' if is_home else 'full') %}
+{% set vk_href = data.settings.get('social_vk') or '#' %}
+{% set tg_href = data.settings.get('social_tg') or '#' %}
 <section class="section contact-section contact-variant-{{ variant }}" id="contact-panel">
+    {% if data.gallery %}
+    <div class="contact-gallery">
+        {% for img in data.gallery %}
+        <img src="{{ url_for('static', filename=img) }}" alt="" loading="lazy">
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="contact-shell contact-shell-{{ variant }}">
         <div class="contact-info">
             <h2>{{ data.title }}</h2>
             <span class="contact-hours-badge">{{ data.settings.get('hours', 'Работаем с 9:00 до 21:00') }}</span>
             <p class="contact-address">{{ data.settings.get('address') }}</p>
-            <a class="button button-dark contact-map-btn" href="#">📍 Показать на карте</a>
+            <a class="button button-dark contact-map-btn" href="#contact-map">📍 Показать на карте</a>
             <div class="contact-meta">
-                <div class="qr-code"></div>
+                <div class="qr-code" aria-hidden="true"></div>
                 <div>
-                    <strong>Социальные сети</strong>
+                    <strong>Связь с нами</strong>
                     <p class="contact-socials-line">
-                        <a href="#">▼ ВКонтакте</a>
-                        <a href="#">✈ Телеграм</a>
+                        <a href="{{ vk_href }}" target="_blank" rel="noopener"><span class="soc-icon soc-vk" aria-hidden="true"></span>ВКонтакте</a>
+                        <a href="{{ tg_href }}" target="_blank" rel="noopener"><span class="soc-icon soc-tg" aria-hidden="true"></span>Телеграм</a>
                     </p>
                     <strong>Телефоны</strong>
                     <p>{{ data.settings.get('phone_1') }} · {{ data.settings.get('phone_2') }}</p>
@@ -663,7 +683,14 @@
             {% include "components/_lead_form.html" %}
         </div>
         {% endif %}
-        <img class="contact-map" src="{{ url_for('static', filename='img/mockup/map.png') }}" alt="">
+        {% set map_iframe = data.settings.get('yandex_map_iframe') %}
+        {% if map_iframe %}
+        <div class="contact-map contact-map-iframe" id="contact-map">
+            <iframe src="{{ map_iframe }}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Семицветик на карте"></iframe>
+        </div>
+        {% else %}
+        <img class="contact-map" id="contact-map" src="{{ url_for('static', filename='img/figma/map-static.png') }}" alt="Карта">
+        {% endif %}
     </div>
 </section>
 

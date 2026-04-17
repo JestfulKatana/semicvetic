@@ -82,6 +82,7 @@ class Program(TimestampMixin, db.Model):
     description = db.Column(db.Text, nullable=True)
     emoji = db.Column(db.String(20), nullable=True)
     color = db.Column(db.String(20), nullable=True)
+    image_url = db.Column(db.String(255), nullable=True)
     age_min = db.Column(db.Float, nullable=True)
     age_max = db.Column(db.Float, nullable=True)
     duration_min = db.Column(db.Integer, nullable=True)
