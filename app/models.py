@@ -69,6 +69,14 @@ class Teacher(TimestampMixin, db.Model):
     photo_url = db.Column(db.String(255), nullable=True)
     emoji = db.Column(db.String(20), nullable=True)
     category = db.Column(db.String(50), nullable=True)
+    # Figma/audit 2026-04-17: rich teacher card fields — all nullable для мягкой миграции.
+    experience_years = db.Column(db.Integer, nullable=True)
+    at_center_since = db.Column(db.Integer, nullable=True)
+    education = db.Column(db.Text, nullable=True)
+    awards = db.Column(db.Text, nullable=True)
+    category_rank = db.Column(db.String(50), nullable=True)
+    quote = db.Column(db.Text, nullable=True)
+    works_with_ages = db.Column(db.String(50), nullable=True)
     sort_order = db.Column(db.Integer, default=0, nullable=False)
 
     programs = db.relationship("Program", back_populates="teacher", lazy=True)
@@ -168,6 +176,8 @@ class Review(TimestampMixin, db.Model):
     rating = db.Column(db.Integer, default=5, nullable=False)
     program_id = db.Column(db.Integer, db.ForeignKey("program.id"), nullable=True)
     is_published = db.Column(db.Boolean, default=True, nullable=False)
+    # Источник отзыва: yandex / 2gis / vk / direct — для иконок/бейджей на фронте.
+    source = db.Column(db.String(40), nullable=True)
 
     program = db.relationship("Program", back_populates="reviews", lazy=True)
 

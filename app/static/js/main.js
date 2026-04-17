@@ -188,10 +188,33 @@ function initReviewsCarousel() {
   });
 }
 
+function initLeadMagnets() {
+  document.querySelectorAll("[data-lead-magnet]").forEach((card) => {
+    const toggle = card.querySelector("[data-lead-magnet-toggle]");
+    const form = card.querySelector("[data-lead-magnet-form]");
+    if (!toggle || !form) return;
+    toggle.addEventListener("click", () => {
+      const isOpen = !form.hasAttribute("hidden");
+      if (isOpen) {
+        form.setAttribute("hidden", "");
+        card.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      } else {
+        form.removeAttribute("hidden");
+        card.classList.add("is-open");
+        toggle.setAttribute("aria-expanded", "true");
+        const firstInput = form.querySelector("input[type=tel], input[type=email]");
+        if (firstInput) firstInput.focus();
+      }
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initProgramFilters();
   initTeacherFilters();
   initReviewsCarousel();
+  initLeadMagnets();
 });
 
 document.querySelectorAll("[data-lead-form]").forEach((form) => {

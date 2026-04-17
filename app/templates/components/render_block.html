@@ -312,7 +312,7 @@
 </section>
 
 {% elif block.component == "advantages" %}
-<section class="section values-section">
+<section class="section values-section" id="preimushchestva">
     <div class="section-head">
         <h2>{{ data.title }}</h2>
     </div>
@@ -375,18 +375,45 @@
         </div>
     </div>
     {% endif %}
-    <div class="teacher-grid" data-teacher-grid>
+    {% set is_pedagogi_page = page_slug == 'pedagogi' %}
+    <div class="teacher-grid{% if is_pedagogi_page %} teacher-grid-rich{% endif %}" data-teacher-grid>
         {% for teacher in data.teachers %}
-        <article class="teacher-card"
+        {% set experience_label = '' %}
+        {% if teacher.experience_years %}
+            {% set experience_label = 'Опыт: ' ~ teacher.experience_years ~ ' ' ~ ('год' if teacher.experience_years == 1 else ('года' if teacher.experience_years in [2,3,4] else 'лет')) %}
+            {% if teacher.at_center_since %}
+                {% set experience_label = experience_label ~ ' · В\u00a0центре с\u00a0' ~ teacher.at_center_since %}
+            {% endif %}
+        {% endif %}
+        <article class="teacher-card{% if is_pedagogi_page %} teacher-card-rich{% endif %}"
                  data-category="{{ teacher.category or '' }}"
                  data-search="{{ (teacher.name ~ ' ' ~ teacher.role ~ ' ' ~ (teacher.specialization or ''))|lower }}">
             <img src="{{ teacher.photo_url or url_for('static', filename='img/mockup/teacher-' ~ ((loop.index0 % 3) + 1) ~ '.png') }}" alt="">
             <div class="teacher-body">
-                <div>
-                    <span class="experience">{{ 'Более 10 лет опыта' if loop.index < 4 else 'Опытный специалист' }}</span>
+                <div class="teacher-top">
+                    {% if experience_label %}
+                    <span class="experience">{{ experience_label }}</span>
+                    {% elif teacher.experience_years %}
+                    <span class="experience">Опыт {{ teacher.experience_years }}+ лет</span>
+                    {% endif %}
                     <h3>{{ teacher.name }}</h3>
                     <p class="teacher-role">{{ teacher.role }}</p>
+                    {% if is_pedagogi_page %}
+                    {% if teacher.category_rank %}
+                    <p class="teacher-rank">{{ teacher.category_rank }}</p>
+                    {% endif %}
+                    {% if teacher.education %}
+                    <p class="teacher-education"><span>Образование:</span> {{ teacher.education }}</p>
+                    {% endif %}
+                    {% if teacher.awards %}
+                    <p class="teacher-awards"><span>Награды:</span> {{ teacher.awards }}</p>
+                    {% endif %}
+                    {% if teacher.works_with_ages %}
+                    <p class="teacher-ages"><span>Работает с:</span> {{ teacher.works_with_ages }}</p>
+                    {% endif %}
+                    {% endif %}
                 </div>
+                {% if not is_pedagogi_page %}
                 <div class="teacher-subjects">
                     <p class="teacher-subjects-label">Предметы</p>
                     <div class="tag-row">
@@ -397,6 +424,22 @@
                         {% endfor %}
                     </div>
                 </div>
+                {% else %}
+                {% if teacher.programs %}
+                <div class="teacher-subjects">
+                    <p class="teacher-subjects-label">Ведёт программы</p>
+                    <div class="tag-row">
+                        {% for program in teacher.programs[:3] %}
+                        <span>{{ program.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if teacher.quote %}
+                <p class="teacher-quote">«{{ teacher.quote }}»</p>
+                {% endif %}
+                <a class="button button-dark teacher-cta" href="#contact-panel?teacher_id={{ teacher.id }}">Записаться к&nbsp;педагогу</a>
+                {% endif %}
             </div>
         </article>
         {% endfor %}
@@ -407,7 +450,7 @@
 </section>
 
 {% elif block.component == "reviews_grid" %}
-<section class="section reviews-section" data-reviews-carousel>
+<section class="section reviews-section" id="reviews" data-reviews-carousel>
     <div class="reviews-head">
         <h2>{{ data.title }}</h2>
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
@@ -493,17 +536,9 @@
 </section>
 
 {% elif block.component == "faq" %}
-<section class="section faq-section">
+<section class="section faq-section" id="faq">
     <div class="faq-head">
         <h2>{{ data.title }}</h2>
-    </div>
-    <div class="faq-filters">
-        <span class="faq-chip is-active">Общие вопросы</span>
-        <span class="faq-chip">Подготовка к&nbsp;школе</span>
-        <span class="faq-chip">Раннее развитие</span>
-        <span class="faq-chip">Логопедия и&nbsp;психология</span>
-        <span class="faq-chip">Творчество и&nbsp;английский язык</span>
-        <span class="faq-chip">Стоимость и&nbsp;запись</span>
     </div>
     <div class="faq-list">
         {% for item in data.get("items", []) %}
@@ -705,8 +740,8 @@
 </section>
 
 {% elif block.component == "gallery" %}
-{% if data.variant == "video" or is_home %}
-<section class="section video-section">
+{% if data.variant == "video" or (is_home and data.variant != "strip") %}
+<section class="section video-section" id="video">
     <div class="video-head">
         <h2>{{ data.title or "Жизнь нашего центра в одном видео" }}</h2>
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
@@ -877,6 +912,287 @@
     <div class="article-shell">
         <article class="prose">{{ data.content|markdown|safe }}</article>
     </div>
+</section>
+
+{% elif block.component == "lead_magnets" %}
+<section class="section lead-magnets">
+    <div class="section-head">
+        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+    </div>
+    <div class="lead-magnets-grid">
+        {% for item in data.get('items', []) %}
+        <article class="lead-magnet-card" data-lead-magnet>
+            <span class="lead-magnet-icon" aria-hidden="true">
+                {% set icon = item.icon or 'gift' %}
+                {% if icon == 'clipboard' %}
+                <svg viewBox="0 0 24 24" width="28" height="28"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 4h6a1 1 0 0 1 1 1v1h2a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h2V5a1 1 0 0 1 1-1Zm0 2v2h6V6M8.5 13l2 2 4-4"/></svg>
+                {% elif icon == 'checklist' %}
+                <svg viewBox="0 0 24 24" width="28" height="28"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 6h3m-3 6h3m-3 6h3m4-12h9m-9 6h9m-9 6h9"/></svg>
+                {% elif icon == 'stethoscope' %}
+                <svg viewBox="0 0 24 24" width="28" height="28"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 4v6a4 4 0 0 0 8 0V4M8 4H4m10 0h-4M10 14v3a4 4 0 0 0 8 0v-2m0 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
+                {% elif icon == 'book' %}
+                <svg viewBox="0 0 24 24" width="28" height="28"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5Zm0 14a2 2 0 0 1 2-2h12"/></svg>
+                {% elif icon == 'star' %}
+                <svg viewBox="0 0 24 24" width="28" height="28"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m12 3 2.7 5.5L21 9.3l-4.5 4.3 1 6.2L12 16.9l-5.6 3 1-6.2L3 9.3l6.3-.8L12 3Z"/></svg>
+                {% else %}
+                <svg viewBox="0 0 24 24" width="28" height="28"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M20 12v9H4v-9m-1-5h18v5H3V7Zm9 0V5a2 2 0 1 0-4 2h4Zm0 0v14m0-14V5a2 2 0 1 1 4 2h-4Z"/></svg>
+                {% endif %}
+            </span>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+            <button class="button button-primary lead-magnet-toggle" type="button" data-lead-magnet-toggle>{{ item.cta_label or 'Получить' }}</button>
+            <form class="lead-magnet-form" method="POST" action="{{ item.form_target or '/api/lead' }}" data-lead-form data-lead-magnet-form hidden>
+                <input type="hidden" name="source_page" value="{{ request.path }}">
+                <input type="hidden" name="source_block" value="{{ item.form_source or 'lead_magnet' }}">
+                <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+                <label class="sr-only" for="lm-phone-{{ loop.index }}">Телефон</label>
+                <input id="lm-phone-{{ loop.index }}" type="tel" name="phone" placeholder="Телефон" required>
+                <label class="sr-only" for="lm-email-{{ loop.index }}">E-mail</label>
+                <input id="lm-email-{{ loop.index }}" type="email" name="email" placeholder="E-mail">
+                <label class="lead-magnet-consent">
+                    <input type="checkbox" name="consent" required>
+                    <span>Согласен на обработку персональных данных</span>
+                </label>
+                <button class="button button-dark" type="submit">Отправить</button>
+                <p class="form-status" data-form-status></p>
+            </form>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% elif block.component == "alumni_schools" %}
+<section class="section alumni-schools">
+    <div class="section-head">
+        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+    </div>
+    <div class="alumni-schools-grid">
+        {% for item in data.get('items', []) %}
+        <article class="alumni-school">
+            <span class="alumni-school-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/></svg>
+            </span>
+            <div>
+                <strong>{{ item.name }}</strong>
+                {% if item.count %}<small>{{ item.count }}{% if item.count is number or item.count|string|first in '0123456789' %}+ выпускников{% endif %}</small>{% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% elif block.component == "credentials_bar" %}
+<section class="section credentials-bar">
+    {% if data.eyebrow or data.title %}
+    <div class="section-head">
+        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+    </div>
+    {% endif %}
+    <div class="credentials-bar-grid">
+        {% for item in data.get('items', []) %}
+        <article class="credentials-chip">
+            <span class="credentials-chip-icon" aria-hidden="true">
+                {% set icon = item.icon or 'star' %}
+                {% if icon == 'license' %}
+                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v11H4zM4 19h16M8 9h8m-8 3h5"/></svg>
+                {% elif icon == 'yandex' %}
+                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m12 3 2.7 5.5L21 9.3l-4.5 4.3 1 6.2L12 16.9l-5.6 3 1-6.2L3 9.3l6.3-.8L12 3Z"/></svg>
+                {% elif icon == 'gov' %}
+                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/></svg>
+                {% else %}
+                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m12 3 2.7 5.5L21 9.3l-4.5 4.3 1 6.2L12 16.9l-5.6 3 1-6.2L3 9.3l6.3-.8L12 3Z"/></svg>
+                {% endif %}
+            </span>
+            <div>
+                <strong>{{ item.title }}</strong>
+                {% if item.subtitle %}<small>{{ item.subtitle }}</small>{% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% elif block.component == "credentials_list" %}
+<section class="section credentials-list">
+    <div class="section-head">
+        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+    </div>
+    <div class="credentials-list-grid">
+        {% for item in data.get('items', []) %}
+        <article class="credential-tile">
+            <span class="credential-tile-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="34" height="34"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 3h8l4 4v14H6zM14 3v4h4M9 13h6m-6 3h4"/></svg>
+            </span>
+            <h3>{{ item.title }}</h3>
+            {% if item.description %}<p>{{ item.description }}</p>{% endif %}
+            <a class="credential-tile-link" href="{{ item.link or '#' }}"{% if item.link and item.link.startswith('http') %} target="_blank" rel="noopener"{% endif %}>Посмотреть →</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% elif block.component == "team_stats" %}
+<section class="section team-stats">
+    <div class="section-head">
+        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+    </div>
+    <div class="team-stats-shell">
+        {% if data.quote %}
+        <div class="team-stats-quote">
+            <span class="team-stats-quote-glyph" aria-hidden="true">“</span>
+            <blockquote>{{ data.quote }}</blockquote>
+            {% if data.quote_author %}<strong>{{ data.quote_author }}</strong>{% endif %}
+            {% if data.quote_tenure %}<small>{{ data.quote_tenure }}</small>{% endif %}
+        </div>
+        {% endif %}
+        {% if data.stats %}
+        <div class="team-stats-grid">
+            {% for stat in data.stats %}
+            <div class="team-stat">
+                <strong>{{ stat.value }}</strong>
+                <span>{{ stat.label }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% elif block.component == "program_outcomes" %}
+<section class="section program-outcomes">
+    <div class="program-outcomes-shell">
+        <div class="program-outcomes-head">
+            {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+            {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+        </div>
+        <ul class="program-outcomes-list">
+            {% for item in data.get('items', []) %}
+            <li>
+                <span class="program-outcomes-check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
+                </span>
+                <span>{{ item }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+{% elif block.component == "lesson_anatomy" %}
+<section class="section lesson-anatomy">
+    <div class="section-head">
+        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+    </div>
+    <ol class="lesson-anatomy-steps">
+        {% for step in data.get('steps', []) %}
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">{{ step.time }}</span>
+            <div class="lesson-anatomy-body">
+                <h3>{{ step.title }}</h3>
+                {% if step.description %}<p>{{ step.description }}</p>{% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ol>
+</section>
+
+{% elif block.component == "safety_checklist" %}
+<section class="section safety-checklist">
+    <div class="section-head">
+        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+    </div>
+    <div class="safety-grid">
+        {% for item in data.get('items', []) %}
+        <article class="safety-card">
+            <span class="safety-icon" aria-hidden="true">
+                {% set icon = item.icon or 'shield' %}
+                {% if icon == 'lock' %}
+                <svg viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 11V8a6 6 0 1 1 12 0v3M5 11h14v10H5zM12 15v3"/></svg>
+                {% elif icon == 'medkit' %}
+                <svg viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16v12H4zM9 7V5h6v2M12 11v4M10 13h4"/></svg>
+                {% elif icon == 'camera' %}
+                <svg viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 8h4l2-2h4l2 2h4v11H4zM12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>
+                {% else %}
+                <svg viewBox="0 0 24 24" width="24" height="24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/></svg>
+                {% endif %}
+            </span>
+            <h3>{{ item.title }}</h3>
+            {% if item.description %}<p>{{ item.description }}</p>{% endif %}
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% elif block.component == "events_teaser" %}
+<section class="section events-teaser" id="events">
+    <div class="section-head split-head">
+        <div>
+            {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+            {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+        </div>
+    </div>
+    {% set ev_list = data.events or [] %}
+    {% if ev_list %}
+    <div class="events-teaser-grid">
+        {% for event in ev_list %}
+        <article class="events-teaser-card">
+            {% if event.event_date %}
+            <div class="events-teaser-date">
+                <strong>{{ event.event_date.strftime('%d') if event.event_date.strftime is defined else event.event_date }}</strong>
+                <span>{{ event.event_date.strftime('%B') if event.event_date.strftime is defined else '' }}</span>
+            </div>
+            {% endif %}
+            <h3>{{ event.title }}</h3>
+            {% if event.excerpt %}<p>{{ event.excerpt }}</p>{% endif %}
+            <a class="soft-button soft-button-arrow" href="/blog/{{ event.slug }}/">Подробнее <span class="soft-arrow">→</span></a>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="events-teaser-empty">Ближайшие события появятся скоро — подпишитесь, чтобы узнать первыми.</p>
+    {% endif %}
+</section>
+
+{% elif block.component == "articles_teaser" %}
+<section class="section articles-teaser" id="articles">
+    <div class="section-head split-head">
+        <div>
+            {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+            {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+        </div>
+    </div>
+    {% set art_list = data.articles or [] %}
+    {% if art_list %}
+    <div class="articles-teaser-grid">
+        {% for article in art_list %}
+        <article class="articles-teaser-card">
+            {% if article.image_url %}
+            <div class="articles-teaser-cover">
+                <img src="{{ url_for('static', filename=article.image_url) }}" alt="">
+            </div>
+            {% endif %}
+            <p class="articles-teaser-date">{{ article.display_date }}</p>
+            <h3>{{ article.title }}</h3>
+            {% if article.excerpt %}<p>{{ article.excerpt }}</p>{% endif %}
+            <a class="soft-button soft-button-arrow" href="/blog/{{ article.slug }}/">Читать <span class="soft-arrow">→</span></a>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="events-teaser-empty">Статьи скоро появятся.</p>
+    {% endif %}
 </section>
 
 {% endif %}

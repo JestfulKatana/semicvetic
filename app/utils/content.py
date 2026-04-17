@@ -21,6 +21,13 @@ def hydrate_blocks(blocks: list[dict], shared: dict) -> list[dict]:
     hydrated = []
     for block in blocks:
         clone = deepcopy(block)
+        # Новые блоки (audit 2026-04-17) приходят в контракте {type, payload}.
+        # Приводим к существующему {component, data}, чтобы render_block.html
+        # не дублировать — фронт-агент пишет ветки через block.component.
+        if clone.get("type") and "component" not in clone:
+            clone["component"] = clone["type"]
+        if "payload" in clone and "data" not in clone:
+            clone["data"] = clone["payload"]
         data = clone.setdefault("data", {})
         source = data.get("source")
         if source == "all_programs":
@@ -44,6 +51,12 @@ def hydrate_blocks(blocks: list[dict], shared: dict) -> list[dict]:
             data["events"] = shared["events"]
         elif source == "all_articles":
             data["articles"] = shared["articles"]
+        elif source == "upcoming_events":
+            limit = data.get("limit", 3)
+            data["events"] = shared["events"][:limit]
+        elif source == "recent_articles":
+            limit = data.get("limit", 3)
+            data["articles"] = shared["articles"][:limit]
         elif source == "all_prices":
             data["programs"] = shared["programs"]
         elif source == "contact_data":
