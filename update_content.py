@@ -523,26 +523,57 @@ def ensure_schema() -> None:
 
 
 def upsert_site_settings() -> None:
-    """Merge brand/contacts settings so templates have real URLs for socials/map."""
-    needed = {
-        "social_vk": "https://vk.com/semicvetic_sp",
-        "social_tg": "https://t.me/semicvetic_bot",
-        "yandex_map_iframe": (
-            "https://yandex.ru/map-widget/v1/?ll=38.1356%2C56.3119&z=15"
-            "&pt=38.1356%2C56.3119%2Cpm2rdm&l=map"
-        ),
-        "address": "Московская область, г. Сергиев Посад, ул. Воробьёвская, д. 16А, 2 этаж (вход с проспекта Красной Армии)",
-        "hours": "Работаем с\u00a09:00 до\u00a021:00",
+    """Merge brand/contacts settings so templates have real URLs for socials/map.
+
+    Contacts (address/phones/hours/map) are *forced* to canonical values from Figma
+    so that re-running this script on stale data corrects drift. Socials are only
+    seeded when missing (so admin-customized links survive).
+    """
+    # Канонический адрес: NBSP между «г./Сергиев», «Сергиев/Посад», «ул./Воробьёвская»,
+    # «д./16А», «2/этаж», «с/проспекта» — чтобы город и номер дома не разрывались.
+    address = (
+        "Московская область, г.\u00a0Сергиев\u00a0Посад, "
+        "ул.\u00a0Воробьёвская, д.\u00a016А, 2\u00a0этаж "
+        "(вход с\u00a0проспекта Красной Армии)"
+    )
+    # Карта: text-search по адресу — Яндекс сам подставит реальный пин,
+    # даже если в будущем изменится нумерация дома.
+    yandex_map = (
+        "https://yandex.ru/map-widget/v1/?text="
+        "%D0%A1%D0%B5%D1%80%D0%B3%D0%B8%D0%B5%D0%B2%20"
+        "%D0%9F%D0%BE%D1%81%D0%B0%D0%B4%2C%20"
+        "%D0%92%D0%BE%D1%80%D0%BE%D0%B1%D1%8C%D1%91%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%20"
+        "16%D0%90&z=17"
+    )
+
+    force_update = {
+        "address": address,
+        "hours": "Работаем с 9:00 до 21:00",
         "phone_1": "8 (926) 366-57-87",
         "phone_2": "8 (496) 551-33-85",
+        "yandex_map_iframe": yandex_map,
     }
-    for key, default_value in needed.items():
+    seed_if_missing = {
+        "social_vk": "https://vk.com/semicvetic_sp",
+        "social_tg": "https://t.me/semicvetic_bot",
+    }
+
+    for key, value in force_update.items():
         row = SiteSetting.query.filter_by(key=key).first()
         if row is None:
-            db.session.add(SiteSetting(key=key, value=default_value))
+            db.session.add(SiteSetting(key=key, value=value))
+            print(f"[new] setting: {key}")
+        elif row.value != value:
+            row.value = value
+            print(f"[upd] setting: {key} (forced to canonical value)")
+
+    for key, value in seed_if_missing.items():
+        row = SiteSetting.query.filter_by(key=key).first()
+        if row is None:
+            db.session.add(SiteSetting(key=key, value=value))
             print(f"[new] setting: {key}")
         elif not row.value:
-            row.value = default_value
+            row.value = value
             print(f"[upd] setting: {key} (empty → default)")
     db.session.commit()
 

@@ -822,11 +822,24 @@
                 <div>
                     <strong>Социальные сети</strong>
                     <p class="contact-socials-line">
-                        <a href="{{ vk_href }}" target="_blank" rel="noopener"><span class="soc-icon soc-vk" aria-hidden="true"></span>Вконтакте</a>
-                        <a href="{{ tg_href }}" target="_blank" rel="noopener"><span class="soc-icon soc-tg" aria-hidden="true"></span>Телеграм</a>
+                        <a href="{{ vk_href }}" target="_blank" rel="noopener" aria-label="ВКонтакте">
+                            <span class="soc-icon soc-vk-svg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12.79 16.56c-5.82 0-9.15-3.99-9.29-10.62h2.92c.1 4.86 2.24 6.92 3.94 7.34V5.94h2.76v4.22c1.67-.18 3.43-2.08 4.02-4.22h2.76c-.45 2.64-2.35 4.54-3.7 5.32 1.35.63 3.51 2.3 4.34 5.3h-3.04c-.64-2.02-2.26-3.58-4.38-3.78v3.78h-.33z"/></svg>
+                            </span>
+                            Вконтакте
+                        </a>
+                        <a href="{{ tg_href }}" target="_blank" rel="noopener" aria-label="Telegram">
+                            <span class="soc-icon soc-tg-svg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M20.6 4.2 2.9 11c-1.2.5-1.2 1.2-.2 1.5l4.5 1.4 1.7 5.3c.2.6.1.9.7.9.5 0 .7-.2 1-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.8l3-14c.3-1.2-.5-1.8-1.4-1.4zM8.4 14.2l9.8-6.2c.4-.3.8-.1.5.2l-8 7.3-.3 3.3-2-4.6z"/></svg>
+                            </span>
+                            Телеграм
+                        </a>
                     </p>
                     <strong>Телефоны</strong>
-                    <p>{{ data.settings.get('phone_1') }}&nbsp;&nbsp;&nbsp;{{ data.settings.get('phone_2') }}</p>
+                    <p class="contact-phones">
+                        {% if data.settings.get('phone_1') %}<a class="contact-phone-link" href="tel:{{ data.settings.get('phone_1')|phone_href }}">{{ data.settings.get('phone_1') }}</a>{% endif %}
+                        {% if data.settings.get('phone_2') %}<a class="contact-phone-link" href="tel:{{ data.settings.get('phone_2')|phone_href }}">{{ data.settings.get('phone_2') }}</a>{% endif %}
+                    </p>
                 </div>
             </div>
         </div>
