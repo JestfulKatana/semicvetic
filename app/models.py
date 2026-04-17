@@ -68,6 +68,7 @@ class Teacher(TimestampMixin, db.Model):
     bio = db.Column(db.Text, nullable=True)
     photo_url = db.Column(db.String(255), nullable=True)
     emoji = db.Column(db.String(20), nullable=True)
+    category = db.Column(db.String(50), nullable=True)
     sort_order = db.Column(db.Integer, default=0, nullable=False)
 
     programs = db.relationship("Program", back_populates="teacher", lazy=True)

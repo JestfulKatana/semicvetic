@@ -59,5 +59,19 @@ def hydrate_blocks(blocks: list[dict], shared: dict) -> list[dict]:
                     {"value": program.price_label, "label": "Стоимость"},
                 ],
             )
+        elif source == "program_schedule" and shared.get("current_program"):
+            program = shared["current_program"]
+            groups: dict[str, list] = {}
+            for slot in program.schedule_slots:
+                key = slot.group_name or "Группа"
+                groups.setdefault(key, []).append({
+                    "day": slot.day_of_week,
+                    "time": f"{slot.time_start}–{slot.time_end}",
+                })
+            data["groups"] = [
+                {"title": title, "slots": slots}
+                for title, slots in groups.items()
+            ]
+            data.setdefault("program", program)
         hydrated.append(clone)
     return hydrated

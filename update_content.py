@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from app import create_app
 from app.extensions import db
-from app.models import Page, Program, SiteSetting
+from app.models import Page, Program, ScheduleSlot, SiteSetting, Teacher
 
 
 def home_blocks() -> list[dict]:
@@ -26,7 +26,7 @@ def home_blocks() -> list[dict]:
                     {"value": "3000+", "label": "Выпускников учатся в\u00a0школах, лицеях, гимназиях"},
                 ],
                 "cta_text": "Записаться",
-                "cta_target": "lead-form",
+                "cta_target": "contact-panel",
                 "source_block": "hero",
             },
         },
@@ -127,22 +127,30 @@ def about_blocks() -> list[dict]:
         {
             "component": "hero",
             "data": {
-                "title": "Среда, где дети растут разносторонними",
+                "title": "Среда, где\u00a0дети растут разносторонними",
                 "subtitle": "",
-                "eyebrow": "О центре",
+                "eyebrow": "О\u00a0центре",
                 "cta_text": "Записаться",
-                "cta_target": "lead-form",
+                "cta_target": "contact-panel",
                 "stats_row": [
                     {"value": "с\u00a02011\u00a0г.", "label": "Уже\u00a015\u00a0лет помогаем детям расти"},
                     {"value": "8", "label": "направлений обучения в\u00a0одном центре"},
-                    {"value": "3000", "label": "детей прошли обучение"},
+                    {"value": "3000+", "label": "детей прошли у\u00a0нас\u00a0обучение"},
                 ],
+                "stats_row_note": "Московская область, Сергиев\u00a0Посад\u00a0— Воробьёвская, 16А, 2\u00a0этаж. Работаем ежедневно.",
             },
         },
         {
             "component": "rich_text",
             "data": {
-                "content": "Сегодня «Семицветик»\u00a0— это\u00a0команда **профессиональных педагогов**, современные программы обучения и\u00a0доказанные результаты. Но\u00a0главное\u00a0— по-прежнему **любовь к\u00a0детям** и\u00a0вера в\u00a0их\u00a0безграничные возможности.",
+                "content": (
+                    "Сегодня «Семицветик»\u00a0— это\u00a0команда **профессиональных педагогов**, современные "
+                    "программы обучения и\u00a0доказанные результаты. Но\u00a0главное\u00a0— по-прежнему **любовь "
+                    "к\u00a0детям** и\u00a0вера в\u00a0их\u00a0безграничные возможности.\n\nМы\u00a0работаем в\u00a0"
+                    "малых группах, сочетаем академические предметы с\u00a0творчеством и\u00a0психологической "
+                    "поддержкой, и\u00a0каждый год выпускаем десятки ребят\u00a0— многие из\u00a0них оканчивают "
+                    "школу с\u00a0медалями."
+                ),
             },
         },
         {
@@ -151,11 +159,20 @@ def about_blocks() -> list[dict]:
                 "title": "Наши ценности",
                 "subtitle": "Принципы, которыми мы\u00a0руководствуемся в\u00a0работе с\u00a0детьми",
                 "items": [
-                    {"icon": "♥", "title": "Индивидуальный подход к\u00a0группе", "text": "Маленькие группы, внимание к\u00a0каждому."},
-                    {"icon": "✦", "title": "Мини-группы", "text": "До\u00a08\u00a0детей\u00a0— каждый получает внимание педагога."},
-                    {"icon": "✪", "title": "Комплексное развитие", "text": "Академические и\u00a0творческие занятия, психология и\u00a0логопедия в\u00a0одном месте."},
-                    {"icon": "★", "title": "Профессионализм", "text": "Педагоги с\u00a0опытом и\u00a0регулярным повышением квалификации."},
+                    {"icon": "♥", "title": "Индивидуальный подход", "text": "Маленькие группы и\u00a0внимание к\u00a0каждому ребёнку. Педагог знает сильные и\u00a0слабые стороны."},
+                    {"icon": "✦", "title": "Мини-группы до\u00a08\u00a0детей", "text": "В\u00a0отличие от\u00a025–30 детей в\u00a0садиках, у\u00a0нас хватает времени на\u00a0каждого."},
+                    {"icon": "✪", "title": "Комплексное развитие", "text": "Академические и\u00a0творческие занятия, психология и\u00a0логопедия\u00a0— в\u00a0одном месте."},
+                    {"icon": "★", "title": "Профессионализм", "text": "Педагоги с\u00a0опытом и\u00a0регулярным повышением квалификации. Учителя школ, а\u00a0не\u00a0воспитатели."},
                 ],
+            },
+        },
+        {
+            "component": "form_strip",
+            "data": {
+                "title": "Приходите знакомиться!",
+                "subtitle": "Покажем центр, педагогов и\u00a0предложим подходящую программу\u00a0— бесплатно.",
+                "color": "purple",
+                "source_block": "about_strip",
             },
         },
         {"component": "contact_panel", "data": {"title": "Ждём вас в\u00a0Семицветике", "variant": "full", "source": "contact_data"}},
@@ -176,6 +193,14 @@ def program_landing_blocks(name: str, tagline: str) -> list[dict]:
             },
         },
         {
+            "component": "program_schedule",
+            "data": {
+                "title": "Программа занятий",
+                "subtitle": "Группы формируем по\u00a0возрасту и\u00a0уровню подготовки",
+                "source": "program_schedule",
+            },
+        },
+        {
             "component": "advantages",
             "data": {
                 "title": "Место, где раскрываются таланты",
@@ -185,6 +210,56 @@ def program_landing_blocks(name: str, tagline: str) -> list[dict]:
                     {"icon": "03", "title": "Маленькие группы", "text": "До\u00a08\u00a0детей, каждому хватает внимания педагога."},
                     {"icon": "04", "title": "Открытая цена", "text": "Стоимость и\u00a0расписание видны сразу, без\u00a0звонка менеджеру."},
                 ],
+            },
+        },
+        {
+            "component": "compare_table",
+            "data": {
+                "title": "Сравните сами",
+                "subtitle": "Чем\u00a0программа «Семицветика» отличается от\u00a0стандартных альтернатив",
+                "columns": [
+                    {
+                        "title": "Семицветик",
+                        "subtitle": "Наш\u00a0подход",
+                        "accent": True,
+                        "points": [
+                            "Группа до\u00a08\u00a0детей — внимание каждому",
+                            "Учителя начальных классов с\u00a0наградами",
+                            "Диагностика логопеда и\u00a0психолога включены",
+                            "Открытая цена и\u00a0расписание на\u00a0сайте",
+                            "15\u00a0лет опыта, более 3000\u00a0выпускников",
+                        ],
+                    },
+                    {
+                        "title": "Детский сад",
+                        "subtitle": "Стандартный формат",
+                        "points": [
+                            "Группа 25–30\u00a0детей",
+                            "Воспитатель, а\u00a0не\u00a0учитель-предметник",
+                            "Коррекционная поддержка\u00a0— только по\u00a0запросу",
+                            "Большая часть дня\u00a0— присмотр",
+                        ],
+                    },
+                    {
+                        "title": "Репетитор",
+                        "subtitle": "Индивидуально",
+                        "points": [
+                            "Один предмет за\u00a0занятие",
+                            "Дорого при\u00a0регулярных занятиях",
+                            "Нет\u00a0социализации и\u00a0работы в\u00a0группе",
+                            "Зависимость от\u00a0одного специалиста",
+                        ],
+                    },
+                ],
+            },
+        },
+        {
+            "component": "form_strip",
+            "data": {
+                "title": "Запишитесь на\u00a0пробное занятие",
+                "subtitle": "Познакомим с\u00a0педагогом, покажем методику и\u00a0подберём удобное время.",
+                "color": "purple",
+                "source_block": "program_strip",
             },
         },
         {
@@ -199,7 +274,8 @@ def program_landing_blocks(name: str, tagline: str) -> list[dict]:
                 ],
             },
         },
-        {"component": "reviews_grid", "data": {"title": "Отзывы по\u00a0программе", "source": "program_reviews"}},
+        {"component": "reviews_grid", "data": {"title": "Что\u00a0говорят родители", "subtitle": "Отзывы по\u00a0программе «" + name + "»", "source": "program_reviews"}},
+        {"component": "photo_strip", "data": {}},
         {"component": "cta_final", "data": {"title": "Запишите ребёнка на\u00a0пробное занятие", "subtitle": "Перезвоним в\u00a0течение 15\u00a0минут, поможем выбрать группу и\u00a0время.", "color": "green", "source_block": "program_final_cta"}},
         {"component": "contact_panel", "data": {"title": "Ждём вас в\u00a0Семицветике", "variant": "full", "source": "contact_data"}},
     ]
@@ -213,7 +289,7 @@ def programmy_blocks() -> list[dict]:
                 "title": "Мы\u00a0создали 8\u00a0направлений, которые охватывают все сферы развития ребёнка",
                 "subtitle": "",
                 "cta_text": "Записаться",
-                "cta_target": "lead-form",
+                "cta_target": "contact-panel",
                 "eyebrow": "Каталог",
             },
         },
@@ -230,8 +306,13 @@ def pedagogi_blocks() -> list[dict]:
                 "title": "Учителя, которым доверяют",
                 "subtitle": "",
                 "cta_text": "Записаться на\u00a0консультацию",
-                "cta_target": "lead-form",
+                "cta_target": "contact-panel",
                 "eyebrow": "Команда",
+                "stats_row": [
+                    {"value": "12", "label": "педагогов работают с\u00a0детьми ежедневно"},
+                    {"value": "10+ лет", "label": "средний стаж наших специалистов"},
+                    {"value": "100%", "label": "проходят повышение квалификации"},
+                ],
             },
         },
         {"component": "teachers_grid", "data": {"title": "", "source": "all_teachers", "show_search": True, "show_chips": True}},
@@ -247,7 +328,7 @@ def kontakty_blocks() -> list[dict]:
                 "title": "Контакты",
                 "subtitle": "Все каналы связи\u00a0— в\u00a0одном месте.",
                 "cta_text": "Заказать звонок",
-                "cta_target": "lead-form",
+                "cta_target": "contact-panel",
                 "eyebrow": "Связь",
             },
         },
@@ -255,9 +336,110 @@ def kontakty_blocks() -> list[dict]:
     ]
 
 
+PROGRAM_CATALOG = [
+    {"slug": "podgotovka-k-shkole", "name": "Подготовка к\u00a0школе", "tagline": "Комплексная программа для\u00a0детей 5–7 лет: чтение, математика, логика, письмо и\u00a0уверенность перед школой.", "description": "Комплексная подготовка к\u00a0школе в\u00a0малых группах. Ребёнок постепенно осваивает чтение, математику, логику и\u00a0учебную дисциплину.", "emoji": "📘", "color": "#f3762f", "age_min": 5, "age_max": 7, "duration_min": 90, "frequency": "2 раза в\u00a0неделю", "price": 6800, "price_unit": "мес", "category": "school", "category_label": "Подготовка к\u00a0школе", "sort_order": 1},
+    {"slug": "logoped", "name": "Логопедия", "tagline": "Индивидуальные и\u00a0мини-групповые занятия для\u00a0постановки звуков и\u00a0развития речи.", "description": "Диагностика речи, постановка звуков, упражнения на\u00a0понимание и\u00a0чистую речь.", "emoji": "🗣️", "color": "#6e65dc", "age_min": 3, "age_max": 8, "duration_min": 45, "frequency": "1–2 раза в\u00a0неделю", "price": 2200, "price_unit": "занятие", "category": "speech", "category_label": "Логопедия и\u00a0коррекция", "sort_order": 2},
+    {"slug": "anglijskij", "name": "Английский", "tagline": "Игровой английский для\u00a0детей 4–9 лет с\u00a0упором на\u00a0речь и\u00a0понимание на\u00a0слух.", "description": "Учим через короткие игровые циклы, песни, карточки и\u00a0небольшие диалоги.", "emoji": "🇬🇧", "color": "#4a8df5", "age_min": 4, "age_max": 9, "duration_min": 60, "frequency": "2 раза в\u00a0неделю", "price": 5400, "price_unit": "мес", "category": "english", "category_label": "Английский язык", "sort_order": 3},
+    {"slug": "rannee-razvitie", "name": "Вместе с\u00a0мамой", "tagline": "Мягкий старт для\u00a0малышей 1–3 лет: сенсорика, движение, внимание, первые слова.", "description": "Формат для\u00a0самых маленьких: короткие смены активности, работа с\u00a0родителями и\u00a0развитие бытовых навыков.", "emoji": "🌈", "color": "#85c88a", "age_min": 1, "age_max": 3, "duration_min": 40, "frequency": "2 раза в\u00a0неделю", "price": 4600, "price_unit": "мес", "category": "early", "category_label": "Раннее развитие", "sort_order": 4},
+    {"slug": "izostudia", "name": "Изостудия и\u00a0Лепка", "tagline": "Рисование, аппликация, лепка и\u00a0декоративно-прикладное искусство для\u00a0детей 4–10 лет.", "description": "Развиваем моторику, вкус и\u00a0фантазию. Работаем с\u00a0красками, глиной, бумагой.", "emoji": "🎨", "color": "#db5eb4", "age_min": 4, "age_max": 10, "duration_min": 60, "frequency": "1 раз в\u00a0неделю", "price": 3400, "price_unit": "мес", "category": "art", "category_label": "Творчество и\u00a0дизайн", "sort_order": 5},
+    {"slug": "otlichnik", "name": "Программа «Отличник»", "tagline": "Углублённая подготовка для\u00a0детей 5–7 лет с\u00a0упором на\u00a0самостоятельность и\u00a0медалистскую траекторию.", "description": "Добавляем олимпиадные задачи, проектную деятельность и\u00a0навыки публичных выступлений.", "emoji": "🏅", "color": "#f59e40", "age_min": 5, "age_max": 7, "duration_min": 90, "frequency": "3 раза в\u00a0неделю", "price": 8900, "price_unit": "мес", "category": "school", "category_label": "Подготовка к\u00a0школе", "sort_order": 6},
+    {"slug": "psiholog", "name": "Психология и\u00a0здоровье", "tagline": "Мини-группы для\u00a0детей 4–10 лет: уверенность, эмоции, дружба.", "description": "Работа в\u00a0парах и\u00a0группах: эмоциональный интеллект, общение, саморегуляция.", "emoji": "🌱", "color": "#4c83f1", "age_min": 4, "age_max": 10, "duration_min": 50, "frequency": "1 раз в\u00a0неделю", "price": 3200, "price_unit": "мес", "category": "psychology", "category_label": "Психология и\u00a0здоровье", "sort_order": 7},
+    {"slug": "detskij-lager", "name": "Детский лагерь", "tagline": "Тематические смены для\u00a0детей 5–12 лет: творчество, спорт, английский, квесты.", "description": "Летние и\u00a0каникулярные смены полного и\u00a0полу-дня. Педагоги центра, активности каждый день.", "emoji": "🏕", "color": "#258c17", "age_min": 5, "age_max": 12, "duration_min": 300, "frequency": "Пн\u00a0– Пт", "price": 8900, "price_unit": "смена", "category": "camp", "category_label": "Летний лагерь", "sort_order": 8},
+]
+
+
+TEACHER_CATALOG = [
+    {"name": "Ирина Бурова", "role": "Педагог подготовки к\u00a0школе", "specialization": "Чтение, математика, развитие логики", "bio": "15 лет помогает детям мягко входить в\u00a0учебную нагрузку и\u00a0формировать уверенность перед школой.", "emoji": "🎓", "category": "school", "sort_order": 1},
+    {"name": "Мария Степанова", "role": "Логопед-дефектолог", "specialization": "Речь, звукопроизношение, фонематический слух", "bio": "Работает с\u00a0речевыми задержками и\u00a0помогает родителям видеть динамику по\u00a0этапам.", "emoji": "🗣️", "category": "speech", "sort_order": 2},
+    {"name": "Ольга Савельева", "role": "Педагог раннего развития", "specialization": "Сенсорика, внимание, запуск речи", "bio": "Собирает занятия так, чтобы ребёнок удерживал интерес и\u00a0не\u00a0уставал от\u00a0формата.", "emoji": "🌱", "category": "early", "sort_order": 3},
+    {"name": "Екатерина Морозова", "role": "Учитель начальных классов", "specialization": "Чтение, прописи, внимательность", "bio": "Работает с\u00a0группами «Лучики» и\u00a0«Звёздочки». Помогает детям полюбить школу ещё до\u00a01 сентября.", "emoji": "📘", "category": "school", "sort_order": 4},
+    {"name": "Анна Карпова", "role": "Преподаватель английского", "specialization": "Игровой английский, речь, Junior Jack", "bio": "Готовит малышей к\u00a0первым международным экзаменам. Дети поют, играют, говорят на\u00a0английском без\u00a0стеснения.", "emoji": "🇬🇧", "category": "english", "sort_order": 5},
+    {"name": "Наталья Кузнецова", "role": "Педагог изостудии", "specialization": "Рисование, лепка, декор", "bio": "Творчество как способ говорить о\u00a0себе. Учит видеть цвет, форму и\u00a0композицию.", "emoji": "🎨", "category": "art", "sort_order": 6},
+    {"name": "Светлана Иванова", "role": "Педагог-психолог", "specialization": "Эмоциональный интеллект, уверенность, общение", "bio": "Помогает детям мягко пройти адаптацию и\u00a0развить социальные навыки.", "emoji": "🌱", "category": "psychology", "sort_order": 7},
+    {"name": "Дарья Николаева", "role": "Преподаватель английского", "specialization": "Старшие группы, подготовка к\u00a0олимпиадам", "bio": "Ведёт группы 2–4 классов. Фокус на\u00a0говорение и\u00a0понимание на\u00a0слух.", "emoji": "🗣️", "category": "english", "sort_order": 8},
+    {"name": "Марина Лебедева", "role": "Учитель начальных классов", "specialization": "Математика и\u00a0логика", "bio": "Наставник олимпиадных групп. Любит задачи «на\u00a0подумать».", "emoji": "🔢", "category": "school", "sort_order": 9},
+    {"name": "Татьяна Орлова", "role": "Воспитатель раннего развития", "specialization": "Ясельная группа, сенсорика", "bio": "Работает с\u00a0малышами 1–2 лет. Мягкий голос и\u00a0бесконечное терпение.", "emoji": "🌸", "category": "early", "sort_order": 10},
+    {"name": "Юлия Васильева", "role": "Вожатая летнего лагеря", "specialization": "Квесты, командные игры, активности", "bio": "Четыре года вожатой в\u00a0«Семицветике». Лагерь\u00a0— её стихия.", "emoji": "🏕", "category": "camp", "sort_order": 11},
+    {"name": "Алёна Сорокина", "role": "Педагог по\u00a0подготовке к\u00a0школе", "specialization": "Письмо, чтение, развитие речи", "bio": "Ведёт «Отличника». Ставит руку, учит усидчивости.", "emoji": "✍️", "category": "school", "sort_order": 12},
+]
+
+
+SCHEDULE_CATALOG = {
+    "podgotovka-k-shkole": [("Лучики", "Вт / Чт", "17:30", "19:00"), ("Звёздочки", "Сб", "10:00", "11:30")],
+    "logoped": [("Индивидуально", "Пн-Пт", "по\u00a0записи", "по\u00a0записи")],
+    "anglijskij": [("Starter", "Пн / Ср", "18:00", "19:00"), ("Junior", "Вт / Чт", "17:00", "18:00")],
+    "rannee-razvitie": [("Малыши", "Вт / Пт", "11:00", "11:40")],
+    "izostudia": [("Творческая", "Сб", "12:00", "13:00")],
+    "otlichnik": [("Олимпиадники", "Пн / Ср / Пт", "17:00", "18:30")],
+    "psiholog": [("Группа Солнышко", "Чт", "18:00", "18:50")],
+    "detskij-lager": [("Летняя смена", "Пн-Пт", "09:00", "14:00")],
+}
+
+
+def upsert_programs() -> None:
+    for item in PROGRAM_CATALOG:
+        program = Program.query.filter_by(slug=item["slug"]).first()
+        data = {k: v for k, v in item.items() if k not in ("slug", "category_label")}
+        if program is None:
+            program = Program(slug=item["slug"], has_landing=True, **data)
+            db.session.add(program)
+            print(f"[new] program: {item['slug']}")
+        else:
+            for key, value in data.items():
+                setattr(program, key, value)
+            print(f"[upd] program: {item['slug']}")
+    db.session.flush()
+
+    program_by_slug = {p.slug: p for p in Program.query.all()}
+    for slug, slots in SCHEDULE_CATALOG.items():
+        program = program_by_slug.get(slug)
+        if program is None:
+            continue
+        existing_keys = {(s.group_name, s.day_of_week, s.time_start) for s in program.schedule_slots}
+        for group, day, start, end in slots:
+            if (group, day, start) in existing_keys:
+                continue
+            db.session.add(ScheduleSlot(program_id=program.id, group_name=group, day_of_week=day, time_start=start, time_end=end))
+
+
+def upsert_teachers() -> None:
+    for item in TEACHER_CATALOG:
+        teacher = Teacher.query.filter_by(name=item["name"]).first()
+        if teacher is None:
+            teacher = Teacher(**item)
+            db.session.add(teacher)
+            print(f"[new] teacher: {item['name']}")
+        else:
+            for key, value in item.items():
+                setattr(teacher, key, value)
+            print(f"[upd] teacher: {item['name']}")
+
+
+def ensure_schema() -> None:
+    from sqlalchemy import text
+    needed = {
+        "teacher": [("category", "VARCHAR(50)")],
+    }
+    for table, cols in needed.items():
+        existing = {row[1] for row in db.session.execute(text(f"PRAGMA table_info({table})"))}
+        for col_name, col_type in cols:
+            if col_name not in existing:
+                db.session.execute(text(f"ALTER TABLE {table} ADD COLUMN {col_name} {col_type}"))
+                print(f"[migrate] {table}.{col_name} added")
+    db.session.commit()
+
+
 def run() -> None:
     app = create_app()
     with app.app_context():
+        ensure_schema()
+        upsert_programs()
+        upsert_teachers()
+        db.session.flush()
+
+        program_meta = {item["slug"]: item for item in PROGRAM_CATALOG}
+        teacher_category_map = {item["name"]: item["category"] for item in TEACHER_CATALOG}
+
         mapping = {
             "home": home_blocks(),
             "o-centre": about_blocks(),
@@ -279,6 +461,9 @@ def run() -> None:
 
         db.session.commit()
         print("Content update complete.")
+        print(f"  programs: {Program.query.count()}")
+        print(f"  teachers: {Teacher.query.count()}")
+        _ = program_meta, teacher_category_map  # reserved for future enrichment
 
 
 if __name__ == "__main__":

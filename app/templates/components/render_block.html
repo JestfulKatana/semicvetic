@@ -60,6 +60,19 @@
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
     </div>
     {% endif %}
+    {% if data.stats_row %}
+    <div class="page-hero-stats">
+        {% for stat in data.stats_row %}
+        <div>
+            <strong>{{ stat.value }}</strong>
+            <span>{{ stat.label }}</span>
+        </div>
+        {% endfor %}
+        {% if data.stats_row_note %}
+        <p class="page-hero-stats-note">{{ data.stats_row_note }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
 </section>
 {% endif %}
 
@@ -164,6 +177,15 @@
 
 {% elif block.component == "programs_grid" %}
 {% set is_catalog = request.path.startswith('/programmy') %}
+{% set category_labels = {
+    'school': 'Подготовка к школе',
+    'speech': 'Логопедия и коррекция',
+    'english': 'Английский язык',
+    'early': 'Раннее развитие',
+    'art': 'Творчество и дизайн',
+    'psychology': 'Психология и здоровье',
+    'camp': 'Летний лагерь',
+} %}
 <section class="section programs-section">
     <div class="section-head split-head">
         <div>
@@ -173,18 +195,29 @@
         <a class="soft-button" href="/programmy/">Все программы →</a>
     </div>
     {% if is_catalog %}
-    <div class="filter-row">
-        <span class="chip is-active">1-3 года</span>
-        <span class="chip">3-5 лет</span>
-        <span class="chip">5-7 лет</span>
-        <span class="chip">7-12 лет</span>
-        <span class="chip">Занятие</span>
-        <span class="chip">Месяц</span>
+    <div class="filter-row" data-program-filters>
+        <span class="chip is-active" data-filter-age="all">Все возрасты</span>
+        <span class="chip" data-filter-age="1-3">1-3 года</span>
+        <span class="chip" data-filter-age="3-5">3-5 лет</span>
+        <span class="chip" data-filter-age="5-7">5-7 лет</span>
+        <span class="chip" data-filter-age="7-12">7-12 лет</span>
+        <span class="chip-divider" aria-hidden="true"></span>
+        <span class="chip" data-filter-price="занятие">Занятие</span>
+        <span class="chip" data-filter-price="мес">Месяц</span>
+        <span class="chip" data-filter-price="смена">Смена</span>
     </div>
-    <div class="program-list">
+    <div class="program-list" data-program-list>
         {% for program in data.programs %}
-        <article class="program-line">
+        <article class="program-line"
+                 data-program-slug="{{ program.slug }}"
+                 data-age-min="{{ program.age_min or 0 }}"
+                 data-age-max="{{ program.age_max or 18 }}"
+                 data-price-unit="{{ program.price_unit or '' }}"
+                 data-category="{{ program.category or '' }}">
             <div>
+                {% if program.category and category_labels.get(program.category) %}
+                <span class="program-accent">{{ category_labels.get(program.category) }}<i>*</i></span>
+                {% endif %}
                 <h3>{{ program.name }}</h3>
                 <div class="tag-row">
                     <span>{{ program.age_label }}</span>
@@ -214,6 +247,7 @@
         </article>
         {% endfor %}
     </div>
+    <p class="filter-empty" data-filter-empty hidden>По\u00a0вашему запросу ничего не\u00a0нашлось. Сбросьте фильтры\u00a0— и\u00a0мы\u00a0покажем все программы.</p>
     {% else %}
     <div class="program-card-grid">
         {% for program in data.programs %}
@@ -266,6 +300,16 @@
 </section>
 
 {% elif block.component == "teachers_grid" %}
+{% set teacher_categories = [
+    ('all', 'Все\u00a0педагоги'),
+    ('school', 'Подготовка к\u00a0школе'),
+    ('english', 'Английский язык'),
+    ('early', 'Раннее развитие'),
+    ('speech', 'Логопедия'),
+    ('art', 'Творчество'),
+    ('psychology', 'Психология'),
+    ('camp', 'Лагерь'),
+] %}
 <section class="section teachers-section">
     <div class="section-head split-head">
         <div>
@@ -277,24 +321,23 @@
     {% if data.show_search or data.show_chips %}
     <div class="teacher-search">
         {% if data.show_search %}
-        <input type="search" placeholder="Найти учителя или предмет">
+        <input type="search" placeholder="Найти учителя или\u00a0предмет" data-teacher-search>
         {% endif %}
-        <div class="filter-row">
-            <span class="chip is-active">Подготовка к школе</span>
-            <span class="chip">Новых обучений</span>
-            <span class="chip">Психология и здоровье</span>
-            <span class="chip">Раннее развитие</span>
-            <span class="chip">Английский язык</span>
-            <span class="chip">Творчество и дизайн</span>
+        <div class="filter-row" data-teacher-filters>
+            {% for key, label in teacher_categories %}
+            <span class="chip {{ 'is-active' if loop.first else '' }}" data-filter-category="{{ key }}">{{ label }}</span>
+            {% endfor %}
         </div>
     </div>
     {% endif %}
-    <div class="teacher-grid">
+    <div class="teacher-grid" data-teacher-grid>
         {% for teacher in data.teachers %}
-        <article class="teacher-card">
+        <article class="teacher-card"
+                 data-category="{{ teacher.category or '' }}"
+                 data-search="{{ (teacher.name ~ ' ' ~ teacher.role ~ ' ' ~ (teacher.specialization or ''))|lower }}">
             <img src="{{ teacher.photo_url or url_for('static', filename='img/mockup/teacher-' ~ ((loop.index0 % 3) + 1) ~ '.png') }}" alt="">
             <div class="teacher-body">
-                <span class="experience">{{ 'Более 10 лет опыта' if loop.index < 3 else 'Опытный специалист' }}</span>
+                <span class="experience">{{ 'Более 10\u00a0лет опыта' if loop.index < 4 else 'Опытный специалист' }}</span>
                 <h3>{{ teacher.name }}</h3>
                 <p class="teacher-role">{{ teacher.role }}</p>
                 <p>{{ teacher.specialization }}</p>
@@ -309,6 +352,9 @@
         </article>
         {% endfor %}
     </div>
+    {% if data.show_search or data.show_chips %}
+    <p class="filter-empty" data-teacher-empty hidden>По\u00a0запросу ничего не\u00a0нашлось. Попробуйте сбросить фильтры.</p>
+    {% endif %}
 </section>
 
 {% elif block.component == "reviews_grid" %}
@@ -400,9 +446,25 @@
 
 {% elif block.component == "compare_table" %}
 <section class="section compare-section">
-    <div class="section-head">
+    <div class="section-head centered-head">
         <h2>{{ data.title }}</h2>
+        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
     </div>
+    {% if data.columns %}
+    <div class="compare-grid">
+        {% for col in data.columns %}
+        <article class="compare-card {{ 'is-accent' if col.accent else '' }}">
+            <h3>{{ col.title }}</h3>
+            {% if col.subtitle %}<p class="compare-subtitle">{{ col.subtitle }}</p>{% endif %}
+            <ul class="compare-list">
+                {% for item in col.points %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
     <div class="comparison-cards">
         {% for row in data.rows %}
         <article class="comparison-card {{ 'is-accent' if loop.first else '' }}">
@@ -412,6 +474,60 @@
         </article>
         {% endfor %}
     </div>
+    {% endif %}
+</section>
+
+{% elif block.component == "program_schedule" %}
+<section class="section schedule-section">
+    <div class="section-head split-head">
+        <div>
+            <h2>{{ data.title or "Программа подготовки" }}</h2>
+            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+        </div>
+        <a class="soft-button" href="#lead-form">Записаться →</a>
+    </div>
+    <div class="schedule-groups">
+        {% for group in data.get("groups", []) %}
+        <article class="schedule-group">
+            <header class="schedule-group-head">
+                <h3>{{ group.title }}</h3>
+                <span class="schedule-tag">{{ data.program.age_label if data.program else '' }}</span>
+            </header>
+            <div class="schedule-group-body">
+                <div class="schedule-teacher">
+                    <span class="teacher-chip">{{ data.program.emoji if data.program else '★' }}</span>
+                    <div>
+                        <strong>{{ data.program.teacher.name if data.program and data.program.teacher else 'Педагог центра' }}</strong>
+                        <small>{{ data.program.teacher.role if data.program and data.program.teacher else 'Специалист' }}</small>
+                    </div>
+                </div>
+                <div class="schedule-slots">
+                    <strong class="col-label">Расписание</strong>
+                    {% for slot in group.slots %}
+                    <div class="schedule-row"><span>{{ slot.day }}</span><span>{{ slot.time }}</span></div>
+                    {% endfor %}
+                </div>
+                <div class="schedule-price">
+                    <strong>{{ data.program.price_label if data.program else '' }}</strong>
+                    <a class="button button-dark" href="#lead-form">Записаться</a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% elif block.component == "photo_strip" %}
+<section class="photo-strip">
+    {% if data.images %}
+    <div class="photo-strip-grid">
+        {% for img in data.images %}
+        <img src="{{ url_for('static', filename=img) }}" alt="">
+        {% endfor %}
+    </div>
+    {% else %}
+    <img src="{{ url_for('static', filename='img/mockup/photo-strip.png') }}" alt="">
+    {% endif %}
 </section>
 
 {% elif block.component == "cta_final" %}
@@ -521,7 +637,7 @@
 
 {% elif block.component == "contact_panel" %}
 {% set variant = data.variant or ('compact' if is_home else 'full') %}
-<section class="section contact-section contact-variant-{{ variant }}" id="lead-form">
+<section class="section contact-section contact-variant-{{ variant }}" id="contact-panel">
     <div class="contact-shell contact-shell-{{ variant }}">
         <div class="contact-info">
             <h2>{{ data.title }}</h2>
