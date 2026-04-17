@@ -82,40 +82,12 @@ h3 { font-size: 25px; font-weight: 700; }
 }
 
 .brand-flower {
-    position: relative;
-    display: inline-block;
+    display: block;
     width: 42px;
     height: 42px;
     flex: 0 0 auto;
+    object-fit: contain;
 }
-
-.brand-flower i {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 18px;
-    height: 18px;
-    border-radius: 999px;
-    transform-origin: 0 0;
-}
-
-.brand-flower i:nth-child(1) { background: #ed4e48; transform: rotate(0deg) translate(8px, -9px); }
-.brand-flower i:nth-child(2) { background: #f0bd20; transform: rotate(52deg) translate(8px, -9px); }
-.brand-flower i:nth-child(3) { background: #58c64f; transform: rotate(104deg) translate(8px, -9px); }
-.brand-flower i:nth-child(4) { background: #2b95e8; transform: rotate(156deg) translate(8px, -9px); }
-.brand-flower i:nth-child(5) { background: #713fd1; transform: rotate(208deg) translate(8px, -9px); }
-.brand-flower i:nth-child(6) { background: #a737ab; transform: rotate(260deg) translate(8px, -9px); }
-.brand-flower i:nth-child(7) { background: #f06b33; transform: rotate(312deg) translate(8px, -9px); }
-
-.mini-flower { width: 96px; height: 96px; }
-.mini-flower i { width: 42px; height: 42px; }
-.mini-flower i:nth-child(1) { transform: rotate(0deg) translate(20px, -21px); }
-.mini-flower i:nth-child(2) { transform: rotate(52deg) translate(20px, -21px); }
-.mini-flower i:nth-child(3) { transform: rotate(104deg) translate(20px, -21px); }
-.mini-flower i:nth-child(4) { transform: rotate(156deg) translate(20px, -21px); }
-.mini-flower i:nth-child(5) { transform: rotate(208deg) translate(20px, -21px); }
-.mini-flower i:nth-child(6) { transform: rotate(260deg) translate(20px, -21px); }
-.mini-flower i:nth-child(7) { transform: rotate(312deg) translate(20px, -21px); }
 
 .header-quick { display: inline-flex; gap: 8px; }
 .quick-icon {
@@ -3693,7 +3665,6 @@ select {
     h2 { font-size: 26px; letter-spacing: -0.9px; }
     .brand strong { max-width: 140px; overflow: hidden; text-overflow: ellipsis; font-size: 16px; }
     .brand-flower { width: 36px; height: 36px; }
-    .brand-flower i { width: 16px; height: 16px; }
     .nav-toggle {
         height: 44px;
         padding: 0 16px;

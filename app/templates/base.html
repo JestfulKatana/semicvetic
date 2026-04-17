@@ -27,9 +27,7 @@
         <header class="site-header">
             <div class="header-row">
                 <a href="{{ url_for('main.home') }}" class="brand" aria-label="Семицветик">
-                    <span class="brand-flower" aria-hidden="true">
-                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-                    </span>
+                    <img class="brand-flower" src="{{ url_for('static', filename='img/logo-flower.png') }}" alt="" width="42" height="42" loading="eager" decoding="async">
                     <strong>{{ site_settings.get('site_name', 'Семицветик') }}</strong>
                 </a>
 
@@ -68,9 +66,7 @@
             <div class="mobile-menu-inner">
                 <div class="mobile-menu-head">
                     <a href="{{ url_for('main.home') }}" class="brand" aria-label="Семицветик">
-                        <span class="brand-flower" aria-hidden="true">
-                            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-                        </span>
+                        <img class="brand-flower" src="{{ url_for('static', filename='img/logo-flower.png') }}" alt="" width="42" height="42" loading="eager" decoding="async">
                         <strong>{{ site_settings.get('site_name', 'Семицветик') }}</strong>
                     </a>
                     <button class="mobile-menu-close" type="button" data-mobile-menu-close aria-label="Закрыть меню">
