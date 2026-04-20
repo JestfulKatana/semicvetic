@@ -1,0 +1,467 @@
+<!doctype html>
+<!--
+    Вариант C — «Program OS» (Bold).
+    Программа — разворот-дашборд. Слева — крупный визуал (фото пространства/занятия).
+    Справа — 4 чётких блока (Кому • Что получит • Как проходит • Кто ведёт). На главной —
+    карусель 3 флагманов. На странице каталога — аккордеон.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Программы — Вариант C — Program OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;760&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+.os-carousel-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+.os-carousel-nav {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.os-carousel-nav span {
+    font-size: 14px;
+    color: var(--muted);
+}
+.os-carousel-nav button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 0;
+    font-size: 18px;
+    cursor: pointer;
+}
+.os-carousel-nav button:hover { background: var(--text); color: #fff; }
+
+.os-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: var(--surface-2);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    width: fit-content;
+}
+.os-tabs button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.os-tabs button.is-active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.os-tabs button .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+}
+
+.program-os {
+    display: grid;
+    grid-template-columns: 1.1fr 1.2fr;
+    gap: 20px;
+    background: var(--surface-2);
+    border-radius: 28px;
+    padding: 20px;
+    min-height: 640px;
+}
+.program-os .visual-block {
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    min-height: 600px;
+    background: linear-gradient(135deg, #ed7735, #d14d20);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px;
+    color: #fff;
+}
+.program-os .visual-block::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.2), transparent 50%);
+    pointer-events: none;
+}
+.program-os .visual-block .top-meta {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.program-os .visual-block .top-meta .cat {
+    display: inline-flex;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(10px);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+.program-os .visual-block .top-meta .age {
+    text-align: right;
+}
+.program-os .visual-block .top-meta .age b {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1;
+}
+.program-os .visual-block .top-meta .age span {
+    font-size: 13px;
+    opacity: 0.85;
+}
+.program-os .visual-block .hero-text {
+    position: relative;
+    z-index: 2;
+}
+.program-os .visual-block .hero-text h2 {
+    color: #fff;
+    font-size: 54px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 16px;
+}
+.program-os .visual-block .hero-text p {
+    color: #fff;
+    opacity: 0.92;
+    font-size: 17px;
+    max-width: 420px;
+}
+.program-os .visual-block .hero-text .emoji-huge {
+    font-size: 120px;
+    line-height: 1;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.program-os .dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr auto;
+    gap: 12px;
+}
+.program-os .dash-card {
+    background: var(--surface);
+    border-radius: 18px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.program-os .dash-card .dash-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--orange);
+}
+.program-os .dash-card .dash-label .num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--orange);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 700;
+}
+.program-os .dash-card h4 {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+.program-os .dash-card p {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--muted);
+}
+.program-os .dash-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.program-os .dash-card ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 14px;
+    line-height: 1.35;
+}
+.program-os .dash-card ul li::before {
+    content: "→";
+    color: var(--orange);
+    font-weight: 700;
+    margin-top: 1px;
+}
+.program-os .dash-card .teacher-block {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 6px;
+}
+.program-os .dash-card .teacher-block .ava {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #e9c8a8;
+    flex: 0 0 auto;
+}
+.program-os .dash-card .teacher-block strong {
+    font-size: 15px;
+    display: block;
+    margin-bottom: 2px;
+}
+.program-os .dash-card .teacher-block small {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.program-os .cta-row {
+    grid-column: 1 / 3;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    padding: 22px;
+    background: var(--text);
+    border-radius: 18px;
+    align-items: center;
+}
+.program-os .cta-row .price {
+    color: #fff;
+}
+.program-os .cta-row .price b {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.8px;
+    display: block;
+}
+.program-os .cta-row .price span {
+    font-size: 13px;
+    opacity: 0.7;
+}
+.program-os .cta-row .button-acid {
+    padding: 14px 24px;
+    font-size: 15px;
+}
+.program-os .cta-row .button-outline {
+    padding: 14px 24px;
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Mobile */
+.mobile-frame-inner .program-os {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 10px;
+}
+.mobile-frame-inner .program-os .visual-block {
+    min-height: 260px;
+    padding: 18px;
+}
+.mobile-frame-inner .program-os .visual-block .hero-text h2 {
+    font-size: 30px;
+}
+.mobile-frame-inner .program-os .visual-block .hero-text .emoji-huge {
+    font-size: 64px;
+}
+.mobile-frame-inner .program-os .dashboard {
+    grid-template-columns: 1fr;
+}
+.mobile-frame-inner .program-os .dash-card {
+    padding: 14px;
+}
+.mobile-frame-inner .program-os .cta-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px;
+}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="stage-main">
+
+<section class="section">
+<div class="os-carousel-head">
+<div>
+<span class="eyebrow">Вариант C · Bold</span>
+<h2>Флагманские программы</h2>
+<p style="max-width: 640px; margin-top: 12px;">Каждая&nbsp;— как отдельный продукт. Открывается как&nbsp;мини-лендинг с&nbsp;ответом на&nbsp;4 ключевых вопроса.</p>
+</div>
+<div class="os-carousel-nav">
+    <span>01&nbsp;/&nbsp;03</span>
+    <button>←</button>
+    <button>→</button>
+</div>
+</div>
+
+<!-- Program filter tabs (on catalog page) -->
+<div class="os-tabs">
+    <button class="is-active"><span class="dot" style="background: var(--orange);"></span>Все направления</button>
+    <button><span class="dot" style="background: var(--orange);"></span>Раннее развитие</button>
+    <button><span class="dot" style="background: var(--purple);"></span>Подготовка к&nbsp;школе</button>
+    <button><span class="dot" style="background: var(--blue);"></span>Языки</button>
+    <button><span class="dot" style="background: var(--pink);"></span>Творчество</button>
+</div>
+
+<article class="program-os">
+
+    <div class="visual-block">
+        <div class="top-meta">
+            <span class="cat">Раннее развитие</span>
+            <div class="age"><b>3–5</b><span>лет</span></div>
+        </div>
+        <div class="hero-text">
+            <span class="emoji-huge">🌿</span>
+            <h2>Умничка</h2>
+            <p>Комплексная развивающая программа. Четыре занятия в&nbsp;неделю&nbsp;— речь, логика, мелкая моторика, социальный навык.</p>
+        </div>
+    </div>
+
+    <div class="dashboard">
+
+        <div class="dash-card">
+            <div class="dash-label"><span class="num">1</span>Кому подойдёт</div>
+            <h4>Детям 3–5&nbsp;лет</h4>
+            <p>Особенно если&nbsp;ребёнок ещё не&nbsp;ходит в&nbsp;сад или&nbsp;нужна мягкая подготовка к&nbsp;нему.</p>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-label"><span class="num">2</span>Ребёнок получит</div>
+            <ul>
+                <li>Речь полными фразами</li>
+                <li>Счёт и&nbsp;буквы в&nbsp;игре</li>
+                <li>Навык работы в&nbsp;группе</li>
+            </ul>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-label"><span class="num">3</span>Как проходит</div>
+            <p><strong style="color:var(--text);">45 минут</strong>&nbsp;· 4 раза в&nbsp;неделю<br>Группа до&nbsp;8 детей. Четыре зоны&nbsp;— речь, математика, творчество, движение.</p>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-label"><span class="num">4</span>Кто ведёт</div>
+            <div class="teacher-block">
+                <div class="ava"></div>
+                <div><strong>Анна Смирнова</strong><small>10 лет стажа, педагог-дефектолог</small></div>
+            </div>
+        </div>
+
+        <div class="cta-row">
+            <div class="price"><b>6 800&nbsp;₽</b><span>в&nbsp;месяц · или&nbsp;1 100&nbsp;₽ за&nbsp;занятие</span></div>
+            <button class="button-outline">Расписание</button>
+            <button class="button-acid">Записаться →</button>
+        </div>
+
+    </div>
+
+</article>
+
+<!-- Mini-preview of other programs (compact cards below OS) -->
+<div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 24px;">
+    <div style="padding: 18px; background: var(--surface-2); border-radius: 16px; cursor: pointer;">
+        <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--purple); display: grid; place-items: center; color:#fff; font-size: 22px; margin-bottom: 12px;">🎒</div>
+        <strong style="display:block; font-size: 15px;">Подготовка к&nbsp;школе</strong>
+        <small style="color:var(--muted); font-size:13px;">5–7 лет · от&nbsp;8 400&nbsp;₽</small>
+    </div>
+    <div style="padding: 18px; background: var(--surface-2); border-radius: 16px; cursor: pointer;">
+        <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--blue); display: grid; place-items: center; color:#fff; font-size: 22px; margin-bottom: 12px;">🌍</div>
+        <strong style="display:block; font-size: 15px;">Английский</strong>
+        <small style="color:var(--muted); font-size:13px;">4–10 лет · от&nbsp;7 200&nbsp;₽</small>
+    </div>
+    <div style="padding: 18px; background: var(--surface-2); border-radius: 16px; cursor: pointer;">
+        <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--pink); display: grid; place-items: center; color:#fff; font-size: 22px; margin-bottom: 12px;">🎨</div>
+        <strong style="display:block; font-size: 15px;">Изостудия</strong>
+        <small style="color:var(--muted); font-size:13px;">4–12 лет · от&nbsp;5 600&nbsp;₽</small>
+    </div>
+    <div style="padding: 18px; background: var(--surface-2); border-radius: 16px; cursor: pointer;">
+        <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--green); display: grid; place-items: center; color:#fff; font-size: 22px; margin-bottom: 12px;">☀</div>
+        <strong style="display:block; font-size: 15px;">Летний лагерь</strong>
+        <small style="color:var(--muted); font-size:13px;">7–12 лет · 18 500&nbsp;₽</small>
+    </div>
+</div>
+
+</section>
+
+</div>
+
+<aside class="stage-note">
+<h4>Вариант C · Bold</h4>
+<p><b>Идея:</b> каждая программа&nbsp;— продукт, не&nbsp;плитка. 4&nbsp;блока-дашборд отвечают на&nbsp;все вопросы до&nbsp;перехода на&nbsp;лендинг.</p>
+<p><b>Что нового:</b> hero-разворот слева (фото/иллюстрация на&nbsp;весь экран), 4-квадратная панель справа, чёрная CTA-строка с&nbsp;ценой. На&nbsp;главной&nbsp;— карусель из&nbsp;3 флагманов. В&nbsp;каталоге&nbsp;— аккордеон со&nbsp;всеми.</p>
+<p><b>Цена:</b> 1.5 дня фронта + новый компонент в&nbsp;render_block.html. Нужны живые фото для&nbsp;hero-блока на&nbsp;каждую программу.</p>
+<p><b>Подходит:</b> если Семицветик хочет чувствоваться как&nbsp;серьёзный продукт, а&nbsp;не&nbsp;список услуг. Работает, когда&nbsp;есть контент (фото, outcome-данные, биография педагога).</p>
+
+<div class="mobile-frame">
+<p style="font-size: 13px; color: var(--muted); margin: 0 0 8px;">Мобильный вид</p>
+<div class="mobile-frame-inner" style="padding: 10px;">
+<article class="program-os">
+    <div class="visual-block">
+        <div class="top-meta">
+            <span class="cat" style="font-size:11px;">Раннее</span>
+            <div class="age"><b style="font-size:22px;">3–5</b><span>лет</span></div>
+        </div>
+        <div class="hero-text">
+            <span class="emoji-huge">🌿</span>
+            <h2 style="font-size:26px;">Умничка</h2>
+            <p style="font-size:13px;">Комплексная программа, 4 раза в&nbsp;неделю.</p>
+        </div>
+    </div>
+    <div class="dashboard">
+        <div class="dash-card">
+            <div class="dash-label"><span class="num">1</span>Кому</div>
+            <h4 style="font-size:14px;">Детям 3–5&nbsp;лет</h4>
+        </div>
+        <div class="dash-card">
+            <div class="dash-label"><span class="num">2</span>Получит</div>
+            <ul style="font-size:13px;">
+                <li>Речь</li>
+                <li>Счёт</li>
+            </ul>
+        </div>
+        <div class="cta-row" style="grid-template-columns: 1fr; gap: 8px; padding: 14px;">
+            <div class="price"><b style="font-size:22px;">6 800&nbsp;₽</b><span>в&nbsp;месяц</span></div>
+            <button class="button-acid">Записаться →</button>
+        </div>
+    </div>
+</article>
+</div>
+</div>
+</aside>
+</div>
+</body>
+</html>

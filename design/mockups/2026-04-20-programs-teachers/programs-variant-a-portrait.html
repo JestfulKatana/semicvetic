@@ -1,0 +1,317 @@
+<!doctype html>
+<!--
+    Вариант A — «Портрет программы» (Safe).
+    Минимальная эволюция текущей цветной плитки. Добавлены:
+    - кружок-портрет ребёнка (живое лицо)
+    - возрастная пилюля крупным кеглем как главный якорь
+    - микро-блок «Что получит ребёнок» — 3 галки, одна строка каждая
+    - педагог крупно внизу, без мелких аватарок
+    Сетка и цветовой код программ сохранены.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Программы — Вариант A — Портрет программы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;760&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+.program-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+.program-tile {
+    position: relative;
+    min-height: 380px;
+    padding: 32px 36px 32px 36px;
+    border-radius: 28px;
+    overflow: hidden;
+    color: #fcf8f4;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    gap: 18px;
+    cursor: pointer;
+    transition: transform .2s ease;
+}
+.program-tile:hover { transform: translateY(-3px); }
+.program-tile h3, .program-tile p, .program-tile span, .program-tile strong, .program-tile li { color: #fcf8f4; }
+.program-tile .age-pill {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(252, 248, 244, 0.22);
+    backdrop-filter: blur(10px);
+    font-size: 14px;
+    font-weight: 500;
+    width: fit-content;
+}
+.program-tile .age-pill b {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+}
+.program-tile .portrait {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+    width: 144px;
+    height: 144px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(255,255,255,0.22);
+    border: 4px solid rgba(252, 248, 244, 0.3);
+    align-self: start;
+    justify-self: end;
+    display: grid;
+    place-items: center;
+    font-size: 48px;
+}
+.program-tile .body {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 480px;
+}
+.program-tile h3 {
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -1.3px;
+}
+.program-tile .tagline {
+    font-size: 15px;
+    line-height: 1.4;
+    opacity: 0.88;
+}
+.program-tile .outcomes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.program-tile .outcomes li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 14px;
+    line-height: 1.35;
+    opacity: 0.95;
+}
+.program-tile .outcomes li::before {
+    content: "✓";
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    background: rgba(252, 248, 244, 0.22);
+    font-size: 11px;
+    margin-top: 2px;
+}
+.program-tile .foot {
+    grid-column: 1 / 3;
+    grid-row: 3 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(252, 248, 244, 0.18);
+}
+.program-tile .teacher-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.program-tile .teacher-row .ava {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    overflow: hidden;
+}
+.program-tile .teacher-row strong { font-size: 14px; font-weight: 600; display: block; }
+.program-tile .teacher-row small { font-size: 12px; opacity: 0.75; }
+.program-tile .price-block { display: flex; align-items: baseline; gap: 8px; }
+.program-tile .price-block b { font-size: 26px; font-weight: 700; letter-spacing: -0.8px; }
+.program-tile .price-block span { font-size: 12px; opacity: 0.7; }
+
+.t-orange { background: #ed7735; }
+.t-purple { background: #6359c2; }
+.t-blue   { background: #4c83f1; }
+.t-pink   { background: #db5eb4; }
+
+/* Mobile mini-variant */
+.mobile-frame-inner .program-tile {
+    min-height: 320px;
+    padding: 20px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 12px;
+}
+.mobile-frame-inner .program-tile .portrait {
+    width: 72px; height: 72px;
+    grid-column: 1; grid-row: 1;
+    justify-self: start;
+}
+.mobile-frame-inner .program-tile .age-pill {
+    grid-row: 2;
+}
+.mobile-frame-inner .program-tile h3 { font-size: 24px; }
+.mobile-frame-inner .program-tile .body { grid-row: 3; }
+.mobile-frame-inner .program-tile .foot { grid-column: 1; grid-row: 4; flex-direction: column; align-items: flex-start; gap: 12px; }
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="stage-main">
+
+<section class="section">
+<div class="section-head">
+<div>
+<span class="eyebrow">Вариант A · Safe</span>
+<h2>Программы для&nbsp;детей</h2>
+<p style="max-width: 640px; margin-top: 12px;">Все направления в&nbsp;Семицветике — с&nbsp;ответом на&nbsp;три вопроса родителя: для&nbsp;кого, что получит ребёнок, кто ведёт.</p>
+</div>
+<button class="soft-button">Все программы →</button>
+</div>
+
+<div class="program-card-grid">
+
+<article class="program-tile t-orange">
+    <span class="age-pill">Возраст <b>3–5 лет</b></span>
+    <div class="portrait">🌿</div>
+    <div class="body">
+        <h3>Умничка</h3>
+        <p class="tagline">Комплексное развитие 4 раза в&nbsp;неделю — речь, логика, мелкая моторика, подготовка к&nbsp;детскому саду.</p>
+        <ul class="outcomes">
+            <li>Научится уверенно говорить полными фразами</li>
+            <li>Освоит счёт до&nbsp;20 и&nbsp;первые буквы</li>
+            <li>Адаптируется к&nbsp;коллективу</li>
+        </ul>
+    </div>
+    <div class="foot">
+        <div class="teacher-row">
+            <div class="ava" style="background:#e9c8a8;"></div>
+            <div><strong>Анна Смирнова</strong><small>10 лет стажа</small></div>
+        </div>
+        <div class="price-block"><b>6 800&nbsp;₽</b><span>в&nbsp;месяц</span></div>
+    </div>
+</article>
+
+<article class="program-tile t-purple">
+    <span class="age-pill">Возраст <b>5–7 лет</b></span>
+    <div class="portrait">🎒</div>
+    <div class="body">
+        <h3>Подготовка к&nbsp;школе</h3>
+        <p class="tagline">Чтение, математика, письмо и&nbsp;навык высидеть 35 минут — за&nbsp;год до&nbsp;первого класса.</p>
+        <ul class="outcomes">
+            <li>Читает бегло, 60 слов в&nbsp;минуту</li>
+            <li>Решает задачи в&nbsp;одно действие</li>
+            <li>Знает, как вести себя на&nbsp;уроке</li>
+        </ul>
+    </div>
+    <div class="foot">
+        <div class="teacher-row">
+            <div class="ava" style="background:#d8b9f0;"></div>
+            <div><strong>Ольга Кузнецова</strong><small>Высшая категория</small></div>
+        </div>
+        <div class="price-block"><b>8 400&nbsp;₽</b><span>в&nbsp;месяц</span></div>
+    </div>
+</article>
+
+<article class="program-tile t-blue">
+    <span class="age-pill">Возраст <b>4–10 лет</b></span>
+    <div class="portrait">🌍</div>
+    <div class="body">
+        <h3>Английский язык</h3>
+        <p class="tagline">Разговорный английский с&nbsp;носителем речи. Игры, песни, диалоги — никакой зубрёжки.</p>
+        <ul class="outcomes">
+            <li>Отвечает на&nbsp;бытовые вопросы по-английски</li>
+            <li>Слышит речь на&nbsp;слух, не&nbsp;боится говорить</li>
+            <li>Базовая лексика&nbsp;— 300+ слов за&nbsp;год</li>
+        </ul>
+    </div>
+    <div class="foot">
+        <div class="teacher-row">
+            <div class="ava" style="background:#b6cff5;"></div>
+            <div><strong>Марина Владимировна</strong><small>Сертификат Cambridge</small></div>
+        </div>
+        <div class="price-block"><b>7 200&nbsp;₽</b><span>в&nbsp;месяц</span></div>
+    </div>
+</article>
+
+<article class="program-tile t-pink">
+    <span class="age-pill">Возраст <b>4–12 лет</b></span>
+    <div class="portrait">🎨</div>
+    <div class="body">
+        <h3>Изостудия и&nbsp;лепка</h3>
+        <p class="tagline">Настоящая студия&nbsp;— краски, глина, бумага, гипс. Не&nbsp;раскраски, а&nbsp;творческое мышление.</p>
+        <ul class="outcomes">
+            <li>Передаёт характер персонажа в&nbsp;рисунке</li>
+            <li>Работает с&nbsp;5 разными материалами</li>
+            <li>Участвует в&nbsp;выставке раз в&nbsp;квартал</li>
+        </ul>
+    </div>
+    <div class="foot">
+        <div class="teacher-row">
+            <div class="ava" style="background:#f2c6e2;"></div>
+            <div><strong>Елена Белова</strong><small>Художник, 12 лет в&nbsp;центре</small></div>
+        </div>
+        <div class="price-block"><b>5 600&nbsp;₽</b><span>в&nbsp;месяц</span></div>
+    </div>
+</article>
+
+</div>
+</section>
+
+</div>
+
+<aside class="stage-note">
+<h4>Вариант A · Safe</h4>
+<p><b>Идея:</b> не&nbsp;ломаем сетку, добавляем четыре элемента, которые отвечают на&nbsp;вопросы родителя за&nbsp;3 секунды.</p>
+<p><b>Что нового:</b> кружок-портрет, возрастная пилюля с&nbsp;крупной цифрой, три галки «ребёнок научится», педагог крупно внизу.</p>
+<p><b>Цена:</b> ~2–3 часа фронта. В&nbsp;модели нужно добавить 3 буллета outcomes — остальное уже есть.</p>
+<p><b>Подходит:</b> если хочется быстро поднять считываемость без ломки того, что уже работает.</p>
+
+<div class="mobile-frame">
+<p style="font-size: 13px; color: var(--muted); margin: 0 0 8px;">Мобильный вид</p>
+<div class="mobile-frame-inner">
+<article class="program-tile t-orange" style="min-height: auto;">
+    <div class="portrait" style="width:64px;height:64px;font-size:28px;">🌿</div>
+    <span class="age-pill">Возраст <b>3–5 лет</b></span>
+    <div class="body">
+        <h3 style="font-size:22px;">Умничка</h3>
+        <p class="tagline" style="font-size:13px;">Комплексное развитие 4 раза в&nbsp;неделю.</p>
+        <ul class="outcomes">
+            <li>Говорит полными фразами</li>
+            <li>Считает до&nbsp;20</li>
+            <li>Адаптируется к&nbsp;коллективу</li>
+        </ul>
+    </div>
+    <div class="foot">
+        <div class="teacher-row">
+            <div class="ava" style="background:#e9c8a8;"></div>
+            <div><strong>Анна&nbsp;Смирнова</strong><small>10 лет стажа</small></div>
+        </div>
+        <div class="price-block"><b>6 800&nbsp;₽</b><span>в&nbsp;мес</span></div>
+    </div>
+</article>
+</div>
+</div>
+
+</aside>
+</div>
+</body>
+</html>

@@ -53,12 +53,12 @@
                 <div class="header-socials" aria-label="Социальные сети">
                     {% if site_settings.get('social_vk') %}
                     <a href="{{ site_settings.get('social_vk') }}" target="_blank" rel="noopener" aria-label="ВКонтакте">
-                        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12.79 16.56c-5.82 0-9.15-3.99-9.29-10.62h2.92c.1 4.86 2.24 6.92 3.94 7.34V5.94h2.76v4.22c1.67-.18 3.43-2.08 4.02-4.22h2.76c-.45 2.64-2.35 4.54-3.7 5.32 1.35.63 3.51 2.3 4.34 5.3h-3.04c-.64-2.02-2.26-3.58-4.38-3.78v3.78h-.33z"/></svg>
+                        <img src="{{ url_for('static', filename='img/figma/social/vk.png') }}" alt="" width="30" height="30" loading="lazy" decoding="async">
                     </a>
                     {% endif %}
                     {% if site_settings.get('social_tg') %}
                     <a href="{{ site_settings.get('social_tg') }}" target="_blank" rel="noopener" aria-label="Telegram">
-                        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M20.6 4.2 2.9 11c-1.2.5-1.2 1.2-.2 1.5l4.5 1.4 1.7 5.3c.2.6.1.9.7.9.5 0 .7-.2 1-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.8l3-14c.3-1.2-.5-1.8-1.4-1.4zM8.4 14.2l9.8-6.2c.4-.3.8-.1.5.2l-8 7.3-.3 3.3-2-4.6z"/></svg>
+                        <img src="{{ url_for('static', filename='img/figma/social/tg.png') }}" alt="" width="30" height="30" loading="lazy" decoding="async">
                     </a>
                     {% endif %}
                 </div>
@@ -98,10 +98,10 @@
                 </div>
                 <div class="mobile-menu-socials" aria-label="Социальные сети">
                     <a href="{{ vk_url }}" target="_blank" rel="noopener" aria-label="ВКонтакте">
-                        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12.79 16.56c-5.82 0-9.15-3.99-9.29-10.62h2.92c.1 4.86 2.24 6.92 3.94 7.34V5.94h2.76v4.22c1.67-.18 3.43-2.08 4.02-4.22h2.76c-.45 2.64-2.35 4.54-3.7 5.32 1.35.63 3.51 2.3 4.34 5.3h-3.04c-.64-2.02-2.26-3.58-4.38-3.78v3.78h-.33z"/></svg>
+                        <img src="{{ url_for('static', filename='img/figma/social/vk.png') }}" alt="" width="40" height="40" loading="lazy" decoding="async">
                     </a>
                     <a href="{{ tg_url }}" target="_blank" rel="noopener" aria-label="Telegram">
-                        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20.6 4.2 2.9 11c-1.2.5-1.2 1.2-.2 1.5l4.5 1.4 1.7 5.3c.2.6.1.9.7.9.5 0 .7-.2 1-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.8l3-14c.3-1.2-.5-1.8-1.4-1.4zM8.4 14.2l9.8-6.2c.4-.3.8-.1.5.2l-8 7.3-.3 3.3-2-4.6z"/></svg>
+                        <img src="{{ url_for('static', filename='img/figma/social/tg.png') }}" alt="" width="40" height="40" loading="lazy" decoding="async">
                     </a>
                 </div>
                 <a class="button button-primary mobile-menu-cta" href="#lead-form" data-mobile-menu-close-link>Записаться на занятие</a>

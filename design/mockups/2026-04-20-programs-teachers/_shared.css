@@ -1,0 +1,187 @@
+/* Базовые переменные и стили, общие для всех мокапов */
+:root {
+    --bg: #f5ebe9;
+    --surface: #fcf8f4;
+    --surface-2: #f2eeea;
+    --text: #332f2e;
+    --muted: #726960;
+    --muted-light: #91857f;
+    --line: rgba(0, 0, 0, 0.10);
+    --orange: #ed7735;
+    --orange-deep: #d14d20;
+    --green: #00b43c;
+    --acid: #b3f457;
+    --purple: #6359c2;
+    --blue: #4c83f1;
+    --pink: #db5eb4;
+    --yellow: #ffee51;
+    --shadow: 0 24px 70px rgba(53, 45, 42, 0.08);
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0;
+    font-family: "Onest", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+}
+p { margin: 0; color: var(--muted); line-height: 1.45; }
+h1, h2, h3, h4 { margin: 0; color: var(--text); line-height: 1.04; letter-spacing: 0; }
+h1 { font-size: 64px; font-weight: 760; letter-spacing: -3.2px; }
+h2 { font-size: 46px; font-weight: 740; letter-spacing: -1.8px; }
+h3 { font-size: 25px; font-weight: 700; letter-spacing: -0.75px; }
+
+.stage {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 24px;
+    align-items: start;
+}
+.stage-main { min-width: 0; }
+.stage-note {
+    padding: 20px 24px;
+    background: #eadfdc;
+    border-radius: 18px;
+    position: sticky;
+    top: 24px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text);
+}
+.stage-note b { color: var(--orange-deep); }
+.stage-note p { color: var(--text); margin-top: 8px; font-size: 14px; }
+.stage-note h4 { font-size: 18px; margin-bottom: 6px; }
+.stage-note .mobile-frame {
+    margin-top: 18px;
+    background: var(--bg);
+    border-radius: 32px;
+    padding: 14px;
+    border: 1px solid var(--line);
+}
+.stage-note .mobile-frame-inner {
+    border-radius: 22px;
+    overflow: hidden;
+    background: var(--surface);
+    min-height: 520px;
+    padding: 20px 16px;
+}
+
+.section {
+    max-width: 1580px;
+    margin: 0 auto;
+    padding: 68px 70px;
+    background: var(--surface);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+}
+.section + .section { margin-top: 10px; }
+
+.section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 36px;
+}
+.eyebrow {
+    display: inline-block;
+    color: var(--orange);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+.soft-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 20px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    border: 0;
+}
+.button-dark {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--text);
+    color: #fff;
+    border-radius: 14px;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    border: 0;
+}
+.button-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 14px;
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    border: 1px solid var(--line);
+}
+.button-acid {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--acid);
+    color: var(--text);
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: 0;
+}
+.chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0;
+}
+.chip.is-active { background: var(--text); color: #fff; }
+
+/* Fake photo — SVG placeholder with initials and color */
+.ph {
+    display: grid;
+    place-items: center;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+/* Mobile frame scaling */
+.mobile-frame-inner h3 { font-size: 20px; }
+.mobile-frame-inner h2 { font-size: 26px; }
+.mobile-frame-inner h1 { font-size: 32px; }
+.mobile-frame-inner p { font-size: 14px; }

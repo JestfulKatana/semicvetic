@@ -1,0 +1,392 @@
+<!doctype html>
+<!--
+    Вариант B — «Профиль с пруфами» (Evolve).
+    Педагог = мини-профиль с доказательствами:
+    - фото
+    - имя + роль
+    - 3 метрики-пилюли (стаж, категория, любимый возраст)
+    - строка отзыва родителя
+    - чипы ведомых программ
+    - прямая запись к конкретному педагогу
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Педагоги — Вариант B — Профиль с пруфами</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;760&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+.teacher-filter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+.teacher-search-input {
+    flex: 0 0 320px;
+    padding: 14px 20px;
+    border-radius: 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    font: inherit;
+    font-size: 15px;
+}
+.teacher-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.teacher-grid-v2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 14px;
+}
+.teacher-card-v2 {
+    background: var(--surface-2);
+    border-radius: 22px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 136px 1fr;
+    gap: 18px;
+    transition: background .15s;
+}
+.teacher-card-v2:hover { background: #efe9e4; }
+.teacher-card-v2 .photo {
+    width: 136px;
+    height: 180px;
+    border-radius: 16px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: grid;
+    place-items: center;
+    font-size: 70px;
+    color: rgba(255,255,255,0.5);
+}
+.teacher-card-v2 .photo .badge-cat {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.3px;
+}
+.teacher-card-v2 .body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+.teacher-card-v2 h3 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.6px;
+}
+.teacher-card-v2 .role {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+.teacher-card-v2 .metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+.teacher-card-v2 .metric {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.teacher-card-v2 .metric small {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-weight: 600;
+}
+.teacher-card-v2 .metric strong {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.teacher-card-v2 .parent-quote {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--muted);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    background: #fff8ef;
+    border-radius: 10px;
+    border: 1px dashed #f4d4a8;
+}
+.teacher-card-v2 .parent-quote::before {
+    content: "❝";
+    color: var(--orange);
+    font-size: 20px;
+    line-height: 1;
+    font-family: serif;
+}
+.teacher-card-v2 .parent-quote em { font-style: normal; font-weight: 600; color: var(--text); }
+.teacher-card-v2 .programs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.teacher-card-v2 .programs span {
+    padding: 4px 10px;
+    background: var(--surface);
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    border: 1px solid var(--line);
+}
+.teacher-card-v2 .programs span:hover { background: var(--text); color: #fff; border-color: var(--text); }
+.teacher-card-v2 .teacher-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--text);
+    color: #fff;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+    margin-top: auto;
+}
+.teacher-card-v2 .teacher-cta .arrow {
+    transition: transform .15s;
+}
+.teacher-card-v2:hover .teacher-cta .arrow { transform: translateX(2px); }
+
+.photo-a { background: linear-gradient(160deg, #f4d4b8, #e9b58a); }
+.photo-b { background: linear-gradient(160deg, #d4c7f0, #b39ed8); }
+.photo-c { background: linear-gradient(160deg, #c4d9f4, #95b5e0); }
+.photo-d { background: linear-gradient(160deg, #f5d2e6, #e39bc4); }
+
+/* Mobile */
+.mobile-frame-inner .teacher-card-v2 {
+    grid-template-columns: 100px 1fr;
+    padding: 14px;
+    gap: 12px;
+}
+.mobile-frame-inner .teacher-card-v2 .photo {
+    width: 100px;
+    height: 140px;
+    font-size: 48px;
+}
+.mobile-frame-inner .teacher-card-v2 h3 { font-size: 17px; }
+.mobile-frame-inner .teacher-card-v2 .metric strong { font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="stage-main">
+
+<section class="section">
+<div class="section-head">
+<div>
+<span class="eyebrow">Вариант B · Evolve</span>
+<h2>Команда педагогов</h2>
+<p style="max-width: 600px; margin-top: 12px;">13 специалистов. Среди&nbsp;них 7&nbsp;— с&nbsp;высшей и&nbsp;первой категорией, 9&nbsp;работают у&nbsp;нас больше 5 лет. Выбирайте, с&nbsp;кем комфортно именно вам.</p>
+</div>
+</div>
+
+<div class="teacher-filter-row">
+<input class="teacher-search-input" type="search" placeholder="Найти педагога или предмет">
+<div class="teacher-chips">
+    <button class="chip is-active">Все педагоги <small style="margin-left:4px;opacity:0.6;">13</small></button>
+    <button class="chip">Раннее развитие <small style="margin-left:4px;opacity:0.6;">4</small></button>
+    <button class="chip">Подготовка к&nbsp;школе <small style="margin-left:4px;opacity:0.6;">3</small></button>
+    <button class="chip">Английский <small style="margin-left:4px;opacity:0.6;">2</small></button>
+    <button class="chip">Творчество <small style="margin-left:4px;opacity:0.6;">3</small></button>
+    <button class="chip">Логопед <small style="margin-left:4px;opacity:0.6;">1</small></button>
+</div>
+</div>
+
+<div class="teacher-grid-v2">
+
+<article class="teacher-card-v2">
+    <div class="photo photo-a">
+        <span class="badge-cat">Раннее развитие</span>
+        👩
+    </div>
+    <div class="body">
+        <div>
+            <h3>Анна Смирнова</h3>
+            <p class="role">Дефектолог · педагог-психолог</p>
+        </div>
+        <div class="metrics">
+            <div class="metric"><small>Стаж</small><strong>10 лет</strong></div>
+            <div class="metric"><small>Категория</small><strong>Первая</strong></div>
+            <div class="metric"><small>Любит возраст</small><strong>3–5 лет</strong></div>
+        </div>
+        <div class="parent-quote">
+            <span><em>Мама Миши, 4 года:</em> «Нашла человека, которому&nbsp;могу доверить свои страхи и&nbsp;своего ребёнка одновременно».</span>
+        </div>
+        <div>
+            <p style="font-size:11px; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; color: var(--muted); margin-bottom: 6px;">Ведёт программы</p>
+            <div class="programs">
+                <span>Умничка</span>
+                <span>Мини-сад «Капелька»</span>
+            </div>
+        </div>
+        <button class="teacher-cta">Записаться к&nbsp;Анне <span class="arrow">→</span></button>
+    </div>
+</article>
+
+<article class="teacher-card-v2">
+    <div class="photo photo-b">
+        <span class="badge-cat">Подготовка к школе</span>
+        👩‍🏫
+    </div>
+    <div class="body">
+        <div>
+            <h3>Ольга Кузнецова</h3>
+            <p class="role">Учитель начальных классов</p>
+        </div>
+        <div class="metrics">
+            <div class="metric"><small>Стаж</small><strong>14 лет</strong></div>
+            <div class="metric"><small>Категория</small><strong>Высшая</strong></div>
+            <div class="metric"><small>Любит возраст</small><strong>5–7 лет</strong></div>
+        </div>
+        <div class="parent-quote">
+            <span><em>Папа Сони, 6 лет:</em> «Дочь в&nbsp;первый класс шла спокойно&nbsp;— знала, что такое &laquo;урок&raquo; и&nbsp;как&nbsp;с&nbsp;учителем».</span>
+        </div>
+        <div>
+            <p style="font-size:11px; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; color: var(--muted); margin-bottom: 6px;">Ведёт программы</p>
+            <div class="programs">
+                <span>Подготовка к&nbsp;школе</span>
+                <span>Отличник</span>
+            </div>
+        </div>
+        <button class="teacher-cta">Записаться к&nbsp;Ольге <span class="arrow">→</span></button>
+    </div>
+</article>
+
+<article class="teacher-card-v2">
+    <div class="photo photo-c">
+        <span class="badge-cat">Английский язык</span>
+        👩‍💼
+    </div>
+    <div class="body">
+        <div>
+            <h3>Марина Владимировна</h3>
+            <p class="role">Преподаватель английского · Cambridge CELTA</p>
+        </div>
+        <div class="metrics">
+            <div class="metric"><small>Стаж</small><strong>8 лет</strong></div>
+            <div class="metric"><small>Сертификат</small><strong>CELTA</strong></div>
+            <div class="metric"><small>Любит возраст</small><strong>4–10 лет</strong></div>
+        </div>
+        <div class="parent-quote">
+            <span><em>Мама Леры, 7 лет:</em> «Через полгода дочь сама начала подписывать английскими буквами свои рисунки».</span>
+        </div>
+        <div>
+            <p style="font-size:11px; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; color: var(--muted); margin-bottom: 6px;">Ведёт программы</p>
+            <div class="programs">
+                <span>Английский 4–10</span>
+                <span>Разговорный клуб</span>
+            </div>
+        </div>
+        <button class="teacher-cta">Записаться к&nbsp;Марине <span class="arrow">→</span></button>
+    </div>
+</article>
+
+<article class="teacher-card-v2">
+    <div class="photo photo-d">
+        <span class="badge-cat">Творчество</span>
+        👩‍🎨
+    </div>
+    <div class="body">
+        <div>
+            <h3>Елена Белова</h3>
+            <p class="role">Художник-педагог · Член Союза художников</p>
+        </div>
+        <div class="metrics">
+            <div class="metric"><small>Стаж</small><strong>12 лет</strong></div>
+            <div class="metric"><small>В центре с</small><strong>2011</strong></div>
+            <div class="metric"><small>Любит возраст</small><strong>6–12 лет</strong></div>
+        </div>
+        <div class="parent-quote">
+            <span><em>Мама Тимы, 8 лет:</em> «У&nbsp;Елены Сергеевны сын впервые сказал &laquo;я&nbsp;умею&raquo; про&nbsp;что-то, кроме Minecraft».</span>
+        </div>
+        <div>
+            <p style="font-size:11px; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; color: var(--muted); margin-bottom: 6px;">Ведёт программы</p>
+            <div class="programs">
+                <span>Изостудия</span>
+                <span>Лепка</span>
+                <span>Дизайн</span>
+            </div>
+        </div>
+        <button class="teacher-cta">Записаться к&nbsp;Елене <span class="arrow">→</span></button>
+    </div>
+</article>
+
+</div>
+</section>
+
+</div>
+
+<aside class="stage-note">
+<h4>Вариант B · Evolve</h4>
+<p><b>Идея:</b> педагог&nbsp;— выбираемая единица. Три&nbsp;пилюли фактов + одна строчка родительского отзыва + прямая запись&nbsp;именно к&nbsp;нему.</p>
+<p><b>Что нового:</b> блок метрик 3×, дашед-блок родительской цитаты (персонально&nbsp;к&nbsp;педагогу, а&nbsp;не&nbsp;к&nbsp;центру), кликабельные программы в&nbsp;карточке.</p>
+<p><b>Цена:</b> ~полдня фронта. В&nbsp;модели Teacher&nbsp;— добавить `favorite_age`, `parent_quote` (или&nbsp;связь с&nbsp;отдельной таблицей отзывов). Лучше&nbsp;собрать у&nbsp;каждого педагога 1&nbsp;цитату от&nbsp;родителя.</p>
+<p><b>Подходит:</b> если хотим, чтобы «запись на&nbsp;педагога» стала реальным сценарием, а&nbsp;не&nbsp;просто тегом.</p>
+
+<div class="mobile-frame">
+<p style="font-size: 13px; color: var(--muted); margin: 0 0 8px;">Мобильный вид</p>
+<div class="mobile-frame-inner" style="padding: 10px;">
+<article class="teacher-card-v2">
+    <div class="photo photo-a">
+        <span class="badge-cat" style="font-size:9px;">Раннее</span>
+        👩
+    </div>
+    <div class="body">
+        <div>
+            <h3>Анна&nbsp;Смирнова</h3>
+            <p class="role" style="font-size:12px;">Дефектолог</p>
+        </div>
+        <div class="metrics">
+            <div class="metric"><small>Стаж</small><strong>10 лет</strong></div>
+            <div class="metric"><small>Категория</small><strong>Первая</strong></div>
+            <div class="metric"><small>Возраст</small><strong>3–5</strong></div>
+        </div>
+        <div class="parent-quote" style="font-size:11px; padding: 8px;">
+            <span><em>Мама&nbsp;Миши:</em> «Могу&nbsp;доверить свои&nbsp;страхи и&nbsp;своего&nbsp;ребёнка».</span>
+        </div>
+        <button class="teacher-cta" style="font-size:12px;">Записаться <span class="arrow">→</span></button>
+    </div>
+</article>
+</div>
+</div>
+</aside>
+</div>
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!doctype html>
+<!--
+    Вариант B — «Путь ребёнка» (Evolve).
+    Сверху секции — горизонтальная линия возрастов 1→12 с точками-категориями.
+    Ниже — карточки-строки отфильтрованной категории: фото | инфо | ребёнок научится | CTA.
+    Родитель за 3 секунды: «есть ли у вас программа для моего 4-летки?».
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Программы — Вариант B — Путь ребёнка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;760&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shared.css">
+<style>
+/* Таймлайн возрастов */
+.age-timeline {
+    position: relative;
+    margin: 40px 0 44px;
+    padding: 28px 24px 44px;
+    background: var(--surface-2);
+    border-radius: 20px;
+}
+.age-timeline-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+.age-timeline-label p {
+    font-size: 14px;
+    color: var(--muted);
+}
+.age-timeline-line {
+    position: relative;
+    height: 4px;
+    background: #e5dcd6;
+    border-radius: 999px;
+    margin: 48px 0 16px;
+}
+.age-dot {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--muted-light);
+    cursor: pointer;
+}
+.age-dot::after {
+    content: attr(data-age);
+    position: absolute;
+    top: -34px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+    font-weight: 500;
+}
+.age-dot::before {
+    content: attr(data-cat);
+    position: absolute;
+    bottom: -34px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--text);
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+.category-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .2s;
+}
+.category-tab.is-active {
+    background: var(--text);
+    color: #fff;
+}
+.category-tab .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.category-tab .count {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+.category-tab:not(.is-active) .count { background: rgba(0,0,0,0.06); }
+
+/* Горизонтальная журнальная карточка */
+.program-row {
+    display: grid;
+    grid-template-columns: 220px 1.2fr 1fr 220px;
+    gap: 28px;
+    padding: 24px;
+    background: var(--surface-2);
+    border-radius: 24px;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: transform .15s;
+}
+.program-row:hover { transform: translateX(2px); background: #efe9e4; }
+
+.program-row .visual {
+    width: 100%;
+    height: 180px;
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 56px;
+}
+.program-row .visual .cat-chip {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.9);
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.program-row h3 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.9px;
+    margin-bottom: 8px;
+}
+.program-row .program-meta-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.program-row .program-meta-row span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+}
+.program-row .program-meta-row .age-highlight {
+    background: var(--orange);
+    color: #fff;
+}
+.program-row .tagline {
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--muted);
+}
+.program-row .outcomes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.program-row .outcomes b {
+    font-size: 13px;
+    color: var(--orange);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    display: block;
+}
+.program-row .outcomes li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--text);
+}
+.program-row .outcomes li::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+    margin-top: 7px;
+    flex: 0 0 auto;
+}
+
+.program-row .cta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+}
+.program-row .cta-block .price {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.7px;
+}
+.program-row .cta-block .price span { font-size: 13px; color: var(--muted); font-weight: 500; }
+.program-row .cta-block .teacher-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: var(--surface);
+    border-radius: 10px;
+}
+.program-row .cta-block .teacher-mini .ava {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #e9c8a8;
+    flex: 0 0 auto;
+}
+.program-row .cta-block .teacher-mini small { font-size: 12px; color: var(--muted); }
+.program-row .cta-block .teacher-mini strong { font-size: 13px; display: block; }
+
+.v-orange { background: linear-gradient(135deg, #ed7735, #d14d20); }
+.v-purple { background: linear-gradient(135deg, #6359c2, #4a3fa0); }
+.v-blue   { background: linear-gradient(135deg, #4c83f1, #2f63c4); }
+.v-pink   { background: linear-gradient(135deg, #db5eb4, #b13c92); }
+.v-green  { background: linear-gradient(135deg, #4fb800, #2d8a3f); }
+
+/* Mobile */
+.mobile-frame-inner .age-timeline { padding: 14px 12px 30px; margin: 16px 0; }
+.mobile-frame-inner .age-timeline-line { margin: 30px 0 10px; }
+.mobile-frame-inner .age-dot::after, .mobile-frame-inner .age-dot::before { font-size: 10px; }
+.mobile-frame-inner .program-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 14px;
+}
+.mobile-frame-inner .program-row .visual { height: 120px; }
+.mobile-frame-inner .program-row h3 { font-size: 20px; }
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="stage-main">
+
+<section class="section">
+<div class="section-head">
+<div>
+<span class="eyebrow">Вариант B · Evolve</span>
+<h2>Программы по&nbsp;возрасту ребёнка</h2>
+<p style="max-width: 640px; margin-top: 12px;">Выберите категорию или&nbsp;просто покажите на&nbsp;таймлайн — мы&nbsp;покажем, что у&nbsp;нас есть для&nbsp;вашего ребёнка именно сейчас.</p>
+</div>
+</div>
+
+<!-- Age timeline -->
+<div class="age-timeline">
+<div class="age-timeline-label">
+<p><b style="color:var(--text);">Путь ребёнка в&nbsp;Семицветике</b> — от&nbsp;ясельных групп до&nbsp;начальной школы</p>
+<p style="font-size:13px;">свайп ←→</p>
+</div>
+<div class="age-timeline-line">
+    <div class="age-dot" style="left: 8%; border-color: #ed7735;" data-age="1–3 года" data-cat="Раннее развитие"></div>
+    <div class="age-dot" style="left: 30%; border-color: #ed7735;" data-age="3–5 лет" data-cat="Раннее развитие"></div>
+    <div class="age-dot" style="left: 52%; background: var(--text); border-color: var(--text);" data-age="5–7 лет" data-cat="Подготовка к школе"></div>
+    <div class="age-dot" style="left: 72%; border-color: #4c83f1;" data-age="4–10 лет" data-cat="Английский"></div>
+    <div class="age-dot" style="left: 92%; border-color: #db5eb4;" data-age="7–12 лет" data-cat="Творчество"></div>
+</div>
+</div>
+
+<!-- Category tabs -->
+<div class="category-tabs">
+    <button class="category-tab is-active">
+        <span class="dot" style="background: var(--orange);"></span>
+        Раннее развитие <span class="count">3</span>
+    </button>
+    <button class="category-tab">
+        <span class="dot" style="background: var(--purple);"></span>
+        Подготовка к&nbsp;школе <span class="count">2</span>
+    </button>
+    <button class="category-tab">
+        <span class="dot" style="background: var(--blue);"></span>
+        Иностранные языки <span class="count">2</span>
+    </button>
+    <button class="category-tab">
+        <span class="dot" style="background: var(--pink);"></span>
+        Творчество <span class="count">4</span>
+    </button>
+    <button class="category-tab">
+        <span class="dot" style="background: var(--green);"></span>
+        Летний лагерь <span class="count">1</span>
+    </button>
+</div>
+
+<!-- Program rows (filtered by active category) -->
+<article class="program-row">
+    <div class="visual v-orange">
+        <span class="cat-chip">Раннее развитие</span>
+        <span>🌿</span>
+    </div>
+    <div>
+        <div class="program-meta-row">
+            <span class="age-highlight">3–5 лет</span>
+            <span>⏱ 45 минут</span>
+            <span>4 раза в&nbsp;неделю</span>
+        </div>
+        <h3>Умничка</h3>
+        <p class="tagline">Комплексное развитие&nbsp;— речь, логика, мелкая моторика, подготовка к&nbsp;детскому саду.</p>
+    </div>
+    <ul class="outcomes">
+        <b>Ребёнок научится</b>
+        <li>Уверенно говорить полными фразами</li>
+        <li>Считать до&nbsp;20 и&nbsp;узнавать буквы</li>
+        <li>Спокойно работать в&nbsp;группе 45 минут</li>
+    </ul>
+    <div class="cta-block">
+        <div class="price">6 800&nbsp;₽ <span>/мес</span></div>
+        <div class="teacher-mini"><div class="ava"></div><div><strong>Анна С.</strong><small>10 лет стажа</small></div></div>
+        <button class="button-dark">Записаться</button>
+        <button class="button-light">Подробнее →</button>
+    </div>
+</article>
+
+<article class="program-row">
+    <div class="visual v-orange">
+        <span class="cat-chip">Раннее развитие</span>
+        <span>🧸</span>
+    </div>
+    <div>
+        <div class="program-meta-row">
+            <span class="age-highlight">1–3 года</span>
+            <span>⏱ 35 минут</span>
+            <span>2 раза в&nbsp;неделю</span>
+        </div>
+        <h3>Малыш и&nbsp;мама</h3>
+        <p class="tagline">Первый коллектив, первые песенки, первые правила. Мама рядом, ребёнок учится не&nbsp;бояться нового.</p>
+    </div>
+    <ul class="outcomes">
+        <b>Ребёнок научится</b>
+        <li>Не&nbsp;бояться быть в&nbsp;группе</li>
+        <li>Повторять простые движения в&nbsp;круге</li>
+        <li>Отпускать маму на&nbsp;2–3 минуты</li>
+    </ul>
+    <div class="cta-block">
+        <div class="price">4 200&nbsp;₽ <span>/мес</span></div>
+        <div class="teacher-mini"><div class="ava" style="background:#e8c5d8;"></div><div><strong>Марина Д.</strong><small>8 лет стажа</small></div></div>
+        <button class="button-dark">Записаться</button>
+        <button class="button-light">Подробнее →</button>
+    </div>
+</article>
+
+<article class="program-row">
+    <div class="visual v-orange">
+        <span class="cat-chip">Раннее развитие</span>
+        <span>👋</span>
+    </div>
+    <div>
+        <div class="program-meta-row">
+            <span class="age-highlight">2–4 года</span>
+            <span>⏱ 40 минут</span>
+            <span>3 раза в&nbsp;неделю</span>
+        </div>
+        <h3>Мини-сад «Капелька»</h3>
+        <p class="tagline">Мягкая адаптация к&nbsp;детскому саду. Маленькая группа 6 детей, тёплый педагог, всё как дома.</p>
+    </div>
+    <ul class="outcomes">
+        <b>Ребёнок научится</b>
+        <li>Сам одеваться и&nbsp;есть ложкой</li>
+        <li>Ходить в&nbsp;туалет без&nbsp;подсказки</li>
+        <li>Играть рядом с&nbsp;другими детьми</li>
+    </ul>
+    <div class="cta-block">
+        <div class="price">12 000&nbsp;₽ <span>/мес</span></div>
+        <div class="teacher-mini"><div class="ava" style="background:#d8e3f0;"></div><div><strong>Ольга К.</strong><small>Высшая категория</small></div></div>
+        <button class="button-dark">Записаться</button>
+        <button class="button-light">Подробнее →</button>
+    </div>
+</article>
+
+</section>
+
+</div>
+
+<aside class="stage-note">
+<h4>Вариант B · Evolve</h4>
+<p><b>Идея:</b> родитель выбирает не&nbsp;программу, а&nbsp;возраст. Или&nbsp;категорию. Интерфейс подстраивается под его&nbsp;вопрос.</p>
+<p><b>Что нового:</b> возрастной таймлайн сверху, чипы-категории с&nbsp;цветными точками (отражают цвет программы), журнальная карточка-строка с&nbsp;явным блоком «ребёнок научится» + мини-педагог прямо в&nbsp;CTA.</p>
+<p><b>Цена:</b> ~день фронта. В&nbsp;модели&nbsp;— добавить 3 буллета outcomes на&nbsp;программу, в&nbsp;render_block — новый режим списка.</p>
+<p><b>Подходит:</b> если главная задача&nbsp;— показать «у&nbsp;нас есть всё, от&nbsp;1 года до&nbsp;5 класса», и&nbsp;свернуть выбор до&nbsp;одного клика.</p>
+
+<div class="mobile-frame">
+<p style="font-size: 13px; color: var(--muted); margin: 0 0 8px;">Мобильный вид</p>
+<div class="mobile-frame-inner">
+    <h3 style="margin-bottom: 6px;">Программы</h3>
+    <div class="age-timeline">
+        <div class="age-timeline-line">
+            <div class="age-dot" style="left: 8%; border-color: #ed7735;" data-age="1-3" data-cat="Раннее"></div>
+            <div class="age-dot" style="left: 30%; border-color: #ed7735;" data-age="3-5" data-cat="Раннее"></div>
+            <div class="age-dot" style="left: 52%; background: var(--text); border-color: var(--text);" data-age="5-7" data-cat="Школа"></div>
+            <div class="age-dot" style="left: 72%; border-color: #4c83f1;" data-age="4-10" data-cat="Яз."></div>
+            <div class="age-dot" style="left: 92%; border-color: #db5eb4;" data-age="7-12" data-cat="Твор."></div>
+        </div>
+    </div>
+    <div class="category-tabs" style="overflow-x: auto; flex-wrap: nowrap; gap: 6px;">
+        <button class="category-tab is-active" style="padding: 8px 14px; font-size: 13px;"><span class="dot" style="background: var(--orange);"></span>Раннее <span class="count" style="font-size:11px;">3</span></button>
+        <button class="category-tab" style="padding: 8px 14px; font-size: 13px;"><span class="dot" style="background: var(--purple);"></span>Школа</button>
+        <button class="category-tab" style="padding: 8px 14px; font-size: 13px;"><span class="dot" style="background: var(--blue);"></span>Англ.</button>
+    </div>
+    <article class="program-row" style="padding: 12px;">
+        <div class="visual v-orange" style="height: 100px;">
+            <span class="cat-chip">Раннее</span>
+            <span style="font-size:32px;">🌿</span>
+        </div>
+        <div>
+            <div class="program-meta-row">
+                <span class="age-highlight">3–5 лет</span>
+                <span>⏱ 45 мин</span>
+            </div>
+            <h3 style="font-size:18px;">Умничка</h3>
+            <p class="tagline" style="font-size:13px;">Речь, логика, моторика.</p>
+        </div>
+        <ul class="outcomes">
+            <b>Научится</b>
+            <li>Говорить фразами</li>
+            <li>Считать до&nbsp;20</li>
+        </ul>
+        <div class="cta-block">
+            <div class="price">6 800&nbsp;₽<span> /мес</span></div>
+            <button class="button-dark" style="width:100%;">Записаться</button>
+        </div>
+    </article>
+</div>
+</div>
+</aside>
+</div>
+</body>
+</html>
