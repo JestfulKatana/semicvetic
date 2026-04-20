@@ -52,7 +52,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch
 - внутри секций — grid, flex, много воздуха
 
 **Существующие блоки** (см. `app/templates/components/render_block.html`):
-`hero`, `trust_bar`, `form_strip`, `programs_grid`, `top_programs`, `advantages`, `credentials_bar`, `credentials_list`, `results_banner`, `teachers_grid`, `reviews_grid`, `how_it_works`, `faq`, `timeline`, `compare_table`, `cta_final`, `gallery`, `photo_strip`, `events_grid`, `events_teaser`, `articles_grid`, `articles_teaser`, `prices_table`, `contact_panel`, `rich_text`, `team_stats`, `program_schedule`, `program_outcomes`, `lesson_anatomy`, `safety_checklist`, `lead_magnets`, `alumni_schools`.
+`hero`, `trust_bar`, `form_strip`, `programs_grid`, `top_programs`, `advantages`, `credentials_list`, `results_banner`, `teachers_grid`, `reviews_grid`, `how_it_works`, `faq`, `timeline`, `compare_table`, `cta_final`, `gallery`, `photo_strip`, `events_grid`, `events_teaser`, `articles_grid`, `articles_teaser`, `prices_table`, `contact_panel`, `rich_text`, `team_stats`, `program_schedule`, `program_outcomes`, `lesson_anatomy`, `safety_checklist`, `lead_magnets`, `alumni_schools`.
 
 Сначала **думай, нельзя ли решить задачу существующим блоком** или комбинацией двух-трёх. Новый блок вводишь, когда ни один старый не даёт нужного смысла.
 

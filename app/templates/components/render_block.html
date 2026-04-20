@@ -985,38 +985,6 @@
     </div>
 </section>
 
-{% elif block.component == "credentials_bar" %}
-<section class="section credentials-bar">
-    {% if data.eyebrow or data.title %}
-    <div class="section-head">
-        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
-        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
-    </div>
-    {% endif %}
-    <div class="credentials-bar-grid">
-        {% for item in data.get('items', []) %}
-        <article class="credentials-chip">
-            <span class="credentials-chip-icon" aria-hidden="true">
-                {% set icon = item.icon or 'star' %}
-                {% if icon == 'license' %}
-                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v11H4zM4 19h16M8 9h8m-8 3h5"/></svg>
-                {% elif icon == 'yandex' %}
-                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m12 3 2.7 5.5L21 9.3l-4.5 4.3 1 6.2L12 16.9l-5.6 3 1-6.2L3 9.3l6.3-.8L12 3Z"/></svg>
-                {% elif icon == 'gov' %}
-                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-3Z"/></svg>
-                {% else %}
-                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m12 3 2.7 5.5L21 9.3l-4.5 4.3 1 6.2L12 16.9l-5.6 3 1-6.2L3 9.3l6.3-.8L12 3Z"/></svg>
-                {% endif %}
-            </span>
-            <div>
-                <strong>{{ item.title }}</strong>
-                {% if item.subtitle %}<small>{{ item.subtitle }}</small>{% endif %}
-            </div>
-        </article>
-        {% endfor %}
-    </div>
-</section>
-
 {% elif block.component == "credentials_list" %}
 <section class="section credentials-list">
     <div class="section-head">

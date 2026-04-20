@@ -76,22 +76,6 @@ def block_alumni_schools() -> dict:
     }
 
 
-def block_credentials_bar() -> dict:
-    return {
-        "type": "credentials_bar",
-        "payload": {
-            "eyebrow": "Нам\u00a0доверяют",
-            "title": "Всё официально, проверяемо, на\u00a0виду",
-            "items": [
-                {"icon": "license", "title": "Лицензия", "subtitle": "№\u00a077-01-0000 от\u00a02012\u00a0г."},
-                {"icon": "yandex", "title": "«Хорошее место»", "subtitle": "отметка Яндекс\u00a0Карт"},
-                {"icon": "gov", "title": "Социальное предприятие", "subtitle": "реестр МинЭкономРазвития\u00a0МО"},
-                {"icon": "star", "title": "4.9 из\u00a05", "subtitle": "средний рейтинг в\u00a02ГИС и\u00a0Яндексе"},
-            ],
-        },
-    }
-
-
 def block_credentials_list() -> dict:
     return {
         "type": "credentials_list",
@@ -217,8 +201,6 @@ def home_blocks() -> list[dict]:
             "component": "programs_grid",
             "data": {"title": "Развивающие программы", "subtitle": "Почему выбирают нас?", "source": "featured_programs", "limit": 4},
         },
-        # NEW: credentials_bar сразу после programs_grid — плашки доверия как якорь.
-        block_credentials_bar(),
         {
             "component": "top_programs",
             "data": {
@@ -315,7 +297,6 @@ def home_blocks() -> list[dict]:
         # NEW: alumni_schools после reviews_grid.
         block_alumni_schools(),
         {"component": "gallery", "data": {"title": "Жизнь нашего центра в\u00a0одном видео", "subtitle": "Короткий ролик о\u00a0том, как\u00a0растут наши «маленькие звёздочки»", "variant": "video"}},
-        # NEW: events_teaser перед cta_final (credentials_bar уже добавлен после programs_grid).
         block_events_teaser("Приходите познакомиться"),
         {"component": "cta_final", "data": {"title": "Ответим на\u00a0вопросы по\u00a0телефону и\u00a0пригласим в\u00a0детский клуб на\u00a0экскурсию", "subtitle": "", "color": "green", "source_block": "final_cta"}},
         {"component": "gallery", "data": {"variant": "strip"}},
@@ -445,8 +426,6 @@ def programmy_blocks() -> list[dict]:
             },
         },
         {"component": "programs_grid", "data": {"title": "", "subtitle": "", "source": "all_programs"}},
-        # NEW: credentials_bar в конце каталога.
-        block_credentials_bar(),
         {"component": "contact_panel", "data": {"title": "Ждём вас в\u00a0Семицветике", "variant": "full", "source": "contact_data"}},
     ]
 
