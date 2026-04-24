@@ -327,6 +327,14 @@ body.is-menu-open { overflow: hidden; }
     word-break: normal;
     hyphens: auto;
 }
+.hero-subtitle {
+    max-width: 620px;
+    margin: 0;
+    color: #5f5650;
+    font-size: 20px;
+    line-height: 1.28;
+    letter-spacing: -0.5px;
+}
 .eyebrow {
     display: inline-flex;
     width: fit-content;
@@ -973,6 +981,25 @@ select {
     letter-spacing: -0.48px;
 }
 .meet-disclaimer u { text-decoration: underline; }
+.meet-conditions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 540px;
+}
+.meet-conditions span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(252, 248, 244, 0.16);
+    color: #fcf8f4;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.25px;
+}
 
 .meet-visual {
     position: relative;
@@ -1593,6 +1620,24 @@ select {
     font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.64px;
+}
+.referral-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+}
+.referral-tags span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #f5ebe9;
+    color: #332f2e;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.25px;
 }
 .reviews-summary {
     min-width: 230px;

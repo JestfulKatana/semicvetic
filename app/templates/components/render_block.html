@@ -10,6 +10,7 @@
         <div class="hero-copy-inner">
             {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
             <h1>Детский центр, где главное — развивающая среда и забота о ребёнке</h1>
+            {% if data.subtitle %}<p class="hero-subtitle">{{ data.subtitle }}</p>{% endif %}
         </div>
         {% if data.stats %}
         <div class="hero-stats">
@@ -214,6 +215,11 @@
                 <button class="button button-acid" type="submit">Получить консультацию</button>
             </div>
             <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
+            <div class="meet-conditions" aria-label="Условия занятий">
+                <span>Пропустили&nbsp;— пересчитаем</span>
+                <span>2-й ребёнок или близнецы&nbsp;— скидка</span>
+                <span>Абонемент или разово&nbsp;— как удобно</span>
+            </div>
             <p class="form-status" data-form-status></p>
         </form>
     </div>
@@ -535,6 +541,13 @@
             <p class="eyebrow">Отзывы родителей</p>
             {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
             {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+            {% if data.referral_tags %}
+            <div class="referral-tags" aria-label="Как родители узнают о центре">
+                {% for tag in data.referral_tags %}
+                <span>{{ tag }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
         <div class="reviews-summary" aria-label="Сводка отзывов">
             <strong>5.0</strong>
@@ -777,7 +790,7 @@
 <section class="section meet-strip meet-strip-green" id="lead-form">
     <div class="meet-copy">
         <h2>{{ data.title or "Записаться на\u00a0личную экскурсию" }}</h2>
-        <p class="meet-sub"><span class="meet-sub-accent-yellow">Ответим на&nbsp;вопросы</span> по&nbsp;телефону, и&nbsp;пригласим в&nbsp;детский клуб на&nbsp;экскурсию</p>
+        <p class="meet-sub">{% if data.subtitle %}{{ data.subtitle }}{% else %}<span class="meet-sub-accent-yellow">Ответим на&nbsp;вопросы</span> по&nbsp;телефону, и&nbsp;пригласим в&nbsp;детский клуб на&nbsp;экскурсию{% endif %}</p>
         <form class="lead-inline meet-lead" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
@@ -788,6 +801,11 @@
                 <button class="button button-yellow" type="submit">Получить консультацию</button>
             </div>
             <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
+            <div class="meet-conditions" aria-label="Условия занятий">
+                <span>Пропустили&nbsp;— пересчитаем</span>
+                <span>2-й ребёнок или близнецы&nbsp;— скидка</span>
+                <span>Абонемент или разово&nbsp;— как удобно</span>
+            </div>
             <p class="form-status" data-form-status></p>
         </form>
     </div>
