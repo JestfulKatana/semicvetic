@@ -136,85 +136,9 @@ function initTeacherFilters() {
   }
 }
 
-function initReviewsCarousel() {
-  document.querySelectorAll("[data-reviews-carousel]").forEach((root) => {
-    const slides = Array.from(root.querySelectorAll("[data-review-slide]"));
-    const dots = Array.from(root.querySelectorAll("[data-review-dot]"));
-    const prevBtn = root.querySelector("[data-review-prev]");
-    const nextBtn = root.querySelector("[data-review-next]");
-    if (slides.length <= 1) return;
-
-    let index = 0;
-    let timer = null;
-
-    const render = () => {
-      slides.forEach((slide, i) => {
-        const active = i === index;
-        slide.classList.toggle("is-active", active);
-        slide.setAttribute("aria-hidden", active ? "false" : "true");
-      });
-      dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
-    };
-
-    const go = (delta) => {
-      index = (index + delta + slides.length) % slides.length;
-      render();
-    };
-
-    const goTo = (i) => {
-      index = ((i % slides.length) + slides.length) % slides.length;
-      render();
-    };
-
-    const resetTimer = () => {
-      if (timer) clearInterval(timer);
-      timer = setInterval(() => go(1), 7000);
-    };
-
-    prevBtn && prevBtn.addEventListener("click", () => { go(-1); resetTimer(); });
-    nextBtn && nextBtn.addEventListener("click", () => { go(1); resetTimer(); });
-    dots.forEach((dot) => {
-      dot.addEventListener("click", () => {
-        goTo(Number(dot.dataset.reviewDot) || 0);
-        resetTimer();
-      });
-    });
-
-    root.addEventListener("mouseenter", () => timer && clearInterval(timer));
-    root.addEventListener("mouseleave", resetTimer);
-
-    render();
-    resetTimer();
-  });
-}
-
-function initLeadMagnets() {
-  document.querySelectorAll("[data-lead-magnet]").forEach((card) => {
-    const toggle = card.querySelector("[data-lead-magnet-toggle]");
-    const form = card.querySelector("[data-lead-magnet-form]");
-    if (!toggle || !form) return;
-    toggle.addEventListener("click", () => {
-      const isOpen = !form.hasAttribute("hidden");
-      if (isOpen) {
-        form.setAttribute("hidden", "");
-        card.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      } else {
-        form.removeAttribute("hidden");
-        card.classList.add("is-open");
-        toggle.setAttribute("aria-expanded", "true");
-        const firstInput = form.querySelector("input[type=tel], input[type=email]");
-        if (firstInput) firstInput.focus();
-      }
-    });
-  });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   initProgramFilters();
   initTeacherFilters();
-  initReviewsCarousel();
-  initLeadMagnets();
 });
 
 document.querySelectorAll("[data-lead-form]").forEach((form) => {

@@ -19,74 +19,22 @@ from app.models import Page, Program, Review, ScheduleSlot, SiteSetting, Teacher
 # ---------------------------------------------------------------------------
 
 
-def block_lead_magnets() -> dict:
-    return {
-        "type": "lead_magnets",
-        "payload": {
-            "eyebrow": "Бесплатно и\u00a0без\u00a0звонка",
-            "title": "Познакомьтесь с\u00a0нами, не\u00a0выходя из\u00a0дома",
-            "items": [
-                {
-                    "icon": "clipboard",
-                    "title": "Тест готовности к\u00a0школе",
-                    "description": "7\u00a0минут, 12\u00a0вопросов. Покажет, над\u00a0чем имеет смысл поработать до\u00a01\u00a0сентября.",
-                    "cta_label": "Пройти тест",
-                    "form_target": "/api/lead",
-                    "form_source": "lead_magnet_school_test",
-                },
-                {
-                    "icon": "checklist",
-                    "title": "Чек-лист: что\u00a0ребёнок должен уметь перед 1\u00a0классом",
-                    "description": "14\u00a0пунктов от\u00a0педагога с\u00a015-летним стажем. Бесплатный PDF на\u00a0почту.",
-                    "cta_label": "Получить чек-лист",
-                    "form_target": "/api/lead",
-                    "form_source": "lead_magnet_school_checklist",
-                },
-                {
-                    "icon": "stethoscope",
-                    "title": "Бесплатная диагностика логопеда",
-                    "description": "30\u00a0минут один на\u00a0один. Скажем, нужна\u00a0ли коррекция и\u00a0сколько времени займёт.",
-                    "cta_label": "Записаться на\u00a0диагностику",
-                    "form_target": "/api/lead",
-                    "form_source": "lead_magnet_speech_diagnostic",
-                },
-            ],
-        },
-    }
-
-
 def block_alumni_schools() -> dict:
     return {
         "type": "alumni_schools",
         "payload": {
             "eyebrow": "За\u00a015\u00a0лет",
             "title": "Наши выпускники учатся в\u00a0лучших школах Сергиева\u00a0Посада",
-            "subtitle": "3000+ детей продолжают учиться в\u00a0гимназиях, лицеях и\u00a0обычных школах города. Вот куда они пошли:",
+            "subtitle": "Родители часто рассказывают, что\u00a0после Семицветика детям проще входить в\u00a0школьный ритм. Вот школы, куда регулярно уходят наши выпускники:",
             "items": [
-                {"name": "Гимназия №\u00a05", "count": "420+ выпускников"},
-                {"name": "Лицей №\u00a024", "count": "310+ выпускников"},
-                {"name": "Школа №\u00a01 им.\u00a0Кузнецова", "count": "280+ выпускников"},
-                {"name": "Гимназия №\u00a011", "count": "195+ выпускников"},
-                {"name": "Школа №\u00a014", "count": "170+ выпускников"},
-                {"name": "Школа №\u00a08", "count": "150+ выпускников"},
-                {"name": "Лицей «Созвездие»", "count": "120+ выпускников"},
-                {"name": "Православная гимназия Сергиева\u00a0Посада", "count": "95+ выпускников"},
-            ],
-        },
-    }
-
-
-def block_credentials_bar() -> dict:
-    return {
-        "type": "credentials_bar",
-        "payload": {
-            "eyebrow": "Нам\u00a0доверяют",
-            "title": "Всё официально, проверяемо, на\u00a0виду",
-            "items": [
-                {"icon": "license", "title": "Лицензия", "subtitle": "№\u00a077-01-0000 от\u00a02012\u00a0г."},
-                {"icon": "yandex", "title": "«Хорошее место»", "subtitle": "отметка Яндекс\u00a0Карт"},
-                {"icon": "gov", "title": "Социальное предприятие", "subtitle": "реестр МинЭкономРазвития\u00a0МО"},
-                {"icon": "star", "title": "4.9 из\u00a05", "subtitle": "средний рейтинг в\u00a02ГИС и\u00a0Яндексе"},
+                {"name": "Гимназия №\u00a05"},
+                {"name": "Лицей №\u00a024"},
+                {"name": "Школа №\u00a01 им.\u00a0Кузнецова"},
+                {"name": "Гимназия №\u00a011"},
+                {"name": "Школа №\u00a014"},
+                {"name": "Школа №\u00a08"},
+                {"name": "Лицей «Созвездие»"},
+                {"name": "Православная гимназия Сергиева\u00a0Посада"},
             ],
         },
     }
@@ -97,13 +45,12 @@ def block_credentials_list() -> dict:
         "type": "credentials_list",
         "payload": {
             "eyebrow": "Открытость",
-            "title": "Документы и\u00a0регалии",
-            "subtitle": "Мы\u00a0не\u00a0прячем, чем\u00a0и\u00a0как\u00a0зарабатываем. Любой из\u00a0документов можно попросить на\u00a0бумаге.",
+            "title": "Документы для\u00a0родителей",
+            "subtitle": "Показываем условия занятий, договор и\u00a0правила обработки заявок до\u00a0записи.",
             "items": [
-                {"icon": "pdf", "title": "Лицензия на\u00a0образовательную деятельность", "description": "№\u00a077-01-0000 от\u00a02012\u00a0г., выдана Министерством образования\u00a0МО", "link": "#"},
-                {"icon": "pdf", "title": "Свидетельство о\u00a0регистрации", "description": "ОГРН 1125000000000", "link": "#"},
-                {"icon": "pdf", "title": "Статус социального предприятия", "description": "Реестр Минэкономразвития\u00a0МО, 2025\u00a0г.", "link": "#"},
+                {"icon": "pdf", "title": "Политика обработки данных", "description": "Открыто показываем, как принимаем заявки и связываемся с родителями.", "link": "#"},
                 {"icon": "pdf", "title": "Договор с\u00a0родителем", "description": "Открытый типовой договор, который подписывается при\u00a0зачислении", "link": "#"},
+                {"icon": "pdf", "title": "Правила посещения", "description": "Расписание, пропуски, переносы и\u00a0условия оплаты обсуждаем до\u00a0старта занятий.", "link": "#"},
             ],
         },
     }
@@ -217,8 +164,6 @@ def home_blocks() -> list[dict]:
             "component": "programs_grid",
             "data": {"title": "Развивающие программы", "subtitle": "Почему выбирают нас?", "source": "featured_programs", "limit": 4},
         },
-        # NEW: credentials_bar сразу после programs_grid — плашки доверия как якорь.
-        block_credentials_bar(),
         {
             "component": "top_programs",
             "data": {
@@ -282,8 +227,6 @@ def home_blocks() -> list[dict]:
                 ],
             },
         },
-        # NEW: лид-магниты сразу после trust_bar, как договорились с фронтом.
-        block_lead_magnets(),
         {
             "component": "teachers_grid",
             "data": {
@@ -293,10 +236,9 @@ def home_blocks() -> list[dict]:
                 "show_chips": True,
                 "limit": 2,
                 "show_all_button": True,
+                "team_stats": block_team_stats()["payload"],
             },
         },
-        # NEW: team_stats после teachers_grid.
-        block_team_stats(),
         {
             "component": "how_it_works",
             "data": {
@@ -315,7 +257,7 @@ def home_blocks() -> list[dict]:
         # NEW: alumni_schools после reviews_grid.
         block_alumni_schools(),
         {"component": "gallery", "data": {"title": "Жизнь нашего центра в\u00a0одном видео", "subtitle": "Короткий ролик о\u00a0том, как\u00a0растут наши «маленькие звёздочки»", "variant": "video"}},
-        # NEW: events_teaser перед cta_final (credentials_bar уже добавлен после programs_grid).
+        # NEW: events_teaser перед cta_final.
         block_events_teaser("Приходите познакомиться"),
         {"component": "cta_final", "data": {"title": "Ответим на\u00a0вопросы по\u00a0телефону и\u00a0пригласим в\u00a0детский клуб на\u00a0экскурсию", "subtitle": "", "color": "green", "source_block": "final_cta"}},
         {"component": "gallery", "data": {"variant": "strip"}},
@@ -381,10 +323,10 @@ def about_blocks() -> list[dict]:
                 "title": "Как\u00a0мы\u00a0росли",
                 "items": [
                     {"icon": "2011", "title": "Открылся центр", "text": "Небольшой клуб на\u00a03\u00a0комнаты\u00a0— подготовка к\u00a0школе и\u00a0логопед. Два\u00a0педагога и\u00a032\u00a0семьи в\u00a0первый год."},
-                    {"icon": "2014", "title": "Получили лицензию", "text": "Образовательная лицензия МинОбра\u00a0МО. Добавили психолога и\u00a0английский для\u00a0малышей."},
+                    {"icon": "2014", "title": "Расширили направления", "text": "Добавили психолога и\u00a0английский для\u00a0малышей. Укрепили команду педагогов."},
                     {"icon": "2017", "title": "Переехали на\u00a0Воробьёвскую", "text": "Второй этаж, 7\u00a0классов, актовый зал. Появился первый летний лагерь и\u00a0изостудия."},
                     {"icon": "2020", "title": "Пережили локдаун вместе с\u00a0семьями", "text": "Весь март-май занимались онлайн, не\u00a0потеряли ни\u00a0одной группы. Летом вернулись живьём."},
-                    {"icon": "2023", "title": "8\u00a0направлений и\u00a0статус соцпредприятия", "text": "Реестр Минэкономразвития\u00a0МО. Льготы семьям СВО закрепили официально."},
+                    {"icon": "2023", "title": "8\u00a0направлений и\u00a0малые группы", "text": "Подбираем программу под возраст, темп и задачу семьи. Родители видят, чем ребёнок занимается."},
                     {"icon": "2026", "title": "3000+ выпускников", "text": "Дети первого выпуска приводят уже\u00a0своих младших братьев и\u00a0сестёр."},
                 ],
             },
@@ -445,8 +387,6 @@ def programmy_blocks() -> list[dict]:
             },
         },
         {"component": "programs_grid", "data": {"title": "", "subtitle": "", "source": "all_programs"}},
-        # NEW: credentials_bar в конце каталога.
-        block_credentials_bar(),
         {"component": "contact_panel", "data": {"title": "Ждём вас в\u00a0Семицветике", "variant": "full", "source": "contact_data"}},
     ]
 

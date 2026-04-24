@@ -25,6 +25,8 @@
     {% set address = site_settings.get('address') or 'г. Сергиев Посад' %}
     {% set vk_url = site_settings.get('social_vk') or '#' %}
     {% set tg_url = site_settings.get('social_tg') or '#' %}
+    {% set has_final_cta = blocks is defined and (blocks|selectattr('component', 'equalto', 'cta_final')|list|length > 0) %}
+    {% set cta_anchor = '#lead-form' if request.path == '/' or has_final_cta else '#contact-panel' %}
     <div class="site-shell">
         <header class="site-header">
             <div class="header-row">
@@ -34,8 +36,12 @@
                 </a>
 
                 <div class="header-quick" aria-hidden="true">
-                    <span class="quick-icon quick-heart"></span>
-                    <span class="quick-icon quick-pin"></span>
+                    <span class="quick-icon">
+                        <img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="" width="40" height="40" loading="eager" decoding="async">
+                    </span>
+                    <span class="quick-icon">
+                        <img src="{{ url_for('static', filename='img/figma/header/header-yandex.png') }}" alt="" width="40" height="40" loading="eager" decoding="async">
+                    </span>
                 </div>
 
                 <nav class="site-nav" data-nav aria-label="Основная навигация">
@@ -104,7 +110,7 @@
                         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M20.6 4.2 2.9 11c-1.2.5-1.2 1.2-.2 1.5l4.5 1.4 1.7 5.3c.2.6.1.9.7.9.5 0 .7-.2 1-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.8l3-14c.3-1.2-.5-1.8-1.4-1.4zM8.4 14.2l9.8-6.2c.4-.3.8-.1.5.2l-8 7.3-.3 3.3-2-4.6z"/></svg>
                     </a>
                 </div>
-                <a class="button button-primary mobile-menu-cta" href="#lead-form" data-mobile-menu-close-link>Записаться на занятие</a>
+                <a class="button button-primary mobile-menu-cta" href="{{ cta_anchor }}" data-mobile-menu-close-link>Записаться на занятие</a>
             </div>
         </div>
 
@@ -162,17 +168,13 @@
             <div class="footer-bottom">
                 <span>Политика использования файлов cookie</span>
                 <span>Политика обработки персональных данных</span>
-                <span class="footer-badge-social">
-                    <span class="footer-badge-heart" aria-hidden="true">💚</span>
-                    Социальное предприятие
-                </span>
             </div>
         </footer>
     </div>
-    <a class="sticky-cta-mobile" href="#lead-form" aria-label="Записаться на занятие">
-        <span>Записаться</span>
-        <span aria-hidden="true">→</span>
-    </a>
+    <div class="sticky-cta-mobile" aria-label="Быстрая связь">
+        <a class="sticky-cta-phone" href="tel:{{ phone|phone_href }}">{{ phone }}</a>
+        <a class="sticky-cta-action" href="{{ cta_anchor }}">Записаться</a>
+    </div>
     {% set wa_number = site_settings.get('whatsapp_number') or site_settings.get('phone_1') %}
     {% if wa_number %}
     <a class="wa-float" href="https://wa.me/{{ wa_number|phone_href|replace('+','') }}" target="_blank" rel="noopener" aria-label="Написать в WhatsApp">
