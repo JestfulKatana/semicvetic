@@ -136,9 +136,32 @@ function initTeacherFilters() {
   }
 }
 
+function initScrollState() {
+  const threshold = 400;
+  const update = () => {
+    const scrolled = window.scrollY > threshold;
+    document.body.classList.toggle("is-scrolled", scrolled);
+  };
+  update();
+  window.addEventListener("scroll", update, { passive: true });
+}
+
+function initStickyCtaAnchor() {
+  // Если на странице нет #lead-form — sticky-cta должна вести на #contact-panel.
+  const hasLeadForm = !!document.getElementById("lead-form");
+  if (hasLeadForm) return;
+  const fallback = document.getElementById("contact-panel") ? "#contact-panel" : null;
+  if (!fallback) return;
+  document.querySelectorAll(".sticky-cta-action[href='#lead-form']").forEach((el) => {
+    el.setAttribute("href", fallback);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initProgramFilters();
   initTeacherFilters();
+  initScrollState();
+  initStickyCtaAnchor();
 });
 
 document.querySelectorAll("[data-lead-form]").forEach((form) => {

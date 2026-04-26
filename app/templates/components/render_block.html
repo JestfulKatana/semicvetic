@@ -3,7 +3,83 @@
 {% set is_home = request.path == '/' %}
 {% set is_program_detail = page.duration_min is defined %}
 
-{% if block.component == "hero" %}
+{% if block.component == "speech_hero" %}
+<section class="speech-hero">
+    <div class="speech-hero-actions">
+        <a class="soft-button" href="{{ url_for('main.home') }}">← На главную</a>
+        <button class="soft-button" type="button">Поделиться</button>
+    </div>
+    <div class="speech-hero-grid">
+        <div class="speech-hero-copy">
+            {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+            <h1>{{ data.title }}</h1>
+            {% if data.subtitle %}<p class="speech-hero-text">{{ data.subtitle }}</p>{% endif %}
+            {% if data.metrics %}
+            <div class="speech-metrics" aria-label="Параметры занятий">
+                {% for item in data.metrics %}
+                <span class="speech-metric">
+                    <strong>{{ item.value }}</strong>
+                    <small>{{ item.label }}</small>
+                </span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="speech-hero-cta">
+                <a class="button button-dark" href="#{{ data.primary_target or 'lead-form' }}">{{ data.primary_cta or "Записаться" }}</a>
+                <a class="button button-light" href="#{{ data.secondary_target or 'schedule' }}">{{ data.secondary_cta or "Смотреть расписание" }}</a>
+            </div>
+            {% if data.note %}<p class="speech-hero-note">{{ data.note }}</p>{% endif %}
+        </div>
+        <aside class="speech-hero-panel" aria-label="Когда стоит обратиться к логопеду">
+            <div class="speech-tool">
+                <img src="{{ url_for('static', filename=data.visual or 'img/figma/programs/mic.png') }}" alt="">
+                <span class="speech-tool-label">диагностика речи</span>
+            </div>
+            <div class="speech-symptoms">
+                <h2>{{ data.symptoms_title or "Когда стоит прийти" }}</h2>
+                <div class="speech-symptoms-grid">
+                    {% for item in data.get('symptoms', []) %}
+                    <span>{{ item }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </aside>
+    </div>
+    {% if data.plan %}
+    <div class="speech-route" aria-label="План работы">
+        {% for item in data.plan %}
+        <article class="speech-route-card">
+            <span>{{ item.step }}</span>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.text }}</p>
+        </article>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if data.scope %}
+    <div class="speech-scope">
+        <div class="speech-scope-head">
+            <h2>{{ data.scope.title }}</h2>
+            {% if data.scope.subtitle %}<p>{{ data.scope.subtitle }}</p>{% endif %}
+        </div>
+        <div class="speech-scope-grid">
+            {% for col in data.scope.get('columns', []) %}
+            <article class="speech-scope-card{% if col.tone %} speech-scope-card-{{ col.tone }}{% endif %}">
+                <h3>{{ col.title }}</h3>
+                <ul>
+                    {% for item in col.get('items', []) %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </article>
+            {% endfor %}
+        </div>
+        {% if data.scope.note %}<p class="speech-scope-note">{{ data.scope.note }}</p>{% endif %}
+    </div>
+    {% endif %}
+</section>
+
+{% elif block.component == "hero" %}
 {% if is_home %}
 <section class="hero-home">
     <div class="hero-copy">
@@ -51,30 +127,48 @@
     </div>
 </section>
 {% else %}
-<section class="page-hero">
+<section class="page-hero{% if is_program_detail %} page-hero--program{% endif %}">
     <div class="page-hero-actions">
         <a class="soft-button" href="{{ url_for('main.home') }}">← На главную</a>
         <button class="soft-button" type="button">Поделиться</button>
     </div>
+    {% if is_program_detail %}<div class="page-hero-grid"><div class="page-hero-copy">{% endif %}
     {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
     <h1>{{ data.title }}</h1>
     {% if data.subtitle %}<p class="page-hero-text{% if data.subtitle_accent %} page-hero-text-accent{% endif %}">{{ data.subtitle }}</p>{% endif %}
+    {% if is_program_detail and (page.age_label or page.duration_min or page.frequency) %}
+    <ul class="page-hero-metrics" aria-label="Параметры занятий">
+        {% if page.age_label %}<li>{{ page.age_label }}</li>{% endif %}
+        {% if page.duration_min %}<li>{{ page.duration_min }} мин</li>{% endif %}
+        {% if page.frequency %}<li>{{ page.frequency }}</li>{% endif %}
+    </ul>
+    {% endif %}
     {% if data.cta_text %}
-    <div class="action-row centered">
-        <a class="button button-dark" href="#{{ data.cta_target or 'lead-form' }}">{{ data.cta_text }}</a>
-        {% if data.cta_secondary_text %}
+    {% set _hero_phone = site_settings.get('phone_1') if site_settings is defined else None %}
+    {% set _wants_tel_secondary = (request.path in ('/kontakty/', '/pedagogi/', '/ceny/')) %}
+    {% set _is_catalog_page = request.path == '/programmy/' %}
+    {% set _primary_btn_class = 'button button-dark' if is_program_detail else 'button button-orange' %}
+    <div class="action-row{% if not is_program_detail %} centered{% endif %}">
+        <a class="{{ _primary_btn_class }}" href="#{{ data.cta_target or 'lead-form' }}">{{ data.cta_text }}</a>
+        {% if _wants_tel_secondary and _hero_phone %}
+        <a class="button button-ghost" href="tel:{{ _hero_phone|phone_href }}">{{ _hero_phone }}</a>
+        {% elif _is_catalog_page %}
+        {# на /programmy/ вторичная кнопка не нужна #}
+        {% elif data.cta_secondary_text %}
         <a class="button button-light" href="#{{ data.cta_secondary_target or 'schedule' }}">{{ data.cta_secondary_text }}</a>
         {% else %}
         <a class="button button-light" href="/programmy/">Смотреть программы</a>
         {% endif %}
     </div>
     {% endif %}
+    {% if is_program_detail %}</div>{% endif %}
     {% if page_slug == 'o-centre' or is_program_detail %}
     <div class="wide-photo">
         <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
     </div>
     {% endif %}
+    {% if is_program_detail %}</div>{% endif %}
     {% if data.stats_row %}
     <div class="page-hero-stats">
         {% for stat in data.stats_row %}
@@ -93,22 +187,39 @@
 
 {% elif block.component == "trust_bar" %}
 <section class="section trust-section">
-    <h2 class="trust-title">{{ data.title or "15 лет растим счастливых детей" }}</h2>
-    <div class="trust-stage">
-        {% set petal_colors = ['red', 'green', 'orange', 'purple', 'blue', 'pinkdark', 'pink'] %}
-        {% for item in data.get("items", [])[:7] %}
-        <div class="trust-drop trust-drop-pos-{{ loop.index }} trust-drop-color-{{ petal_colors[loop.index0] }}">
-            <div class="trust-drop-inner">
-                <strong>{{ item.value }}</strong>
-                <span>{{ item.label }}</span>
-            </div>
-        </div>
-        {% endfor %}
-        <img class="trust-flower" src="{{ url_for('static', filename='img/figma/brand/seven-flower.png') }}" alt="Пушистый Семицветик">
+    <div class="trust-head">
+        <span class="trust-eyebrow">Почему семьи возвращаются</span>
+        <h2 class="trust-title">Семицветик в цифрах</h2>
     </div>
-    <div class="trust-notes">
-        <p class="trust-note trust-note-left"><span class="trust-note-line" aria-hidden="true"></span>Программа обучения разработана методистами с&nbsp;15-ти летним опытом работы</p>
-        <p class="trust-note trust-note-right"><span class="trust-note-line" aria-hidden="true"></span>С&nbsp;2010 года сохраняем традиции качественного образования и&nbsp;преемственность методик</p>
+    <div class="trust-grid">
+        <article class="trust-card trust-card--red">
+            <strong class="trust-card__value">15 лет</strong>
+            <span class="trust-card__label">Работаем и развиваем детей в Сергиевом Посаде</span>
+        </article>
+        <article class="trust-card trust-card--yellow">
+            <strong class="trust-card__value">&gt;70%</strong>
+            <span class="trust-card__label">детей из детского сада приходит за дополнительными занятиями</span>
+        </article>
+        <article class="trust-card trust-card--blue">
+            <strong class="trust-card__value">10%</strong>
+            <span class="trust-card__label">скидка детям участников СВО и вторым детям в семье</span>
+        </article>
+        <article class="trust-card trust-card--pink">
+            <strong class="trust-card__value">&gt;80%</strong>
+            <span class="trust-card__label">рекомендуют друзьям и приводят младших сестёр и братьев</span>
+        </article>
+        <article class="trust-card trust-card--purple">
+            <strong class="trust-card__value">100%</strong>
+            <span class="trust-card__label">активно участвуют в спектаклях, квестах, мастер-классах и летнем лагере</span>
+        </article>
+        <article class="trust-card trust-card--indigo">
+            <strong class="trust-card__value">98%</strong>
+            <span class="trust-card__label">дети идут с удовольствием в клуб</span>
+        </article>
+        <article class="trust-card trust-card--green">
+            <strong class="trust-card__value">~1,5 ч</strong>
+            <span class="trust-card__label">гарантированного живого развития без смартфонов</span>
+        </article>
     </div>
 </section>
 
@@ -172,6 +283,7 @@
                     </div>
                     <div class="top-programs-footer">
                         <strong>{{ active.price }}</strong>
+                        <small class="top-programs-note">Абонемент или разовая оплата</small>
                         <a class="button button-dark" href="#lead-form">Записаться</a>
                     </div>
                 </div>
@@ -186,7 +298,11 @@
 <section class="section meet-strip">
     <div class="meet-copy">
         <h2>{{ data.title or "Давайте знакомиться!" }}</h2>
+        {% if data.subtitle %}
+        <p class="meet-sub">{{ data.subtitle }}</p>
+        {% else %}
         <p class="meet-sub">Оставьте телефон, и&nbsp;убедитесь сами, почему <span class="meet-sub-accent">нам доверяют</span> более 3000 семей</p>
+        {% endif %}
         <ul class="meet-points">
             <li class="meet-point">
                 <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -202,7 +318,7 @@
             </li>
             <li class="meet-point">
                 <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>Дадим скидку на&nbsp;курс</span>
+                <span>Расскажем об&nbsp;оплате и&nbsp;льготах</span>
             </li>
         </ul>
         <form class="lead-inline meet-lead" data-lead-form>
@@ -223,8 +339,8 @@
             <p class="form-status" data-form-status></p>
         </form>
     </div>
-    <div class="meet-visual" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
+    <div class="meet-visual{% if data.visual_variant %} meet-visual-{{ data.visual_variant }}{% endif %}" aria-hidden="true">
+        <img class="meet-photo" src="{{ url_for('static', filename=data.image or 'img/figma/hero-boy-camera.png') }}" alt="">
     </div>
 </section>
 {#
@@ -294,44 +410,61 @@
         <span class="chip" data-filter-price="мес">Месяц</span>
         <span class="chip" data-filter-price="смена">Смена</span>
     </div>
-    <div class="program-list" data-program-list>
+    {% set petal_palette = ['red','yellow','green','blue','indigo','purple','pink'] %}
+    <div class="program-list program-list-cards" data-program-list>
         {% for program in data.programs %}
-        <article class="program-line"
+        {% set petal = petal_palette[loop.index0 % petal_palette|length] %}
+        <article class="program-card program-card--petal-{{ petal }}"
                  data-program-slug="{{ program.slug }}"
                  data-age-min="{{ program.age_min or 0 }}"
                  data-age-max="{{ program.age_max or 18 }}"
                  data-price-unit="{{ program.price_unit or '' }}"
                  data-category="{{ program.category or '' }}">
-            <div>
-                {% if program.category and category_labels.get(program.category) %}
-                <span class="program-accent">{{ category_labels.get(program.category) }}<i>*</i></span>
+            <a class="program-card__photo" href="/{{ program.slug }}/" aria-label="Открыть {{ program.name }}">
+                {% if program.image_url %}
+                <img src="{{ url_for('static', filename=program.image_url) }}" alt="{{ program.name }}" loading="lazy" decoding="async">
+                {% else %}
+                <span class="program-card__photo-mark" aria-hidden="true">{{ program.emoji or "✦" }}</span>
                 {% endif %}
-                <h3>{{ program.name }}</h3>
-                <div class="tag-row">
-                    <span>{{ program.age_label }}</span>
-                    <span>{{ program.duration_min or 45 }} минут</span>
-                    <span>{{ program.frequency }}</span>
+                <span class="program-card__corner" aria-hidden="true"></span>
+            </a>
+            <div class="program-card__body">
+                <div class="program-card__head">
+                    {% if program.category and category_labels.get(program.category) %}
+                    <span class="program-card__cat">{{ category_labels.get(program.category) }}</span>
+                    {% endif %}
+                    <h3 class="program-card__title">{{ program.name }}<span class="program-card__age"> · {{ program.age_label }}</span></h3>
+                    {% if program.tagline %}<p class="program-card__lead">{{ program.tagline }}</p>{% endif %}
                 </div>
-                <p>{{ program.tagline }}</p>
-                <div class="teacher-mini">
-                    <span>{{ program.emoji or "✦" }}</span>
+                <ul class="program-card__meta" aria-label="Параметры занятий">
+                    <li>{{ program.duration_min or 45 }} мин</li>
+                    <li>{{ program.frequency }}</li>
+                </ul>
+                {% if program.teacher %}
+                <div class="program-card__teacher">
+                    {% if program.teacher.photo_url %}
+                    <img class="program-card__teacher-photo" src="{{ url_for('static', filename=program.teacher.photo_url) }}" alt="" loading="lazy">
+                    {% else %}
+                    <span class="program-card__teacher-photo program-card__teacher-photo--ph" aria-hidden="true">{{ program.teacher.name[:1] }}</span>
+                    {% endif %}
                     <div>
-                        <strong>{{ program.teacher.name if program.teacher else "Педагог центра" }}</strong>
-                        <small>{{ program.teacher.role if program.teacher else "Специалист направления" }}</small>
+                        <strong>{{ program.teacher.name }}</strong>
+                        {% if program.teacher.role %}<small>{{ program.teacher.role }}</small>{% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="program-card__foot">
+                    <div class="program-card__price">
+                        <strong>{{ program.price_label }}</strong>
+                        {% if program.price_unit %}<small>в {{ program.price_unit }}</small>{% endif %}
+                    </div>
+                    <div class="program-card__cta">
+                        <a class="button button-dark" href="#lead-form">Записаться</a>
+                        <a class="program-card__details" href="/{{ program.slug }}/">Подробнее →</a>
                     </div>
                 </div>
             </div>
-            <div class="schedule-preview">
-                <strong>{{ program.price_label }}</strong>
-                <a class="button button-dark" href="#lead-form">Записаться</a>
-                <a class="program-details-link" href="/{{ program.slug }}/">Подробнее</a>
-                <p>Расписание занятий</p>
-                {% for slot in program.schedule_slots[:2] %}
-                <div class="schedule-row"><span>{{ slot.day_of_week }}</span><span>{{ slot.time_start }}-{{ slot.time_end }}</span></div>
-                {% else %}
-                <div class="schedule-row"><span>По запросу</span><span>Индивидуально</span></div>
-                {% endfor %}
-            </div>
+            <a class="program-card__pin" href="#lead-form" aria-label="Записаться на {{ program.name }}">Записаться →</a>
         </article>
         {% endfor %}
     </div>
@@ -494,7 +627,7 @@
                 {% if teacher.quote %}
                 <p class="teacher-quote">«{{ teacher.quote }}»</p>
                 {% endif %}
-                <a class="button button-dark teacher-cta" href="#contact-panel" data-teacher-id="{{ teacher.id }}">Записаться к&nbsp;педагогу</a>
+                <a class="button button-dark teacher-cta" href="#contact-panel" data-teacher-id="{{ teacher.id }}">Подобрать педагога</a>
                 {% endif %}
             </div>
         </article>
@@ -621,7 +754,10 @@
                 <span class="faq-question">{{ item.q }}</span>
                 <span class="faq-chevron" aria-hidden="true">⌄</span>
             </summary>
-            <p class="faq-answer">{{ item.a }}</p>
+            <div class="faq-answer">
+                <p>{{ item.a }}</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
         </details>
         {% endfor %}
     </div>
@@ -717,6 +853,11 @@
                 <h3>{{ group.title }}</h3>
                 <div class="schedule-group-price">
                     <strong>{{ data.program.price_label if data.program else '' }}</strong>
+                    <div class="schedule-term-chips" aria-label="Условия оплаты">
+                        <span>Абонемент</span>
+                        <span>Разово</span>
+                        <span>Перерасчёт</span>
+                    </div>
                     <a class="button button-dark button-compact" href="#lead-form">Записаться</a>
                 </div>
             </header>
@@ -791,6 +932,16 @@
     <div class="meet-copy">
         <h2>{{ data.title or "Записаться на\u00a0личную экскурсию" }}</h2>
         <p class="meet-sub">{% if data.subtitle %}{{ data.subtitle }}{% else %}<span class="meet-sub-accent-yellow">Ответим на&nbsp;вопросы</span> по&nbsp;телефону, и&nbsp;пригласим в&nbsp;детский клуб на&nbsp;экскурсию{% endif %}</p>
+        {% if data.points %}
+        <ul class="meet-points meet-points-final">
+            {% for point in data.points %}
+            <li class="meet-point">
+                <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>{{ point }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         <form class="lead-inline meet-lead" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
@@ -811,10 +962,10 @@
     </div>
     <div class="meet-visual" aria-hidden="true">
         <img class="meet-photo" src="{{ url_for('static', filename='img/mockup/cta-kids.png') }}" alt="">
-        <span class="meet-badge meet-badge-1">✦ Познакомим с&nbsp;вашими педагогами</span>
-        <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Многие наши педагоги работают в&nbsp;клубе с&nbsp;момента его основания</span>
-        <span class="meet-badge meet-badge-3 meet-badge-orange">✦ Наши учителя и&nbsp;психологи — это специалисты школ</span>
-        <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Каждый предмет ведет профильный специалист</span>
+        <span class="meet-badge meet-badge-1">✦ Педагоги-практики</span>
+        <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Всё в&nbsp;одном центре</span>
+        <span class="meet-badge meet-badge-3 meet-badge-orange">✦ Пробное без&nbsp;спешки</span>
+        <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Группа по&nbsp;возрасту и&nbsp;уровню</span>
     </div>
 </section>
 
@@ -856,6 +1007,7 @@
 {% endif %}
 
 {% elif block.component == "events_grid" %}
+{% set _events_cta_href = '/#lead-form' if request.path == '/meropriyatiya/' else '#lead-form' %}
 <section class="section events-section">
     <div class="section-head">
         <h2>{{ data.title }}</h2>
@@ -866,6 +1018,7 @@
             <p class="event-date">{{ event.display_date }}{% if event.event_time %} · {{ event.event_time }}{% endif %}</p>
             <h3>{{ event.title }}</h3>
             <p>{{ event.excerpt }}</p>
+            <a class="button button-orange button-sm event-card__cta" href="{{ _events_cta_href }}">Записаться</a>
         </article>
         {% endfor %}
     </div>
@@ -907,7 +1060,7 @@
             </div>
             <div class="schedule-preview">
                 <strong>{{ program.price_label }}</strong>
-                <a class="button button-dark" href="#lead-form">Записаться</a>
+                <a class="button button-orange" href="#lead-form">Записаться</a>
                 {% for slot in program.schedule_slots[:3] %}
                 <div class="schedule-row"><span>{{ slot.day_of_week }}</span><span>{{ slot.time_start }}-{{ slot.time_end }}</span></div>
                 {% else %}
@@ -917,10 +1070,28 @@
         </article>
         {% endfor %}
     </div>
+    <div class="prices-cta" id="lead-form">
+        <div class="prices-cta__copy">
+            <h3>Не нашли подходящее? Подберём вместе</h3>
+            <p>Оставьте телефон — позвоним, расспросим про ребёнка и предложим программу под запрос.</p>
+        </div>
+        <form class="prices-cta__form lead-inline" data-lead-form>
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="prices_table_cta">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+            <label class="sr-only" for="prices-cta-name">Имя</label>
+            <input id="prices-cta-name" type="text" name="name" placeholder="Имя">
+            <label class="sr-only" for="prices-cta-phone">Телефон</label>
+            <input id="prices-cta-phone" type="tel" name="phone" placeholder="Телефон" required>
+            <button class="button button-acid" type="submit">Подобрать</button>
+            <p class="form-status" data-form-status></p>
+        </form>
+    </div>
 </section>
 
 {% elif block.component == "contact_panel" %}
-{% set variant = data.variant or ('compact' if is_home else 'full') %}
+{% set _force_full = request.path in ('/kontakty/', '/pedagogi/', '/programmy/') %}
+{% set variant = 'full' if _force_full else (data.variant or ('compact' if is_home else 'full')) %}
 {% set vk_href = data.settings.get('social_vk') or '#' %}
 {% set tg_href = data.settings.get('social_tg') or '#' %}
 <section class="section contact-section contact-variant-{{ variant }}" id="contact-panel">
@@ -939,11 +1110,20 @@
                 <span class="contact-hours-badge">{{ data.settings.get('hours', 'Работаем с 9:00 до 21:00') }}</span>
             </div>
             <p class="contact-address">{{ data.settings.get('address') }}</p>
-            <a class="button contact-map-btn" href="#contact-map">Связаться с нами</a>
+            {% if data.highlights %}
+            <div class="contact-highlights">
+                {% for item in data.highlights %}
+                <span>{{ item }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <a class="button contact-map-btn" href="#contact-map">Открыть карту</a>
             <div class="contact-meta">
                 <div>
-                    <div class="qr-code" aria-hidden="true"></div>
-                    <span class="qr-caption">Мы в телеграмме</span>
+                    <a class="qr-code" href="{{ tg_href }}" target="_blank" rel="noopener" aria-label="Открыть Telegram Семицветика">
+                        <img src="{{ url_for('static', filename='img/qr-telegram.svg') }}" alt="">
+                    </a>
+                    <span class="qr-caption">Мы в Telegram</span>
                 </div>
                 <div>
                     <strong>Социальные сети</strong>
@@ -958,7 +1138,7 @@
                             <span class="soc-icon soc-tg-svg" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M20.6 4.2 2.9 11c-1.2.5-1.2 1.2-.2 1.5l4.5 1.4 1.7 5.3c.2.6.1.9.7.9.5 0 .7-.2 1-.5l2.2-2.1 4.6 3.4c.8.5 1.4.2 1.6-.8l3-14c.3-1.2-.5-1.8-1.4-1.4zM8.4 14.2l9.8-6.2c.4-.3.8-.1.5.2l-8 7.3-.3 3.3-2-4.6z"/></svg>
                             </span>
-                            Телеграм
+                            Telegram
                         </a>
                     </p>
                     <strong>Телефоны</strong>
@@ -970,7 +1150,7 @@
             </div>
         </div>
         {% if variant == 'full' %}
-        <div class="contact-form-card">
+        <div class="contact-form-card" id="lead-form">
             <h3>Или оставьте телефон. Мы ответим на вопросы и пригласим в детский клуб на экскурсию</h3>
             {% include "components/_lead_form.html" %}
         </div>
@@ -995,10 +1175,19 @@
 
 {% elif block.component == "alumni_schools" %}
 <section class="section alumni-schools">
-    <div class="section-head">
-        {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
-        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
-        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+    <div class="alumni-schools-head">
+        <div class="section-head">
+            {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
+            {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+        </div>
+        {% if data.summary %}
+        <aside class="alumni-summary">
+            <strong>{{ data.summary.value }}</strong>
+            <span>{{ data.summary.label }}</span>
+            <p>{{ data.summary.text }}</p>
+        </aside>
+        {% endif %}
     </div>
     <div class="alumni-schools-grid">
         {% for item in data.get('items', []) %}
