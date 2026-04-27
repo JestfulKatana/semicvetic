@@ -6668,3 +6668,39 @@ body.is-menu-open .wa-float { display: none; }
     display: inline-flex;
 }
 
+/* ── anglijskij / izostudia slug-overrides ── */
+
+/* Скрыть кнопку «Поделиться» на страницах программ */
+.page-program .page-hero-actions .soft-button:last-child {
+    display: none;
+}
+
+/* Скрыть reviews-summary на страницах программ (мало отзывов — оценка нерелевантна) */
+.page-program .reviews-summary {
+    display: none;
+}
+
+/* schedule-group: подпись под H3 для малой группы */
+.schedule-group-note {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 400;
+}
+
+/* photo-strip с eyebrow (изостудия) */
+.photo-strip--izostudia {
+    padding-top: 0;
+}
+.photo-strip-eyebrow {
+    display: block;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 860px) {
+    .schedule-group-note {
+        font-size: 13px;
+    }
+}
+

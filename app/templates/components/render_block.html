@@ -141,6 +141,8 @@
         {% if page.age_label %}<li>{{ page.age_label }}</li>{% endif %}
         {% if page.duration_min %}<li>{{ page.duration_min }} мин</li>{% endif %}
         {% if page.frequency %}<li>{{ page.frequency }}</li>{% endif %}
+        {% if page_slug == 'anglijskij' %}<li>Живые занятия в группе</li>{% endif %}
+        {% if page_slug == 'izostudia' %}<li>Без оценок</li>{% endif %}
     </ul>
     {% endif %}
     {% if data.cta_text %}
@@ -164,7 +166,13 @@
     {% if is_program_detail %}</div>{% endif %}
     {% if page_slug == 'o-centre' or is_program_detail %}
     <div class="wide-photo">
+        {% if page_slug == 'anglijskij' %}
+        <img src="{{ url_for('static', filename='img/figma/gallery/kids-xmas.png') }}" alt="Дети на занятии английского — Семицветик">
+        {% elif page_slug == 'izostudia' %}
+        <img src="{{ url_for('static', filename='img/figma/gallery/girl-paints.png') }}" alt="Девочка рисует на занятии изостудии — Семицветик">
+        {% else %}
         <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
+        {% endif %}
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
     </div>
     {% endif %}
@@ -747,6 +755,60 @@
     <div class="faq-head">
         <h2>{{ data.title }}</h2>
     </div>
+    {% if page_slug == 'izostudia' %}
+    <div class="faq-list">
+        <details class="faq-item" open>
+            <summary>
+                <span class="faq-question">Нужно ли приносить материалы?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Все материалы (краски, кисти, глина, бумага) включены в стоимость абонемента.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+        <details class="faq-item">
+            <summary>
+                <span class="faq-question">Что если ребёнок «не умеет рисовать»?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Это нормально: на пробном занятии педагог подбирает технику под уровень ребёнка. Цель — не научить рисовать как взрослый, а раскрыть фантазию.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+        <details class="faq-item">
+            <summary>
+                <span class="faq-question">Можно ли смотреть работы ребёнка?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Да, ребёнок забирает работы домой после каждого занятия. Раз в сезон делаем мини-выставку для родителей.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+        <details class="faq-item">
+            <summary>
+                <span class="faq-question">Нужен ли фартук / запасная одежда?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Мы выдаём фартуки, но запасную футболку лучше иметь — творчество = краски на руках.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+        <details class="faq-item">
+            <summary>
+                <span class="faq-question">Сколько детей в группе?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>До 8 детей. Педагог успевает уделить внимание каждому.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+    </div>
+    {% else %}
     <div class="faq-list">
         {% for item in data.get("items", []) %}
         <details class="faq-item" {% if loop.first %}open{% endif %}>
@@ -760,7 +822,20 @@
             </div>
         </details>
         {% endfor %}
+        {% if page_slug == 'anglijskij' %}
+        <details class="faq-item">
+            <summary>
+                <span class="faq-question">Почему не онлайн (Skyeng / Skysmart)?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>В живой группе дети говорят друг с другом, а не в экран. Peer-speaking, эмоциональный контакт, нет нагрузки на зрение от экрана — то, что онлайн-школы принципиально не дают.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+        {% endif %}
     </div>
+    {% endif %}
 </section>
 
 {% elif block.component == "timeline" %}
@@ -851,6 +926,7 @@
         <article class="schedule-group">
             <header class="schedule-group-head">
                 <h3>{{ group.title }}</h3>
+                {% if page_slug == 'anglijskij' %}<p class="schedule-group-note">маленькая группа до 6 детей</p>{% endif %}
                 <div class="schedule-group-price">
                     <strong>{{ data.program.price_label if data.program else '' }}</strong>
                     <div class="schedule-term-chips" aria-label="Условия оплаты">
@@ -915,6 +991,18 @@
 </section>
 
 {% elif block.component == "photo_strip" %}
+{% if page_slug == 'izostudia' %}
+<section class="photo-strip photo-strip--izostudia">
+    <p class="photo-strip-eyebrow eyebrow">Так выглядят занятия</p>
+    <div class="photo-strip-grid">
+        <img src="{{ url_for('static', filename='img/figma/gallery/girl-paints.png') }}" alt="Девочка рисует" loading="lazy">
+        <img src="{{ url_for('static', filename='img/figma/gallery/letters.png') }}" alt="Творческое занятие" loading="lazy">
+        <img src="{{ url_for('static', filename='img/figma/gallery/balloons.png') }}" alt="Дети в центре" loading="lazy">
+        <img src="{{ url_for('static', filename='img/figma/gallery/pumpkins.png') }}" alt="Поделки из глины" loading="lazy">
+        <img src="{{ url_for('static', filename='img/figma/gallery/bear.png') }}" alt="Творческая работа" loading="lazy">
+    </div>
+</section>
+{% else %}
 <section class="photo-strip">
     {% if data.images %}
     <div class="photo-strip-grid">
@@ -926,6 +1014,7 @@
     <img src="{{ url_for('static', filename='img/mockup/photo-strip.png') }}" alt="">
     {% endif %}
 </section>
+{% endif %}
 
 {% elif block.component == "cta_final" %}
 <section class="section meet-strip meet-strip-green" id="lead-form">
@@ -962,10 +1051,17 @@
     </div>
     <div class="meet-visual" aria-hidden="true">
         <img class="meet-photo" src="{{ url_for('static', filename='img/mockup/cta-kids.png') }}" alt="">
+        {% if page_slug == 'izostudia' %}
+        <span class="meet-badge meet-badge-1">✦ Все материалы включены</span>
+        <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Работы забирают домой</span>
+        <span class="meet-badge meet-badge-3 meet-badge-orange">✦ Без оценок и сравнений</span>
+        <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Группа до 8 детей</span>
+        {% else %}
         <span class="meet-badge meet-badge-1">✦ Педагоги-практики</span>
         <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Всё в&nbsp;одном центре</span>
         <span class="meet-badge meet-badge-3 meet-badge-orange">✦ Пробное без&nbsp;спешки</span>
         <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Группа по&nbsp;возрасту и&nbsp;уровню</span>
+        {% endif %}
     </div>
 </section>
 
@@ -1150,7 +1246,7 @@
             </div>
         </div>
         {% if variant == 'full' %}
-        <div class="contact-form-card" id="lead-form">
+        <div class="contact-form-card" id="contact-lead-form">
             <h3>Или оставьте телефон. Мы ответим на вопросы и пригласим в детский клуб на экскурсию</h3>
             {% include "components/_lead_form.html" %}
         </div>
@@ -1258,6 +1354,34 @@
             {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
             {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
         </div>
+        {% if page_slug == 'izostudia' %}
+        <ul class="program-outcomes-list">
+            <li>
+                <span class="program-outcomes-check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
+                </span>
+                <span>Рисует акварелью, гуашью, мелками — пробует разные техники</span>
+            </li>
+            <li>
+                <span class="program-outcomes-check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
+                </span>
+                <span>Лепит из глины и пластилина, делает аппликации</span>
+            </li>
+            <li>
+                <span class="program-outcomes-check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
+                </span>
+                <span>Забирает работы домой — есть что показать бабушке и повесить на холодильник</span>
+            </li>
+            <li>
+                <span class="program-outcomes-check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
+                </span>
+                <span>Учится видеть цвет, форму, композицию — без оценок и без «правильно/неправильно»</span>
+            </li>
+        </ul>
+        {% else %}
         <ul class="program-outcomes-list">
             {% for item in data.get('items', []) %}
             <li>
@@ -1268,6 +1392,7 @@
             </li>
             {% endfor %}
         </ul>
+        {% endif %}
     </div>
 </section>
 
@@ -1275,7 +1400,11 @@
 <section class="section lesson-anatomy">
     <div class="section-head">
         {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
-        {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+        {% if page_slug == 'anglijskij' %}
+        <h2>Как проходит одно занятие</h2>
+        {% elif data.title %}
+        <h2>{{ data.title }}</h2>
+        {% endif %}
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
     </div>
     <ol class="lesson-anatomy-steps">
