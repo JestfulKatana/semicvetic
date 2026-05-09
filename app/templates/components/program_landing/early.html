@@ -1,0 +1,322 @@
+{# Раннее развитие — красный #d14d20 — перенос из early-variant-e.jsx #}
+<nav class="pl-crumbs" aria-label="Хлебные крошки">
+    <a href="/">Главная</a> &nbsp;/&nbsp; <a href="/programmy/">Программы</a> &nbsp;/&nbsp; <span>Раннее развитие</span>
+</nav>
+
+{# HERO — на бумаге #}
+<section class="pl-hero pl-hero--paper" style="padding: 64px 72px 56px;">
+    <div class="pl-pill-row">
+        <span class="pl-pill pl-pill--soft">1–4,5&nbsp;лет</span>
+        <span class="pl-pill pl-pill--neutral">от 5&nbsp;200&nbsp;₽ / месяц</span>
+        <span class="pl-pill pl-pill--neutral">2&nbsp;раза в&nbsp;неделю по&nbsp;60&nbsp;мин</span>
+    </div>
+
+    <div class="pl-hero-grid pl-hero-grid--end pl-hero-grid--early">
+        <h1 class="pl-h1-lg">Всё важное&nbsp;—<br><span class="pl-mark-accent">до&nbsp;школы</span></h1>
+        <p class="pl-hero-lead" style="color: var(--pl-soft); font-size:17px;">Речь, моторика, любопытство, способность сидеть и&nbsp;слушать&nbsp;— всё это закладывается до&nbsp;школы. Не&nbsp;от&nbsp;количества развивашек, а&nbsp;от&nbsp;качества среды.</p>
+    </div>
+
+    {# Плакат "1.5 часа без экрана" #}
+    <div class="pl-poster">
+        <div class="pl-poster-grid">
+            <div class="pl-poster-num">1,5</div>
+            <div>
+                <div class="pl-poster-eye">часа в&nbsp;неделю</div>
+                <strong class="pl-poster-title">гарантированно <span class="pl-mark-acid">без экрана</span></strong>
+                <p class="pl-poster-text">На&nbsp;занятии телефонов нет&nbsp;— ни&nbsp;у&nbsp;детей, ни&nbsp;у&nbsp;педагогов. Только реальные предметы, живые люди, настоящие книги.</p>
+            </div>
+            <div class="pl-poster-tags">
+                <span>Без смартфонов</span>
+                <span>Живые материалы</span>
+                <span>Бумажные книги</span>
+            </div>
+        </div>
+    </div>
+
+    <form class="pl-hero-cta" method="post" action="#lead-form" style="margin-top:24px;">
+        <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required style="min-width:220px; max-width:280px;">
+        <button class="pl-btn pl-btn--accent" type="submit">Прийти на&nbsp;пробное</button>
+        <span class="pl-cta-meta">Бесплатное знакомство, можно с&nbsp;мамой</span>
+    </form>
+</section>
+
+{# Неделя у Росточков #}
+<section class="pl-section pl-section--soft" style="padding: 68px 64px;">
+    <div class="pl-cols-2 pl-cols-2--baseline" style="margin-bottom:36px;">
+        <div>
+            <span class="pl-eyebrow pl-eyebrow--dark">Неделя у&nbsp;Росточков</span>
+            <h2 class="pl-h2 pl-h2--lg" style="margin-top:10px;">Что мы&nbsp;трогаем,<br>нюхаем и&nbsp;слушаем</h2>
+        </div>
+        <p class="pl-text-body" style="padding-top:18px;">Каждое занятие&nbsp;— новая «коробка» с&nbsp;материалами под тему недели. Никаких карточек на&nbsp;ламинате&nbsp;— только настоящие предметы, природные материалы, живая музыка.</p>
+    </div>
+
+    <div class="pl-week-grid">
+        {# TODO: фото реальных коробок недели #}
+        <article class="pl-week-card" style="--pl-week-bg:#f5c388;">
+            <div class="pl-week-head">
+                <span class="pl-week-day">Пн</span>
+                <span class="pl-week-num">нед. 1</span>
+            </div>
+            <div class="pl-week-photo"><i data-tag="// фото коробки"></i></div>
+            <strong class="pl-week-topic">Осень</strong>
+            <ul class="pl-week-tags"><li>листья</li><li>каштаны</li><li>жёлуди</li><li>кора</li></ul>
+            <p class="pl-week-action">— Сортируем по&nbsp;цвету и&nbsp;форме</p>
+        </article>
+        <article class="pl-week-card" style="--pl-week-bg:#fce8b5;">
+            <div class="pl-week-head">
+                <span class="pl-week-day">Ср</span>
+                <span class="pl-week-num">нед. 1</span>
+            </div>
+            <div class="pl-week-photo"><i data-tag="// фото коробки"></i></div>
+            <strong class="pl-week-topic">Молоко</strong>
+            <ul class="pl-week-tags"><li>творог</li><li>сметана</li><li>сыр</li><li>тесто</li></ul>
+            <p class="pl-week-action">— Месим тесто руками</p>
+        </article>
+        <article class="pl-week-card" style="--pl-week-bg:#fbd4c5;">
+            <div class="pl-week-head">
+                <span class="pl-week-day">Пт</span>
+                <span class="pl-week-num">нед. 1</span>
+            </div>
+            <div class="pl-week-photo"><i data-tag="// фото коробки"></i></div>
+            <strong class="pl-week-topic">Звуки</strong>
+            <ul class="pl-week-tags"><li>колокольчик</li><li>маракас</li><li>ксилофон</li><li>бубен</li></ul>
+            <p class="pl-week-action">— Играем оркестром</p>
+        </article>
+        <article class="pl-week-card" style="--pl-week-bg:#e8d4f5;">
+            <div class="pl-week-head">
+                <span class="pl-week-day">Пн</span>
+                <span class="pl-week-num">нед. 2</span>
+            </div>
+            <div class="pl-week-photo"><i data-tag="// фото коробки"></i></div>
+            <strong class="pl-week-topic">Семья</strong>
+            <ul class="pl-week-tags"><li>куклы</li><li>фото</li><li>книжки</li><li>дом</li></ul>
+            <p class="pl-week-action">— Кто кому кем приходится</p>
+        </article>
+        <article class="pl-week-card" style="--pl-week-bg:#dde8c4;">
+            <div class="pl-week-head">
+                <span class="pl-week-day">Ср</span>
+                <span class="pl-week-num">нед. 2</span>
+            </div>
+            <div class="pl-week-photo"><i data-tag="// фото коробки"></i></div>
+            <strong class="pl-week-topic">Зерно</strong>
+            <ul class="pl-week-tags"><li>рис</li><li>гречка</li><li>фасоль</li><li>мука</li></ul>
+            <p class="pl-week-action">— Пересыпаем, ищем клад</p>
+        </article>
+    </div>
+    <div style="margin-top:24px; font-size:13px; color: var(--pl-mute2); text-align:center;">// плейсхолдер: фото реальных коробок недели</div>
+</section>
+
+{# Пять каналов #}
+<section class="pl-section">
+    <span class="pl-eyebrow pl-eyebrow--muted">Пять каналов</span>
+    <h2 class="pl-h2 pl-h2--md" style="margin: 10px 0 8px;">Через все&nbsp;чувства, не&nbsp;через карточки</h2>
+    <p class="pl-text-body" style="margin: 0 0 32px; max-width: 720px;">В&nbsp;этом возрасте мозг строится через сенсорный опыт. Каждое занятие задействует все&nbsp;каналы&nbsp;— поэтому работает.</p>
+    <div class="pl-senses">
+        <article class="pl-sense">
+            <div class="pl-sense-icon" style="--sense-color:#f5c388;"></div>
+            <div>
+                <span class="pl-sense-num">01</span>
+                <strong class="pl-sense-name">Зрение</strong>
+                <p class="pl-sense-desc">Цвет, форма, размер</p>
+            </div>
+        </article>
+        <article class="pl-sense">
+            <div class="pl-sense-icon" style="--sense-color:#fce8b5;"></div>
+            <div>
+                <span class="pl-sense-num">02</span>
+                <strong class="pl-sense-name">Слух</strong>
+                <p class="pl-sense-desc">Музыка, ритм, речь</p>
+            </div>
+        </article>
+        <article class="pl-sense">
+            <div class="pl-sense-icon" style="--sense-color:#fbd4c5;"></div>
+            <div>
+                <span class="pl-sense-num">03</span>
+                <strong class="pl-sense-name">Осязание</strong>
+                <p class="pl-sense-desc">Текстуры, температура</p>
+            </div>
+        </article>
+        <article class="pl-sense">
+            <div class="pl-sense-icon" style="--sense-color:#e8d4f5;"></div>
+            <div>
+                <span class="pl-sense-num">04</span>
+                <strong class="pl-sense-name">Обоняние</strong>
+                <p class="pl-sense-desc">Травы, специи, фрукты</p>
+            </div>
+        </article>
+        <article class="pl-sense">
+            <div class="pl-sense-icon" style="--sense-color:#dde8c4;"></div>
+            <div>
+                <span class="pl-sense-num">05</span>
+                <strong class="pl-sense-name">Вкус</strong>
+                <p class="pl-sense-desc">Кулинария на&nbsp;занятии</p>
+            </div>
+        </article>
+    </div>
+</section>
+
+{# Группы #}
+<section class="pl-section pl-section--soft">
+    <div class="pl-head pl-head--baseline" style="margin-bottom: 28px;">
+        <div>
+            <span class="pl-eyebrow pl-eyebrow--dark">Группы</span>
+            <h2 class="pl-h2 pl-h2--md">Каждой группе&nbsp;— свои&nbsp;задачи</h2>
+        </div>
+        <span class="pl-head-meta">До&nbsp;8&nbsp;детей · 2&nbsp;раза в&nbsp;неделю</span>
+    </div>
+    <div class="pl-groups">
+        <div class="pl-group-row pl-group-row--early">
+            <strong class="pl-group-name">Малыши</strong>
+            <span class="pl-group-pill">1–2 года</span>
+            <span class="pl-group-age">с&nbsp;мамой</span>
+            <span class="pl-group-what">Сенсорика, моторика, первые звуки</span>
+            <span class="pl-group-price">1&nbsp;200&nbsp;₽/занятие</span>
+            <span class="pl-group-slots">есть места</span>
+            <button class="pl-btn pl-btn--dark pl-btn--sm" type="button">Записать</button>
+        </div>
+        <div class="pl-group-row pl-group-row--early">
+            <strong class="pl-group-name">Росточки</strong>
+            <span class="pl-group-pill">2–3 года</span>
+            <span class="pl-group-age">без&nbsp;мамы</span>
+            <span class="pl-group-what">Речь, моторика, социализация</span>
+            <span class="pl-group-price">5&nbsp;200&nbsp;₽/мес</span>
+            <span class="pl-group-slots">есть места</span>
+            <button class="pl-btn pl-btn--dark pl-btn--sm" type="button">Записать</button>
+        </div>
+        <div class="pl-group-row pl-group-row--early is-full">
+            <strong class="pl-group-name">Цветики</strong>
+            <span class="pl-group-pill">3–4 года</span>
+            <span class="pl-group-age">без&nbsp;мамы</span>
+            <span class="pl-group-what">Кругозор, ролевые игры, начало букв</span>
+            <span class="pl-group-price">5&nbsp;600&nbsp;₽/мес</span>
+            <span class="pl-group-slots is-full">набрано</span>
+            <button class="pl-btn pl-btn--sm" type="button" disabled>Лист ожидания</button>
+        </div>
+        <div class="pl-group-row pl-group-row--early">
+            <strong class="pl-group-name">Звёздочки</strong>
+            <span class="pl-group-pill">4–4,5 лет</span>
+            <span class="pl-group-age">без&nbsp;мамы</span>
+            <span class="pl-group-what">Чтение, счёт, переход к&nbsp;«Подготовке»</span>
+            <span class="pl-group-price">6&nbsp;200&nbsp;₽/мес</span>
+            <span class="pl-group-slots">есть места</span>
+            <button class="pl-btn pl-btn--dark pl-btn--sm" type="button">Записать</button>
+        </div>
+    </div>
+    <div class="pl-note pl-note--paper">
+        <strong>Скидка 10%</strong>&nbsp;— семьям СВО и&nbsp;при втором ребёнке в&nbsp;центре.
+    </div>
+</section>
+
+{# Команда #}
+<section class="pl-section">
+    <h2 class="pl-h2 pl-h2--md" style="margin-top:0;">На&nbsp;занятии&nbsp;— 3&nbsp;взрослых</h2>
+    <p class="pl-text-body" style="margin: 12px 0 32px;">Ведущий педагог + специалист по&nbsp;ИЗО/музыке + помощник. На&nbsp;8&nbsp;детей&nbsp;— как должно быть.</p>
+    <div class="pl-teachers pl-teachers--equal">
+        {# TODO: реальные фото и подтверждённые сертификаты #}
+        <article class="pl-teacher">
+            <div class="pl-teacher-photo"></div>
+            <div class="pl-teacher-body">
+                <span class="pl-teacher-pill">12&nbsp;лет в&nbsp;Семицветике</span>
+                <h3>Дёмина И.&nbsp;С.</h3>
+                <p class="pl-teacher-role">Ведущий педагог</p>
+                <p class="pl-teacher-sub">Группы 2–4&nbsp;лет</p>
+            </div>
+        </article>
+        <article class="pl-teacher">
+            <div class="pl-teacher-photo"></div>
+            <div class="pl-teacher-body">
+                <span class="pl-teacher-pill">9&nbsp;лет</span>
+                <h3>Семёнова О.&nbsp;К.</h3>
+                <p class="pl-teacher-role">Психолог · речь</p>
+                <p class="pl-teacher-sub">Малыши, мамы рядом</p>
+            </div>
+        </article>
+        <article class="pl-teacher">
+            <div class="pl-teacher-photo"></div>
+            <div class="pl-teacher-body">
+                <span class="pl-teacher-pill">7&nbsp;лет</span>
+                <h3>Кравцова А.&nbsp;Н.</h3>
+                <p class="pl-teacher-role">ИЗО · музыка</p>
+                <p class="pl-teacher-sub">Творческие занятия</p>
+            </div>
+        </article>
+    </div>
+</section>
+
+{# Отзывы #}
+<section class="pl-section">
+    <span class="pl-eyebrow pl-eyebrow--muted">Отзывы родителей</span>
+    <h2 class="pl-h2 pl-h2--sm" style="margin: 10px 0 8px;">5,0 на&nbsp;Яндексе, 2ГИС и&nbsp;ВК</h2>
+    <p class="pl-text-body" style="margin: 0 0 32px;">Без накруток. Только то, что мамы пишут сами.</p>
+    <div class="pl-reviews">
+        {# TODO: цитаты — из реальных отзывов на Я.Картах/2ГИС/ВК #}
+        <article class="pl-review">
+            <div class="pl-review-stars">★★★★★</div>
+            <span class="pl-review-source">Я.Карты</span>
+            <p class="pl-review-text">«Сын в&nbsp;Росточках полгода. Стал сидеть и&nbsp;слушать&nbsp;30&nbsp;минут&nbsp;— в&nbsp;саду никогда не&nbsp;сидел. Понимаю, что это среда работает, не&nbsp;«наследственность».»</p>
+            <strong class="pl-review-author">— Юлия М.</strong>
+        </article>
+        <article class="pl-review">
+            <div class="pl-review-stars">★★★★★</div>
+            <span class="pl-review-source">2ГИС</span>
+            <p class="pl-review-text">«У&nbsp;дочери в&nbsp;2,5&nbsp;не&nbsp;было речи. Через 4&nbsp;месяца на&nbsp;Малышах&nbsp;— фразы из&nbsp;3–4&nbsp;слов. Никаких «быстрее», «учим»&nbsp;— просто живая среда.»</p>
+            <strong class="pl-review-author">— Екатерина Л.</strong>
+        </article>
+        <article class="pl-review">
+            <div class="pl-review-stars">★★★★★</div>
+            <span class="pl-review-source">ВК</span>
+            <p class="pl-review-text">«Я&nbsp;тоже отдыхаю на&nbsp;Малышах. Час без телефона&nbsp;— для меня тоже важно. И&nbsp;вижу, как мой малыш растёт.»</p>
+            <strong class="pl-review-author">— Анастасия В.</strong>
+        </article>
+    </div>
+</section>
+
+{# FAQ #}
+<section class="pl-section">
+    <h2 class="pl-h2 pl-h2--md" style="margin-top:0;">Частые вопросы</h2>
+    <div class="pl-faq">
+        <details>
+            <summary>А&nbsp;если ребёнок плачет первые занятия?</summary>
+            <p>Это нормально. Первые 2–3&nbsp;занятия мама в&nbsp;зале, потом постепенный выход.</p>
+        </details>
+        <details>
+            <summary>Сколько детей в&nbsp;группе?</summary>
+            <p>Максимум 8. Ведущий педагог + 2&nbsp;специалиста по&nbsp;направлениям.</p>
+        </details>
+        <details>
+            <summary>Чем отличается от&nbsp;детского сада?</summary>
+            <p>Структурированный час с&nbsp;конкретной темой и&nbsp;материалами, а&nbsp;не&nbsp;пребывание.</p>
+        </details>
+        <details>
+            <summary>Что приносить?</summary>
+            <p>Сменку и&nbsp;хорошее настроение. Все материалы у&nbsp;нас.</p>
+        </details>
+        <details>
+            <summary>Можно ходить раз в&nbsp;неделю?</summary>
+            <p>Можно, но&nbsp;2&nbsp;раза эффективнее&nbsp;— между занятиями ребёнок забывает.</p>
+        </details>
+        <details>
+            <summary>Сколько по&nbsp;времени занятие?</summary>
+            <p>60&nbsp;минут активной работы + 15&nbsp;минут на&nbsp;сборы и&nbsp;разговор с&nbsp;родителем.</p>
+        </details>
+    </div>
+</section>
+
+{# Final CTA #}
+<section class="pl-final-cta" id="lead-form">
+    <div class="pl-final-cta-grid">
+        <div>
+            <span class="pl-eyebrow pl-eyebrow--acid">Бесплатное пробное</span>
+            <h2>Приходите вместе с&nbsp;<span class="pl-mark-acid">малышом</span></h2>
+            <p>Для Малышей мама в&nbsp;зале весь час, для остальных&nbsp;— рядом, в&nbsp;зоне видимости. Посмотрите, как ребёнок реагирует на&nbsp;среду.</p>
+        </div>
+        <form class="pl-form" method="post" action="#lead-form">
+            <input class="pl-input" type="text" name="child_name" placeholder="Имя ребёнка и возраст">
+            <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
+            <button class="pl-btn pl-btn--md" type="submit">Записать на пробное</button>
+            <p class="pl-form-meta">Перезвоним в&nbsp;течение часа</p>
+        </form>
+    </div>
+</section>
+
+{% include "components/program_landing/_program_nav.html" %}

@@ -1,0 +1,22 @@
+{# Соседние программы внизу страницы. Параметр current — slug текущей. #}
+{% set _all = [
+    ('rannee-razvitie', 'Раннее развитие', '1–4,5 лет', '#d14d20', '#fde0d2'),
+    ('podgotovka-k-shkole', 'Подготовка к школе', '5–6,5 лет', '#6359c2', '#efedf9'),
+    ('anglijskij', 'Английский', '5–14 лет', '#2d8a3f', '#e6f3ec'),
+    ('logoped', 'Логопедия', '4–12 лет', '#ed7735', '#fde8d8'),
+] %}
+<section class="pl-prog-nav">
+    <div class="pl-prog-nav-head">
+        <h2>Другие наши программы</h2>
+        <span class="pl-prog-nav-meta">Скидка 10%&nbsp;— при втором ребёнке в&nbsp;центре</span>
+    </div>
+    <div class="pl-prog-grid">
+        {% for slug, name, age, color, bg in _all if slug != current %}
+        <a class="pl-prog-card" href="/{{ slug }}/" style="--pn-bg: {{ bg }}; --pn-color: {{ color }};">
+            <span class="pl-prog-pill">{{ age }}</span>
+            <strong class="pl-prog-name">{{ name }}</strong>
+            <span class="pl-prog-link">Подробнее <span aria-hidden="true">→</span></span>
+        </a>
+        {% endfor %}
+    </div>
+</section>
