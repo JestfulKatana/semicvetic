@@ -98,7 +98,7 @@
             {% endfor %}
         </div>
         {% endif %}
-        <form class="lead-inline hero-lead" data-lead-form>
+        <form class="lead-inline hero-lead" id="lead-form" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or 'hero' }}">
             <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
@@ -118,7 +118,7 @@
         </form>
     </div>
     <div class="hero-photo-wrap">
-        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок-фотограф — Семицветик">
+        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
         <div class="hero-photo-badges">
             <span class="photo-badge photo-badge-open"><img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="">Открыто для родителей</span>
@@ -130,26 +130,76 @@
 <section class="page-hero{% if is_program_detail %} page-hero--program{% endif %}">
     <div class="page-hero-actions">
         <a class="soft-button" href="{{ url_for('main.home') }}">← На главную</a>
-        <button class="soft-button" type="button">Поделиться</button>
+        {% if not is_program_detail %}<button class="soft-button" type="button">Поделиться</button>{% endif %}
     </div>
     {% if is_program_detail %}<div class="page-hero-grid"><div class="page-hero-copy">{% endif %}
     {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
     <h1>{{ data.title }}</h1>
     {% if data.subtitle %}<p class="page-hero-text{% if data.subtitle_accent %} page-hero-text-accent{% endif %}">{{ data.subtitle }}</p>{% endif %}
-    {% if is_program_detail and (page.age_label or page.duration_min or page.frequency) %}
+    {% if page_slug == 'psiholog' %}
+    <p class="page-hero-note">Поддержка, а не диагноз. Конфиденциально. Помогаем ребёнку — без ярлыков и направлений.</p>
+    {% endif %}
+    {% if is_program_detail %}
     <ul class="page-hero-metrics" aria-label="Параметры занятий">
-        {% if page.age_label %}<li>{{ page.age_label }}</li>{% endif %}
-        {% if page.duration_min %}<li>{{ page.duration_min }} мин</li>{% endif %}
+        {% if page_slug == 'otlichnik' %}
+        <li>1–4 класс</li>
+        <li>Помощь с домашкой</li>
+        <li>Все предметы</li>
+        {% elif page_slug == 'detskij-lager' %}
+        <li>5–12 лет</li>
+        <li>5 часов в день</li>
+        <li>Пн – Пт</li>
+        {% else %}
+        {% if page.age_label %}<li>{% if page_slug == 'podgotovka-k-shkole' %}5–7 лет{% else %}{{ page.age_label }}{% endif %}</li>{% endif %}
+        {% if page.duration_min and page_slug != 'anglijskij' %}<li>{% if page_slug == 'logoped' %}45{% else %}{{ page.duration_min }}{% endif %} мин</li>{% endif %}
         {% if page.frequency %}<li>{{ page.frequency }}</li>{% endif %}
         {% if page_slug == 'anglijskij' %}<li>Живые занятия в группе</li>{% endif %}
         {% if page_slug == 'izostudia' %}<li>Без оценок</li>{% endif %}
+        {% endif %}
     </ul>
+    {% endif %}
+    {% if page_slug == 'otlichnik' %}
+    <p class="page-hero-note">Снимаем стресс с домашки и закрываем пробелы — чтобы вечером ребёнок улыбался, а в дневнике росли четвёрки и пятёрки.</p>
+    {% elif page_slug == 'detskij-lager' %}
+    <p class="page-hero-note">Летние смены: июнь, июль, август. Точные даты — по звонку.</p>
+    {% elif page_slug == 'podgotovka-k-shkole' %}
+    <p class="page-hero-note">✓ Первое занятие — диагностика готовности к 1 классу: бесплатно</p>
+    {% endif %}
+    {% if page_slug == 'psiholog' %}
+    <div class="page-hero-tags">
+        <span class="hero-tag">Тревога и страхи</span>
+        <span class="hero-tag">Тики и навязчивости</span>
+        <span class="hero-tag">Истерики и агрессия</span>
+        <span class="hero-tag">Плохо спит</span>
+        <span class="hero-tag">Адаптация к саду/школе</span>
+        <span class="hero-tag">Развод и ссоры дома</span>
+        <span class="hero-tag">Ревность к младшему</span>
+        <span class="hero-tag">Замкнулся, мало друзей</span>
+    </div>
+    {% elif page_slug == 'logoped' %}
+    <div class="speech-symptoms">
+        <p class="speech-symptoms-title">Когда стоит обратиться к логопеду:</p>
+        <ul class="speech-symptoms-grid">
+            <li>Не получаются Р, Л, Ш, Ж</li>
+            <li>Путает звуки в словах</li>
+            <li>Сложно пересказывать</li>
+            <li>Нечёткая дикция</li>
+            <li>Трудности чтения и письма</li>
+            <li>Речь непонятна окружающим</li>
+        </ul>
+    </div>
     {% endif %}
     {% if data.cta_text %}
     {% set _hero_phone = site_settings.get('phone_1') if site_settings is defined else None %}
     {% set _wants_tel_secondary = (request.path in ('/kontakty/', '/pedagogi/', '/ceny/')) %}
     {% set _is_catalog_page = request.path == '/programmy/' %}
     {% set _primary_btn_class = 'button button-dark' if is_program_detail else 'button button-orange' %}
+    {% if page_slug == 'psiholog' %}
+    <div class="action-row">
+        <a class="button button-dark" href="#lead-form">Бесплатно поговорить с психологом</a>
+        <a class="button button-light" href="#schedule">Посмотреть форматы</a>
+    </div>
+    {% else %}
     <div class="action-row{% if not is_program_detail %} centered{% endif %}">
         <a class="{{ _primary_btn_class }}" href="#{{ data.cta_target or 'lead-form' }}">{{ data.cta_text }}</a>
         {% if _wants_tel_secondary and _hero_phone %}
@@ -163,6 +213,7 @@
         {% endif %}
     </div>
     {% endif %}
+    {% endif %}
     {% if is_program_detail %}</div>{% endif %}
     {% if page_slug == 'o-centre' or is_program_detail %}
     <div class="wide-photo">
@@ -170,6 +221,18 @@
         <img src="{{ url_for('static', filename='img/figma/gallery/kids-xmas.png') }}" alt="Дети на занятии английского — Семицветик">
         {% elif page_slug == 'izostudia' %}
         <img src="{{ url_for('static', filename='img/figma/gallery/girl-paints.png') }}" alt="Девочка рисует на занятии изостудии — Семицветик">
+        {% elif page_slug == 'logoped' %}
+        <img src="{{ url_for('static', filename='img/figma/gallery/bear.png') }}" alt="Логопед — Семицветик">
+        {% elif page_slug == 'psiholog' %}
+        <img src="{{ url_for('static', filename='img/figma/gallery/girl-gift.png') }}" alt="Психолог — Семицветик">
+        {% elif page_slug == 'rannee-razvitie' %}
+        <img src="{{ url_for('static', filename='img/figma/gallery/croc-family.png') }}" alt="Раннее развитие — Семицветик">
+        {% elif page_slug == 'podgotovka-k-shkole' %}
+        <img src="{{ url_for('static', filename='img/figma/gallery/graduation.png') }}" alt="Подготовка к школе — Семицветик">
+        {% elif page_slug == 'otlichnik' %}
+        <img src="{{ url_for('static', filename='img/figma/gallery/letters.png') }}" alt="Отличник — Семицветик">
+        {% elif page_slug == 'detskij-lager' %}
+        <img src="{{ url_for('static', filename='img/figma/gallery/balloons.png') }}" alt="Детский лагерь — Семицветик">
         {% else %}
         <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
         {% endif %}
@@ -445,8 +508,9 @@
                     {% if program.tagline %}<p class="program-card__lead">{{ program.tagline }}</p>{% endif %}
                 </div>
                 <ul class="program-card__meta" aria-label="Параметры занятий">
-                    <li>{{ program.duration_min or 45 }} мин</li>
-                    <li>{{ program.frequency }}</li>
+                    {% if program.age_label %}<li class="meta-age">{{ program.age_label }}</li>{% endif %}
+                    <li class="meta-duration">{{ program.duration_min or 45 }} мин</li>
+                    {% if program.frequency %}<li class="meta-frequency">{{ program.frequency }}</li>{% endif %}
                 </ul>
                 {% if program.teacher %}
                 <div class="program-card__teacher">
@@ -468,7 +532,7 @@
                     </div>
                     <div class="program-card__cta">
                         <a class="button button-dark" href="#lead-form">Записаться</a>
-                        <a class="program-card__details" href="/{{ program.slug }}/">Подробнее →</a>
+                        <a class="program-card__text-link" href="/{{ program.slug }}/">Подробнее</a>
                     </div>
                 </div>
             </div>
@@ -755,7 +819,60 @@
     <div class="faq-head">
         <h2>{{ data.title }}</h2>
     </div>
-    {% if page_slug == 'izostudia' %}
+    {% if page_slug == 'otlichnik' %}
+    <div class="faq-list">
+        <details class="faq-item" open>
+            <summary>
+                <span class="faq-question">Вы делаете с ребёнком домашку или просто объясняете?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Разбираем вместе: ребёнок делает сам, педагог рядом подсказывает и проверяет. Цель — чтобы дома он мог делать дз без вас.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+        <details class="faq-item">
+            <summary>
+                <span class="faq-question">У ребёнка двойка по математике, успеете подтянуть?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Да. На пробном смотрим, где пробел, и составляем план на 4–6 недель. Параллельно идёт текущая домашка.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+        <details class="faq-item">
+            <summary>
+                <span class="faq-question">Можно ходить только перед контрольной, разово?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Да, есть формат разовых занятий. Удобно для подготовки к проверочной или к концу четверти.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+        <details class="faq-item">
+            <summary>
+                <span class="faq-question">Какие предметы охватываете?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Математика, русский, чтение, окружающий мир. Английский и логопедия — отдельно по запросу.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+        <details class="faq-item">
+            <summary>
+                <span class="faq-question">Есть ли пробное занятие?</span>
+                <span class="faq-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="faq-answer">
+                <p>Да, пробное занятие — бесплатно. Знакомим с педагогом, смотрим уровень, обсуждаем, что нужно подтянуть.</p>
+                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+            </div>
+        </details>
+    </div>
+    {% elif page_slug == 'izostudia' %}
     <div class="faq-list">
         <details class="faq-item" open>
             <summary>
@@ -1017,7 +1134,7 @@
 {% endif %}
 
 {% elif block.component == "cta_final" %}
-<section class="section meet-strip meet-strip-green" id="lead-form">
+<section class="section meet-strip meet-strip-green" id="final-cta">
     <div class="meet-copy">
         <h2>{{ data.title or "Записаться на\u00a0личную экскурсию" }}</h2>
         <p class="meet-sub">{% if data.subtitle %}{{ data.subtitle }}{% else %}<span class="meet-sub-accent-yellow">Ответим на&nbsp;вопросы</span> по&nbsp;телефону, и&nbsp;пригласим в&nbsp;детский клуб на&nbsp;экскурсию{% endif %}</p>
@@ -1166,7 +1283,7 @@
         </article>
         {% endfor %}
     </div>
-    <div class="prices-cta" id="lead-form">
+    <div class="prices-cta" id="lead-form-contact">
         <div class="prices-cta__copy">
             <h3>Не нашли подходящее? Подберём вместе</h3>
             <p>Оставьте телефон — позвоним, расспросим про ребёнка и предложим программу под запрос.</p>
@@ -1351,35 +1468,51 @@
     <div class="program-outcomes-shell">
         <div class="program-outcomes-head">
             {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
-            {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+            {% if page_slug == 'otlichnik' %}
+            <h2>К концу четверти</h2>
+            {% elif data.title %}
+            <h2>{{ data.title }}</h2>
+            {% endif %}
             {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+            {% if page_slug == 'podgotovka-k-shkole' %}
+            <p class="section-sub">К 1 сентября ребёнок готов сесть за парту без стресса. Вот конкретные навыки:</p>
+            {% endif %}
         </div>
-        {% if page_slug == 'izostudia' %}
+        {% if page_slug == 'otlichnik' %}
         <ul class="program-outcomes-list">
+            {% set otlichnik_items = [
+                'Делает домашку самостоятельно — родитель не сидит рядом 2 часа',
+                'Понимает тему, а не зубрит — может объяснить своими словами',
+                'Закрывает пробелы по математике и русскому до того, как поставят двойку',
+                'Готовится к контрольной без слёз и истерик',
+                'Перестаёт бояться поднять руку и спросить у учителя',
+                'Возвращается домой со сделанным дз — вечер свободен для семьи'
+            ] %}
+            {% for item in otlichnik_items %}
             <li>
                 <span class="program-outcomes-check" aria-hidden="true">
                     <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
                 </span>
-                <span>Рисует акварелью, гуашью, мелками — пробует разные техники</span>
+                <span>{{ item }}</span>
             </li>
+            {% endfor %}
+        </ul>
+        {% elif page_slug == 'izostudia' %}
+        <ul class="program-outcomes-list">
+            {% set izo_items = [
+                'Рисует акварелью, гуашью, мелками — пробует разные техники',
+                'Лепит из глины и пластилина, делает аппликации',
+                'Забирает работы домой — есть что показать бабушке и повесить на холодильник',
+                'Учится видеть цвет, форму, композицию — без оценок и без «правильно/неправильно»'
+            ] %}
+            {% for item in izo_items %}
             <li>
                 <span class="program-outcomes-check" aria-hidden="true">
                     <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
                 </span>
-                <span>Лепит из глины и пластилина, делает аппликации</span>
+                <span>{{ item }}</span>
             </li>
-            <li>
-                <span class="program-outcomes-check" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
-                </span>
-                <span>Забирает работы домой — есть что показать бабушке и повесить на холодильник</span>
-            </li>
-            <li>
-                <span class="program-outcomes-check" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
-                </span>
-                <span>Учится видеть цвет, форму, композицию — без оценок и без «правильно/неправильно»</span>
-            </li>
+            {% endfor %}
         </ul>
         {% else %}
         <ul class="program-outcomes-list">
@@ -1395,13 +1528,221 @@
         {% endif %}
     </div>
 </section>
+{% if page_slug == 'psiholog' %}
+<section class="section program-outcomes program-outcomes--soft">
+    <div class="program-outcomes-shell">
+        <div class="program-outcomes-head">
+            <p class="eyebrow">Важно знать</p>
+            <h2>Как мы работаем</h2>
+        </div>
+        <ul class="program-outcomes-list">
+            {% set psiholog_work_items = [
+                'Конфиденциально — никаких записей в саду, школе или медкарте',
+                'Без диагнозов и направлений — мы поддержка, а не врачи',
+                'Можно индивидуально и в группе — выбираете формат',
+                'Первая встреча — знакомство, не сеанс. Можно прийти с родителем'
+            ] %}
+            {% for item in psiholog_work_items %}
+            <li>
+                <span class="program-outcomes-check" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4 10-10"/></svg>
+                </span>
+                <span>{{ item }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% elif page_slug == 'rannee-razvitie' %}
+<section class="section meet-strip meet-strip--compact">
+    <div class="meet-copy">
+        <h3>Хотите попробовать?</h3>
+        <p>Запишитесь на пробное — покажем, как проходит занятие с малышом.</p>
+    </div>
+    <form class="lead-form" data-lead-form style="max-width:400px;">
+        <input type="hidden" name="source_page" value="{{ request.path }}">
+        <input type="hidden" name="source_block" value="inline_strip">
+        <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+        <div class="meet-strip-row">
+            <input type="tel" name="phone" placeholder="Телефон" required>
+            <button class="button button-acid" type="submit">Записаться</button>
+        </div>
+        <p class="form-status" data-form-status></p>
+    </form>
+</section>
+{% endif %}
 
 {% elif block.component == "lesson_anatomy" %}
+{% if page_slug == 'psiholog' %}
+<section class="section psiholog-when">
+    <p class="eyebrow">Поводы обращения</p>
+    <h2>Когда родители приходят к нам</h2>
+    <div class="psiholog-when-grid">
+        <div class="psiholog-when-card">Стал тревожным, плохо засыпает</div>
+        <div class="psiholog-when-card">Появились тики или навязчивые движения</div>
+        <div class="psiholog-when-card">Боится школы/сада, истерики по утрам</div>
+        <div class="psiholog-when-card">Замкнулся, конфликтует со сверстниками</div>
+        <div class="psiholog-when-card">Ревнует к младшему, агрессия дома</div>
+        <div class="psiholog-when-card">Развод/переезд — ребёнок замкнулся</div>
+    </div>
+    <p class="psiholog-when-note">Не нашли свою ситуацию? <a href="#lead-form">Напишите — подскажем, наш ли это случай.</a></p>
+</section>
+{% elif page_slug == 'otlichnik' %}
+<section class="section lesson-anatomy">
+    <div class="section-head">
+        <p class="eyebrow">Одно занятие</p>
+        <h2>Как проходит 1,5 часа в «Отличнике»</h2>
+    </div>
+    <ol class="lesson-anatomy-steps">
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">00–10</span>
+            <div class="lesson-anatomy-body">
+                <h3>Разбор школьного дня</h3>
+                <p>Что задали, где затык, что было непонятно.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">10–35</span>
+            <div class="lesson-anatomy-body">
+                <h3>Делаем домашку вместе</h3>
+                <p>Педагог не делает за ребёнка — объясняет шаг за шагом.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">35–45</span>
+            <div class="lesson-anatomy-body">
+                <h3>Двигательная пауза</h3>
+                <p>Переключение и отдых.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">45–75</span>
+            <div class="lesson-anatomy-body">
+                <h3>Закрываем пробел по теме недели</h3>
+                <p>Математика, русский или окружающий мир — по запросу.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">75–90</span>
+            <div class="lesson-anatomy-body">
+                <h3>Итог родителю</h3>
+                <p>Что получилось, где добирать, на что обратить внимание дома.</p>
+            </div>
+        </li>
+    </ol>
+</section>
+{% elif page_slug == 'detskij-lager' %}
+<section class="section lesson-anatomy">
+    <div class="section-head">
+        <p class="eyebrow">Один день</p>
+        <h2>Как проходит день в лагере</h2>
+    </div>
+    <ol class="lesson-anatomy-steps">
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">09:00</span>
+            <div class="lesson-anatomy-body">
+                <h3>Встреча и зарядка</h3>
+                <p>Приходим, разминаемся, заряжаемся на день.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">09:30</span>
+            <div class="lesson-anatomy-body">
+                <h3>Английский в игре</h3>
+                <p>Карточки, диалоги, песни — без парт и учебников.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">10:30</span>
+            <div class="lesson-anatomy-body">
+                <h3>Перекус</h3>
+                <p>Небольшой перерыв с едой и отдыхом.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">11:00</span>
+            <div class="lesson-anatomy-body">
+                <h3>Творчество и квест</h3>
+                <p>Рисование, лепка, командная игра или тематический квест.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">12:30</span>
+            <div class="lesson-anatomy-body">
+                <h3>Обед</h3>
+                <p>Горячий обед — входит в стоимость смены.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">13:00</span>
+            <div class="lesson-anatomy-body">
+                <h3>Прогулка и активность</h3>
+                <p>Спорт, игры на улице, свежий воздух.</p>
+            </div>
+        </li>
+        <li class="lesson-anatomy-step">
+            <span class="lesson-anatomy-time">14:00</span>
+            <div class="lesson-anatomy-body">
+                <h3>Сбор и расставание</h3>
+                <p>Подводим итог дня, забираем работы и расходимся.</p>
+            </div>
+        </li>
+    </ol>
+</section>
+<section class="section camp-includes">
+    <p class="eyebrow">Организация</p>
+    <h2>Что входит в смену</h2>
+    <div class="camp-includes-grid">
+        <div class="camp-includes-item">
+            <span class="camp-includes-icon" aria-hidden="true">🍽</span>
+            <div>
+                <strong>Питание</strong>
+                <p>Горячий обед и 2 перекуса</p>
+            </div>
+        </div>
+        <div class="camp-includes-item">
+            <span class="camp-includes-icon" aria-hidden="true">🔒</span>
+            <div>
+                <strong>Безопасность</strong>
+                <p>Закрытая территория, педагог рядом</p>
+            </div>
+        </div>
+        <div class="camp-includes-item">
+            <span class="camp-includes-icon" aria-hidden="true">👨‍🏫</span>
+            <div>
+                <strong>Взрослые рядом</strong>
+                <p>Педагог и вожатый на группу до 10 детей</p>
+            </div>
+        </div>
+        <div class="camp-includes-item">
+            <span class="camp-includes-icon" aria-hidden="true">🌳</span>
+            <div>
+                <strong>Прогулки</strong>
+                <p>Ежедневно на свежем воздухе</p>
+            </div>
+        </div>
+        <div class="camp-includes-item">
+            <span class="camp-includes-icon" aria-hidden="true">🩹</span>
+            <div>
+                <strong>Первая помощь</strong>
+                <p>Педагог с допуском к первой помощи</p>
+            </div>
+        </div>
+        <div class="camp-includes-item">
+            <span class="camp-includes-icon" aria-hidden="true">🎒</span>
+            <div>
+                <strong>Что взять с собой</strong>
+                <p>Сменка, бутылка воды, хорошее настроение</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
 <section class="section lesson-anatomy">
     <div class="section-head">
         {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
         {% if page_slug == 'anglijskij' %}
-        <h2>Как проходит одно занятие</h2>
+        <h2>Как проходит одно занятие английского</h2>
         {% elif data.title %}
         <h2>{{ data.title }}</h2>
         {% endif %}
@@ -1419,6 +1760,7 @@
         {% endfor %}
     </ol>
 </section>
+{% endif %}
 
 {% elif block.component == "safety_checklist" %}
 <section class="section safety-checklist">

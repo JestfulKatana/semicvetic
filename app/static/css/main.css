@@ -4156,7 +4156,8 @@ select {
         padding: 20px;
     }
     .lead-inline .form-status { grid-column: auto; }
-    .hero-photo-wrap { display: none; }
+    /* Lazyweb 2026-05-09: фото показываем на mobile как 2-й блок hero (Идея 1+2) */
+    .hero-photo-wrap { display: block; }
     .wide-photo { min-height: 360px; border-radius: 22px; }
     .page-hero-actions {
         margin-bottom: 38px;
@@ -4652,12 +4653,27 @@ select {
     .trust-card {
         padding: 22px 18px 20px;
         border-radius: 18px;
+        background: color-mix(in srgb, var(--trust-accent, var(--orange)) 8%, white);
+        border-color: color-mix(in srgb, var(--trust-accent, var(--orange)) 35%, white);
     }
     .trust-card:first-child {
         grid-column: span 2;
+        position: relative;
+        overflow: hidden;
+    }
+    .trust-card:first-child::after {
+        content: "";
+        position: absolute;
+        right: -30px;
+        bottom: -30px;
+        width: 120px;
+        height: 120px;
+        background: url("../img/figma/brand/petal-fill-red.svg") center/contain no-repeat;
+        opacity: 0.6;
+        pointer-events: none;
     }
     .trust-card__value {
-        font-size: clamp(32px, 9vw, 44px);
+        font-size: clamp(36px, 9.5vw, 50px);
     }
     .trust-card__label {
         font-size: 14px;
@@ -4826,12 +4842,28 @@ select {
     }
     .hero-copy-inner {
         order: 1;
+        position: relative;
         background: var(--surface);
         border-radius: 22px;
         box-shadow: var(--shadow);
         padding: 28px 24px 32px;
         gap: 28px;
+        overflow: hidden;
     }
+    .hero-copy-inner::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -60px;
+        width: 240px;
+        height: 240px;
+        background: url("../img/figma/brand/petal-fill-yellow.svg") center/contain no-repeat;
+        opacity: 0.5;
+        transform: rotate(18deg);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .hero-copy-inner > * { position: relative; z-index: 1; }
     .hero-copy h1 {
         font-size: 32px;
         letter-spacing: -1.2px;
@@ -4846,15 +4878,42 @@ select {
         padding: 0;
     }
     .hero-stats > div {
+        --stat-accent: var(--orange);
+        position: relative;
         min-width: 0 !important;
         max-width: none !important;
-        padding: 22px 20px;
+        padding: 22px 20px 22px 64px;
         border-radius: 20px;
-        background: #f0e7e4;
+        background: #fff;
+        border: 1.5px solid var(--stat-accent);
+        box-shadow: 0 6px 18px color-mix(in srgb, var(--stat-accent) 14%, transparent);
         gap: 6px;
     }
+    .hero-stats > div::before {
+        content: "✿";
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        font-size: 20px;
+        line-height: 1;
+        color: var(--stat-accent);
+        background: color-mix(in srgb, var(--stat-accent) 16%, white);
+        border-radius: 50%;
+        font-variant-emoji: text;
+    }
+    .hero-stats > div:nth-child(1) { --stat-accent: var(--orange); }
+    .hero-stats > div:nth-child(1)::before { content: "✦"; }
     .hero-stats > div:nth-child(1) strong { color: var(--orange); }
+    .hero-stats > div:nth-child(2) { --stat-accent: var(--green); }
+    .hero-stats > div:nth-child(2)::before { content: "♥"; }
     .hero-stats > div:nth-child(2) strong { color: var(--green); }
+    .hero-stats > div:nth-child(3) { --stat-accent: var(--purple); }
+    .hero-stats > div:nth-child(3)::before { content: "★"; }
     .hero-stats > div:nth-child(3) strong { color: var(--purple); }
     .hero-stats strong {
         font-size: 34px;
@@ -5012,7 +5071,28 @@ select {
         padding: 40px 22px 40px;
         min-height: 0;
         border-radius: 24px;
+        position: relative;
+        overflow: hidden;
     }
+    .meet-strip::after {
+        content: "";
+        position: absolute;
+        right: -50px;
+        top: -40px;
+        width: 200px;
+        height: 200px;
+        background: url("../img/figma/brand/petal-fill-purple.svg") center/contain no-repeat;
+        opacity: 0.18;
+        transform: rotate(22deg);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .meet-strip-green::after {
+        background-image: url("../img/figma/brand/petal-fill-green.svg");
+        opacity: 0.22;
+    }
+    .meet-strip > *,
+    .meet-strip-green > * { position: relative; z-index: 1; }
     .meet-copy { gap: 22px; max-width: none; }
     .meet-copy h2 {
         font-size: 28px;
@@ -5258,26 +5338,51 @@ select {
     right: 14px;
     bottom: 14px;
     z-index: 40;
+    flex-direction: column;
     align-items: stretch;
-    justify-content: stretch;
     gap: 0;
-    height: 56px;
     padding: 0;
-    border-radius: 16px;
-    background: var(--orange);
+    background: transparent;
     color: #fff;
     font-size: 16px;
     font-weight: 600;
     letter-spacing: -0.3px;
-    box-shadow: 0 12px 28px rgba(237, 119, 53, 0.32);
     text-decoration: none;
-    overflow: hidden;
-    transform: translateY(120%);
-    transition: transform 0.3s ease;
+    transform: translateY(140%);
+    transition: transform 0.3s ease, filter 0.3s ease;
 }
 .sticky-cta-mobile:hover { color: #fff; }
 body.is-menu-open .sticky-cta-mobile { display: none !important; }
 body.is-scrolled .sticky-cta-mobile { transform: none; }
+body.is-scrolled .sticky-cta-mobile {
+    filter: drop-shadow(0 16px 32px rgba(237, 119, 53, 0.42));
+}
+.sticky-cta-badge {
+    align-self: center;
+    padding: 5px 14px;
+    margin: 0 0 6px;
+    background: var(--green);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    box-shadow: 0 6px 14px rgba(0, 180, 60, 0.28);
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sticky-cta-row {
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    height: 56px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(237, 119, 53, 0.32);
+}
 .sticky-cta-phone {
     flex: 0 0 40%;
     display: inline-flex;
@@ -5285,7 +5390,7 @@ body.is-scrolled .sticky-cta-mobile { transform: none; }
     justify-content: center;
     gap: 8px;
     padding: 0 12px;
-    background: rgba(255, 255, 255, 0.16);
+    background: linear-gradient(180deg, #f08e44 0%, #d96420 100%);
     color: #fff;
     text-decoration: none;
     font-size: 14px;
@@ -5307,14 +5412,19 @@ body.is-scrolled .sticky-cta-mobile { transform: none; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     padding: 0 14px;
-    background: var(--orange);
+    background: linear-gradient(180deg, #f08e44 0%, #d96420 100%);
     color: #fff;
     text-decoration: none;
     font-size: 16px;
     font-weight: 700;
     letter-spacing: -0.3px;
+}
+.sticky-cta-heart {
+    flex-shrink: 0;
+    margin-right: 2px;
+    color: #fff;
 }
 .sticky-cta-arrow {
     display: inline-flex;
@@ -5753,9 +5863,11 @@ body.is-menu-open .wa-float { display: none; }
 }
 
 @media (max-width: 860px) {
-    .hero-lead { order: 2; }
-    .hero-photo-wrap { order: 3; }
-    .hero-stats { order: 4; }
+    /* Lazyweb 2026-05-09: H1 → фото → stats → форма (см. блок ниже) */
+    .hero-copy-inner { order: 1; }
+    .hero-photo-wrap { order: 2; }
+    .hero-stats { order: 3; }
+    .hero-lead { order: 5; }
     .hero-photo-wrap::before { width: 70px; transform: translateX(-10px) skewX(-4deg); }
     .page-hero-text.page-hero-text-accent {
         font-size: 18px;
@@ -6451,14 +6563,21 @@ body.is-menu-open .wa-float { display: none; }
     flex-wrap: wrap;
     gap: 8px 10px;
 }
-@media (max-width: 480px) {
+@media (max-width: 860px) {
+    /* Lazyweb 2026-05-09: на mobile фильтры — горизонтальный скролл с fade-out
+       справа (Идея 4), чтобы пользователь видел: «дальше есть ещё чипы». */
     .page-programmy .filter-row[data-program-filters] {
         position: relative;
         flex-wrap: nowrap;
         overflow-x: auto;
         scrollbar-width: none;
-        -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 88%, transparent 100%);
-                mask-image: linear-gradient(90deg, #000 0%, #000 88%, transparent 100%);
+        padding-right: 24px;
+        -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 calc(100% - 36px), transparent 100%);
+                mask-image: linear-gradient(90deg, #000 0%, #000 calc(100% - 36px), transparent 100%);
+    }
+    .page-programmy .filter-row[data-program-filters] .chip,
+    .page-programmy .filter-row[data-program-filters] .chip-divider {
+        flex: 0 0 auto;
     }
     .page-programmy .filter-row[data-program-filters]::-webkit-scrollbar { display: none; }
 }
@@ -6704,3 +6823,371 @@ body.is-menu-open .wa-float { display: none; }
     }
 }
 
+/* consent checkbox в лид-форме */
+.consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #666;
+    cursor: pointer;
+    margin-top: 4px;
+}
+.consent-label input[type="checkbox"] {
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--acid);
+    cursor: pointer;
+}
+.consent-label a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+/* текстовая ссылка "Подробнее" в карточке программы */
+.program-card__text-link {
+    font-size: 13px;
+    color: #666;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s;
+}
+.program-card__text-link:hover {
+    color: #333;
+}
+
+/* ============================================================
+   Mobile adaptive pass — «сделать живо» (2026-04-27)
+   правки 2, 4, 5, 6, 8, 9, 13 из ТЗ main-mobile-adaptive.md
+   ============================================================ */
+
+/* Правка 2 — дифференцированный вертикальный ритм между секциями */
+@media (max-width: 860px) {
+    .hero-home,
+    .page-hero,
+    main > .section {
+        margin: 16px auto;
+    }
+    /* Тесные связки */
+    .hero-home + .section,
+    .meet-strip-green + .section,
+    .photo-strip + .faq-section,
+    .faq-section + .contact-section {
+        margin-top: 8px;
+    }
+    /* Большой "вдох" перед целевыми блоками */
+    .reviews-section + .alumni-schools,
+    .video-section + .events-teaser,
+    .events-teaser + .meet-strip-green,
+    .gallery-strip + .faq-section {
+        margin-top: 28px;
+    }
+}
+
+/* Правка 4 — пульсация сердца внутри sticky-CTA */
+@keyframes heartbeat {
+    0%, 70%, 100% { transform: scale(1); }
+    35%           { transform: scale(1.18); }
+    50%           { transform: scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+    .sticky-cta-heart {
+        animation: heartbeat 2.4s ease-in-out infinite;
+        transform-origin: center;
+    }
+}
+
+/* Правка 5 — декоративные петали-разделители между секциями (главная) */
+@keyframes petalFloat {
+    0%, 100% { transform: rotate(-6deg) translateY(0); }
+    50%      { transform: rotate(6deg) translateY(-3px); }
+}
+@media (max-width: 860px) {
+    body.page-home main > .section:not(.video-section):not(.contact-section):not(.meet-strip):not(.meet-strip-green)::before {
+        content: "";
+        display: block;
+        width: 36px;
+        height: 36px;
+        margin: -2px auto 18px;
+        background: var(--petal-deco, url("../img/figma/brand/petal-fill-yellow.svg")) center/contain no-repeat;
+        opacity: 0.85;
+        transform-origin: center;
+        pointer-events: none;
+    }
+    body.page-home main > .section:nth-of-type(odd)::before  { --petal-deco: url("../img/figma/brand/petal-fill-yellow.svg"); }
+    body.page-home main > .section:nth-of-type(even)::before { --petal-deco: url("../img/figma/brand/petal-fill-green.svg"); }
+    body.page-home main > .section:nth-of-type(3n)::before   { --petal-deco: url("../img/figma/brand/petal-fill-pink.svg"); }
+    body.page-home main > .section:nth-of-type(5n)::before   { --petal-deco: url("../img/figma/brand/petal-fill-blue.svg"); }
+    body.page-home main > .section:nth-of-type(7n)::before   { --petal-deco: url("../img/figma/brand/petal-fill-purple.svg"); }
+    /* первая секция — без петальки, hero уже с декором */
+    body.page-home main > .section:first-of-type::before { display: none; }
+}
+@media (max-width: 860px) and (prefers-reduced-motion: no-preference) {
+    body.page-home main > .section::before {
+        animation: petalFloat 4.2s ease-in-out infinite;
+    }
+}
+
+/* Правка 6 — scroll-reveal (fadeUp) для карточек */
+@keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(14px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 860px) and (prefers-reduced-motion: no-preference) {
+    .program-card,
+    .trust-card,
+    .place-card,
+    .review-card,
+    .teacher-card,
+    .alumni-school,
+    .event-card,
+    .faq-item {
+        animation: fadeUp 0.55s ease-out both;
+    }
+    .program-card:nth-child(1),
+    .trust-card:nth-child(1),
+    .place-card:nth-child(1) { animation-delay: 0.05s; }
+    .program-card:nth-child(2),
+    .trust-card:nth-child(2),
+    .place-card:nth-child(2) { animation-delay: 0.12s; }
+    .program-card:nth-child(3),
+    .trust-card:nth-child(3),
+    .place-card:nth-child(3) { animation-delay: 0.20s; }
+    .program-card:nth-child(4),
+    .trust-card:nth-child(4),
+    .place-card:nth-child(4) { animation-delay: 0.28s; }
+    .trust-card:nth-child(5) { animation-delay: 0.36s; }
+    .trust-card:nth-child(6) { animation-delay: 0.44s; }
+    .trust-card:nth-child(7) { animation-delay: 0.52s; }
+}
+
+/* Правка 8 — пульсация CTA-кнопок + wobble стрелочки sticky-CTA */
+@keyframes ctaPulse {
+    0%, 100% { box-shadow: 0 6px 18px rgba(179, 244, 87, 0.32); }
+    50%      { box-shadow: 0 10px 28px rgba(179, 244, 87, 0.55); }
+}
+@keyframes ctaWobble {
+    0%, 92%, 100% { transform: rotate(0); }
+    94%           { transform: rotate(-2deg); }
+    96%           { transform: rotate(2deg); }
+    98%           { transform: rotate(-1deg); }
+}
+@media (max-width: 860px) and (prefers-reduced-motion: no-preference) {
+    .hero-lead .button-acid,
+    .meet-lead .button-acid {
+        animation: ctaPulse 4s ease-in-out infinite;
+        animation-delay: 2.5s;
+    }
+    .sticky-cta-arrow {
+        animation: ctaWobble 6s ease-in-out infinite;
+    }
+}
+
+/* Правка 13 — пульсация WhatsApp на мобиле */
+@keyframes waPulse {
+    0%, 70%, 100% { box-shadow: 0 8px 22px rgba(37, 211, 102, 0.45), 0 0 0 0 rgba(37, 211, 102, 0.45); }
+    80%           { box-shadow: 0 8px 22px rgba(37, 211, 102, 0.45), 0 0 0 14px rgba(37, 211, 102, 0); }
+}
+@media (max-width: 860px) and (prefers-reduced-motion: no-preference) {
+    body.is-scrolled .wa-float {
+        animation: waPulse 5s ease-out infinite;
+        animation-delay: 1.5s;
+    }
+}
+
+/* ============================================================
+   Lazyweb design audit (2026-05-09) — внедрение 4 идей
+   Идея 1: мобильная воронка главной (порядок блоков, sticky CTA)
+   Идея 3: hero-stats — иконки и разделители на десктопе
+   Идея 4: каталог /programmy/ — компактный hero, чипы-метрики,
+            прокручиваемые фильтры на mobile
+   Hero-страниц направлений: вертикальные CTA на mobile
+   ============================================================ */
+
+/* — Идея 1. Мобильная воронка: H1 → фото → stats → форма — */
+@media (max-width: 860px) {
+    /* На mobile подгоняем визуал hero-photo-wrap под общий ритм карточек,
+       а order для всех hero-детей задан выше (в блоке "lazyweb mobile reorder"
+       и в media-блоке Mobile pass), чтобы сохранить совместимость
+       с остальными правилами. */
+    .hero-photo-wrap {
+        max-height: 360px;
+        overflow: hidden;
+    }
+    .hero-photo-wrap > img { max-height: 360px; }
+    .hero-photo-wrap .round-arrow { display: none; }
+
+    /* Идея 1: разделяем promise и disclaimer внутри формы — лёгкий
+       визуальный сепаратор, чтобы две смысловые подписи не слипались. */
+    .hero-lead-promise {
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+    }
+    .hero-lead-right { gap: 14px; }
+    .hero-lead-disclaimer { opacity: 0.85; }
+}
+
+/* Sticky CTA на главной — показываем тот же float-CTA, что и на других
+   leady-страницах (чтобы родителю не приходилось скроллить обратно к форме).
+   Базовая логика: .sticky-cta-mobile видно на mobile (≤860px) глобально,
+   плюс мы расширяем до 1024px для главной — как делает has-floating-cta. */
+@media (max-width: 1024px) {
+    .page-home .sticky-cta-mobile { display: inline-flex; }
+    .page-home { padding-bottom: 84px; }
+}
+
+/* — Идея 3. Hero-stats: разделители + иконки на десктопе — */
+@media (min-width: 861px) {
+    .hero-copy > .hero-stats {
+        gap: 0;
+        align-items: stretch;
+        flex-wrap: nowrap;
+    }
+    .hero-stats > div {
+        position: relative;
+        flex: 1 1 0;
+        min-width: 0 !important;
+        max-width: none !important;
+        padding: 6px 16px 6px 52px;
+    }
+    .hero-stats > div + div {
+        border-left: 1px solid rgba(50, 40, 35, 0.12);
+    }
+    .hero-stats > div::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 50%;
+        width: 36px;
+        height: 36px;
+        transform: translateY(-50%);
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        line-height: 1;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--orange) 14%, white);
+        color: var(--orange);
+        font-variant-emoji: text;
+    }
+    .hero-stats > div:nth-child(1)::before {
+        content: "✦";
+        background: color-mix(in srgb, var(--orange) 14%, white);
+        color: var(--orange);
+    }
+    .hero-stats > div:nth-child(2)::before {
+        content: "♥";
+        background: color-mix(in srgb, var(--green) 14%, white);
+        color: var(--green);
+    }
+    .hero-stats > div:nth-child(3)::before {
+        content: "★";
+        background: color-mix(in srgb, var(--purple) 14%, white);
+        color: var(--purple);
+    }
+    .hero-stats strong { font-size: 24px; line-height: 1.05; letter-spacing: -0.9px; }
+    .hero-stats span { font-size: 13px; line-height: 1.2; max-width: none; }
+}
+
+/* — Идея 4. Каталог /programmy/ — компактнее hero, видимые карточки выше — */
+.page-programmy .page-hero { padding-top: 38px; padding-bottom: 38px; }
+.page-programmy .page-hero h1 {
+    font-size: 44px;
+    line-height: 1.05;
+    letter-spacing: -1.4px;
+    max-width: 880px;
+}
+.page-programmy .page-hero .page-hero-text {
+    max-width: 760px;
+    font-size: 18px;
+    color: var(--muted);
+}
+.page-programmy .programs-section { margin-top: 12px; }
+
+/* Чипы-метрики на карточках каталога (Идея 4) */
+.program-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 12px;
+    padding: 0;
+    list-style: none;
+}
+.program-card__meta li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px 5px 8px;
+    background: color-mix(in srgb, var(--orange) 10%, #fff);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    border-radius: 999px;
+}
+.program-card__meta li::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.program-card__meta li.meta-age {
+    background: color-mix(in srgb, var(--purple) 12%, #fff);
+}
+.program-card__meta li.meta-age::before {
+    content: "👶";
+    background: none;
+    width: auto;
+    height: auto;
+    font-size: 13px;
+    line-height: 1;
+}
+.program-card__meta li.meta-duration::before {
+    content: "⏱";
+    background: none;
+    width: auto;
+    height: auto;
+    font-size: 13px;
+    line-height: 1;
+}
+.program-card__meta li.meta-frequency {
+    background: color-mix(in srgb, var(--green) 12%, #fff);
+}
+.program-card__meta li.meta-frequency::before {
+    content: "🗓";
+    background: none;
+    width: auto;
+    height: auto;
+    font-size: 13px;
+    line-height: 1;
+}
+
+/* Mobile тонкости /programmy/ */
+@media (max-width: 860px) {
+    .page-programmy .page-hero h1 { font-size: 32px; letter-spacing: -1.2px; }
+    .page-programmy .page-hero .page-hero-text { font-size: 16px; }
+}
+
+/* — Hero страниц направлений на mobile: CTA в столбик, дыхание справа — */
+@media (max-width: 860px) {
+    .page-hero .action-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .page-hero .action-row .button { width: 100%; }
+    .page-hero .action-row.centered { align-items: stretch; }
+    .page-hero .page-hero-text,
+    .page-hero h1 {
+        padding-right: 6px;
+        overflow-wrap: anywhere;
+    }
+    .page-hero-metrics {
+        flex-wrap: wrap;
+    }
+}

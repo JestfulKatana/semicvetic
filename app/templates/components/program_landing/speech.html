@@ -1,0 +1,348 @@
+{# Логопедия — оранжевый #ed7735 — перенос из speech-variant-e.jsx #}
+<nav class="pl-crumbs" aria-label="Хлебные крошки">
+    <a href="/">Главная</a> &nbsp;/&nbsp; <a href="/programmy/">Программы</a> &nbsp;/&nbsp; <span>Логопедия</span>
+</nav>
+
+{# HERO — на бумаге, акцент через цвет #}
+<section class="pl-hero pl-hero--paper" style="padding: 72px 80px 64px;">
+    <div class="pl-pill-row">
+        <span class="pl-pill pl-pill--soft">4–12 лет</span>
+        <span class="pl-pill pl-pill--neutral">от 1&nbsp;200&nbsp;₽ за&nbsp;занятие</span>
+        <span class="pl-pill pl-pill--neutral">40–60 мин · 2&nbsp;раза в&nbsp;неделю</span>
+        <span class="pl-pill pl-pill--yandex">Я.Карты: «Хорошее место»</span>
+    </div>
+
+    <div class="pl-hero-grid pl-hero-grid--end pl-hero-grid--speech">
+        <div>
+            <h1 class="pl-h1-xl">С&nbsp;вашим&nbsp;— <span class="pl-mark-accent">скорее всего,</span><br>всё в&nbsp;порядке</h1>
+            <p class="pl-hero-lead" style="color: var(--pl-soft); max-width:600px;">Каждая мама ребёнка-«молчуна» хоть раз гуглила «когда идти к&nbsp;логопеду». На&nbsp;занятии знакомства мы&nbsp;посмотрим речь, слух, моторику. И&nbsp;скажем правду&nbsp;— а&nbsp;не «срочно к&nbsp;нам».</p>
+            <p class="pl-hero-sub">15&nbsp;лет в&nbsp;Сергиевом Посаде. Репутация важнее одной записи.</p>
+
+            <form class="pl-hero-cta" method="post" action="#lead-form" style="margin-top:36px;">
+                <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required style="min-width:220px; max-width:280px;">
+                <button class="pl-btn pl-btn--accent" type="submit">Прийти познакомиться</button>
+                <span class="pl-cta-meta">30&nbsp;мин · бесплатно</span>
+            </form>
+        </div>
+
+        {# Слово старшего логопеда #}
+        <div class="pl-quote-card">
+            <span class="pl-quote-tag">Слово старшего логопеда</span>
+            <p class="pl-quote-text">«К&nbsp;5&nbsp;годам у&nbsp;многих не&nbsp;поставлены Р&nbsp;и&nbsp;Л&nbsp;— это норма. К&nbsp;6&nbsp;— уже стоит заглянуть. Я&nbsp;не&nbsp;буду «лечить» того, кому это не&nbsp;нужно. Это против моей репутации в&nbsp;городе.»</p>
+            <div class="pl-quote-author">
+                <div class="pl-quote-avatar"></div>
+                <div>
+                    <strong class="pl-quote-name">Мишина Е.&nbsp;В.</strong>
+                    <div class="pl-quote-role">12&nbsp;лет в&nbsp;Семицветике</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Норма по возрасту #}
+<section class="pl-section pl-section--soft" style="padding: 72px 64px;">
+    <div class="pl-cols-2 pl-cols-2--start" style="margin-bottom: 40px;">
+        <div>
+            <span class="pl-eyebrow pl-eyebrow--dark">Норма по&nbsp;возрасту</span>
+            <h2 class="pl-h2 pl-h2--lg" style="margin-top:10px;">Когда какой звук&nbsp;— норма</h2>
+        </div>
+        <p class="pl-text-body" style="padding-top:18px;">Если в&nbsp;3&nbsp;года ребёнок не&nbsp;говорит «Р»&nbsp;— это <strong>не&nbsp;проблема</strong>, это просто рано. Реальные сроки формирования звуков по&nbsp;возрасту:</p>
+    </div>
+
+    <div class="pl-norms-card">
+        <div class="pl-norms-axis">
+            <span>2&nbsp;года</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span>7+ норма</span>
+        </div>
+
+        <div class="pl-norm-row">
+            <strong class="pl-norm-label">Гласные · М, П, Б, Т</strong>
+            <div class="pl-norm-bar"><i style="left:0; width:25%; --norm-color:#7fc97f;"></i></div>
+            <span class="pl-norm-age">к 2,5&nbsp;годам</span>
+        </div>
+        <div class="pl-norm-row">
+            <strong class="pl-norm-label">Свистящие · С, З, Ц</strong>
+            <div class="pl-norm-bar"><i style="left:20%; width:30%; --norm-color:#a4d65e;"></i></div>
+            <span class="pl-norm-age">к 4&nbsp;годам</span>
+        </div>
+        <div class="pl-norm-row">
+            <strong class="pl-norm-label">Шипящие · Ш, Ж, Ч, Щ</strong>
+            <div class="pl-norm-bar"><i style="left:35%; width:35%; --norm-color:#f5c30a;"></i></div>
+            <span class="pl-norm-age">к 5&nbsp;годам</span>
+        </div>
+        <div class="pl-norm-row">
+            <strong class="pl-norm-label">Сонорные · Л, Р</strong>
+            <div class="pl-norm-bar"><i style="left:55%; width:30%; --norm-color:var(--pl-accent);"></i></div>
+            <span class="pl-norm-age">к 6&nbsp;годам</span>
+        </div>
+        <div class="pl-norm-row is-flag">
+            <strong class="pl-norm-label">Если в&nbsp;6&nbsp;не&nbsp;всё</strong>
+            <div class="pl-norm-bar is-flag"><i style="left:85%; width:15%;"></i></div>
+            <span class="pl-norm-age">заглянуть к&nbsp;нам</span>
+        </div>
+
+        <div class="pl-note pl-note--yellow" style="margin-top:32px;">
+            <strong>Главное:</strong> до&nbsp;5&nbsp;лет почти всё, что вас тревожит&nbsp;— это норма формирования речи. Если хочется проверить просто «чтобы не&nbsp;переживать»&nbsp;— приходите, посмотрим вместе.
+        </div>
+    </div>
+</section>
+
+{# Когда стоит заглянуть #}
+<section class="pl-section">
+    <div class="pl-head pl-head--baseline">
+        <div>
+            <span class="pl-eyebrow pl-eyebrow--muted">Когда стоит заглянуть</span>
+            <h2 class="pl-h2 pl-h2--md">Шесть моментов «возможно, нам сюда»</h2>
+        </div>
+        <div class="pl-head-meta" style="max-width:280px;">Если узнали хотя&nbsp;бы один&nbsp;— приходите. Чаще всего тревога не&nbsp;подтверждается.</div>
+    </div>
+    <div class="pl-six">
+        <article class="pl-six-card">
+            <div class="pl-six-num">1</div>
+            <div>
+                <strong>В&nbsp;3&nbsp;года почти не&nbsp;говорит фразами</strong>
+                <p>или говорит только «своими» словами, понимает один родитель</p>
+            </div>
+        </article>
+        <article class="pl-six-card">
+            <div class="pl-six-num">2</div>
+            <div>
+                <strong>Не выговаривает звуки в&nbsp;6+</strong>
+                <p>Р, Л, Ш&nbsp;— всё ещё «как-то не&nbsp;так», и&nbsp;вы&nbsp;это&nbsp;уже слышите</p>
+            </div>
+        </article>
+        <article class="pl-six-card">
+            <div class="pl-six-num">3</div>
+            <div>
+                <strong>Путает похожие звуки</strong>
+                <p>мишка / миска, бочка / почка&nbsp;— слышит одинаково</p>
+            </div>
+        </article>
+        <article class="pl-six-card">
+            <div class="pl-six-num">4</div>
+            <div>
+                <strong>Заикается, тянет слова</strong>
+                <p>застревает на&nbsp;первой букве, особенно когда волнуется</p>
+            </div>
+        </article>
+        <article class="pl-six-card">
+            <div class="pl-six-num">5</div>
+            <div>
+                <strong>В&nbsp;школе пишет с&nbsp;ошибками</strong>
+                <p>не «по&nbsp;правилу», а&nbsp;«как слышит»&nbsp;— корова, сабака</p>
+            </div>
+        </article>
+        <article class="pl-six-card">
+            <div class="pl-six-num">6</div>
+            <div>
+                <strong>Плохо читает</strong>
+                <p>медленно, по&nbsp;слогам, не&nbsp;понимает смысл прочитанного</p>
+            </div>
+        </article>
+    </div>
+</section>
+
+{# Как идёт работа #}
+<section class="pl-section pl-section--accent">
+    <div class="pl-cols-2 pl-cols-2--start">
+        <div>
+            <span class="pl-eyebrow pl-eyebrow--acid">Как идёт работа</span>
+            <h2 class="pl-h2 pl-h2--md" style="margin-top:12px; color: var(--pl-paper);">Звук «Р»&nbsp;— за&nbsp;2–4&nbsp;месяца. Без слёз.</h2>
+            <p class="pl-text-body">Первые сдвиги вы&nbsp;услышите через 2–4&nbsp;недели. Полная постановка звука&nbsp;— за&nbsp;2–4&nbsp;месяца. Логопед записывает «до» и&nbsp;«после»&nbsp;— прогресс слышно.</p>
+            <p class="pl-text-meta">Дома&nbsp;— 10–15&nbsp;минут в&nbsp;день. Не&nbsp;«заваливаем» ребёнка домашкой.</p>
+        </div>
+
+        <div class="pl-steps-card">
+            <div class="pl-lesson-meta" style="color: var(--pl-acid);">Один путь · от&nbsp;звукоборки до&nbsp;речи</div>
+            <div class="pl-step-row">
+                <span class="pl-step-time">1 неделя</span>
+                <span class="pl-step-text">Первое занятие&nbsp;— знакомство, артикуляционный профиль</span>
+            </div>
+            <div class="pl-step-row">
+                <span class="pl-step-time">2–4 нед.</span>
+                <span class="pl-step-text">Подготовка артикуляции&nbsp;— упражнения перед зеркалом</span>
+            </div>
+            <div class="pl-step-row">
+                <span class="pl-step-time">1–2 мес.</span>
+                <span class="pl-step-text">Постановка звука&nbsp;— изолированно</span>
+            </div>
+            <div class="pl-step-row">
+                <span class="pl-step-time">2–3 мес.</span>
+                <span class="pl-step-text">Звук в&nbsp;слогах, словах, коротких фразах</span>
+            </div>
+            <div class="pl-step-row">
+                <span class="pl-step-time">3–4 мес.</span>
+                <span class="pl-step-text">Автоматизация&nbsp;— звук в&nbsp;живой речи</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Цены и форматы #}
+<section class="pl-section">
+    <div class="pl-head pl-head--baseline" style="margin-bottom: 28px;">
+        <div>
+            <span class="pl-eyebrow pl-eyebrow--muted">Форматы</span>
+            <h2 class="pl-h2 pl-h2--sm">Цены и&nbsp;занятия</h2>
+        </div>
+        <div class="pl-head-meta">Подбираем по&nbsp;возрасту и&nbsp;запросу</div>
+    </div>
+    <div class="pl-pricing">
+        <article class="pl-price-card pl-price-card--free">
+            <div class="pl-price-head">
+                <strong class="pl-price-name">Знакомство</strong>
+                <span class="pl-price-amount">Бесплатно</span>
+            </div>
+            <span class="pl-price-dur">30&nbsp;мин · первая встреча</span>
+            <p class="pl-price-desc">Скажем честно, нужны&nbsp;ли занятия. Покажем кабинет.</p>
+        </article>
+        <article class="pl-price-card">
+            <div class="pl-price-head">
+                <strong class="pl-price-name">Индивидуальное</strong>
+                <span class="pl-price-amount">1&nbsp;200&nbsp;₽</span>
+            </div>
+            <span class="pl-price-dur">40&nbsp;мин · 2&nbsp;р/нед.</span>
+            <p class="pl-price-desc">Базовая постановка звука. Самый частый формат.</p>
+        </article>
+        <article class="pl-price-card">
+            <div class="pl-price-head">
+                <strong class="pl-price-name">Расширенное</strong>
+                <span class="pl-price-amount">1&nbsp;500&nbsp;₽</span>
+            </div>
+            <span class="pl-price-dur">60&nbsp;мин · 2&nbsp;р/нед.</span>
+            <p class="pl-price-desc">Школьники с&nbsp;дисграфией, запущенная дислалия, ОНР.</p>
+        </article>
+        <article class="pl-price-card">
+            <div class="pl-price-head">
+                <strong class="pl-price-name">Мини-группа из&nbsp;двух</strong>
+                <span class="pl-price-amount">900&nbsp;₽</span>
+            </div>
+            <span class="pl-price-dur">40&nbsp;мин · схожий запрос</span>
+            <p class="pl-price-desc">Когда у&nbsp;двух детей одна задача&nbsp;— вдвоём веселее.</p>
+        </article>
+    </div>
+    <div class="pl-note pl-note--yellow">
+        <strong>Скидка 10%</strong>&nbsp;— семьям СВО и&nbsp;при втором ребёнке в&nbsp;центре. Действует постоянно.
+    </div>
+</section>
+
+{# Логопеды #}
+<section class="pl-section pl-section--soft">
+    <h2 class="pl-h2 pl-h2--md" style="margin-top:0;">Логопеды, которые ставят звук</h2>
+    <p class="pl-text-body" style="margin: 12px 0 32px;">Высшее дефектологическое, опыт работы в&nbsp;школах и&nbsp;поликлиниках</p>
+    <div class="pl-teachers pl-teachers--equal">
+        {# TODO: реальные фото и подтверждённые сертификаты #}
+        <article class="pl-teacher pl-teacher--featured-paper">
+            <div class="pl-teacher-photo">
+                <span class="pl-teacher-badge pl-teacher-badge--paper">Старший логопед</span>
+            </div>
+            <div class="pl-teacher-body">
+                <span class="pl-teacher-pill">12&nbsp;лет в&nbsp;Семицветике</span>
+                <h3>Мишина Е.&nbsp;В.</h3>
+                <p class="pl-teacher-role">Старший логопед</p>
+                <p class="pl-teacher-sub">Дислалия · ОНР · дисграфия</p>
+            </div>
+        </article>
+        <article class="pl-teacher">
+            <div class="pl-teacher-photo"></div>
+            <div class="pl-teacher-body">
+                <span class="pl-teacher-pill">9&nbsp;лет</span>
+                <h3>Семёнова О.&nbsp;К.</h3>
+                <p class="pl-teacher-role">Логопед-дефектолог</p>
+                <p class="pl-teacher-sub">Заикание · ЗРР · ринолалия</p>
+            </div>
+        </article>
+        <article class="pl-teacher">
+            <div class="pl-teacher-photo"></div>
+            <div class="pl-teacher-body">
+                <span class="pl-teacher-pill">7&nbsp;лет</span>
+                <h3>Кравцова А.&nbsp;Н.</h3>
+                <p class="pl-teacher-role">Логопед</p>
+                <p class="pl-teacher-sub">Школьники: чтение, письмо</p>
+            </div>
+        </article>
+    </div>
+</section>
+
+{# Отзывы #}
+<section class="pl-section">
+    <span class="pl-eyebrow pl-eyebrow--muted">Отзывы родителей</span>
+    <h2 class="pl-h2 pl-h2--sm" style="margin: 10px 0 8px;">5,0 на&nbsp;Яндексе, 2ГИС и&nbsp;ВК</h2>
+    <p class="pl-text-body" style="margin: 0 0 32px;">Без накруток. Только то, что мамы пишут сами.</p>
+    <div class="pl-reviews">
+        {# TODO: цитаты — из реальных отзывов на Я.Картах/2ГИС/ВК #}
+        <article class="pl-review">
+            <div class="pl-review-stars">★★★★★</div>
+            <span class="pl-review-source">Я.Карты</span>
+            <p class="pl-review-text">«Сын в&nbsp;5&nbsp;лет не&nbsp;выговаривал Р&nbsp;и&nbsp;Ш. После 4&nbsp;месяцев у&nbsp;Елены Викторовны&nbsp;— чисто, как у&nbsp;меня. Спасибо.»</p>
+            <strong class="pl-review-author">— Анна П.</strong>
+        </article>
+        <article class="pl-review">
+            <div class="pl-review-stars">★★★★★</div>
+            <span class="pl-review-source">2ГИС</span>
+            <p class="pl-review-text">«Поставили звук за&nbsp;полгода вместо двух лет в&nbsp;поликлинике. И&nbsp;с&nbsp;ребёнком разговаривают как с&nbsp;человеком, а&nbsp;не&nbsp;как с&nbsp;пациентом.»</p>
+            <strong class="pl-review-author">— Светлана Г.</strong>
+        </article>
+        <article class="pl-review">
+            <div class="pl-review-stars">★★★★★</div>
+            <span class="pl-review-source">ВК</span>
+            <p class="pl-review-text">«Дочь после 1-го&nbsp;класса писала "карова" и&nbsp;"сабака". Год занятий&nbsp;— пишет нормально. Без слёз и&nbsp;репетитора по&nbsp;русскому.»</p>
+            <strong class="pl-review-author">— Марина Д.</strong>
+        </article>
+    </div>
+</section>
+
+{# FAQ #}
+<section class="pl-section">
+    <h2 class="pl-h2 pl-h2--md" style="margin-top:0;">Частые вопросы</h2>
+    <div class="pl-faq">
+        <details>
+            <summary>С&nbsp;какого возраста берёте?</summary>
+            <p>С&nbsp;3&nbsp;лет&nbsp;— раньше речь ещё формируется. Можем дать рекомендации родителям.</p>
+        </details>
+        <details>
+            <summary>Сколько занятий нужно?</summary>
+            <p>От&nbsp;8 до&nbsp;40 в&nbsp;зависимости от&nbsp;запроса. Точный план&nbsp;— после первого знакомства.</p>
+        </details>
+        <details>
+            <summary>Есть ли занятия онлайн?</summary>
+            <p>Для школьников&nbsp;— да. Для дошколят рекомендуем очные.</p>
+        </details>
+        <details>
+            <summary>Что делать дома?</summary>
+            <p>Логопед даёт небольшое домашнее задание&nbsp;— 10–15&nbsp;минут в&nbsp;день.</p>
+        </details>
+        <details>
+            <summary>Если ребёнок не&nbsp;идёт на&nbsp;контакт?</summary>
+            <p>Первые занятия мама в&nbsp;кабинете. Логопед строит работу через игру, не «давит».</p>
+        </details>
+        <details>
+            <summary>Сколько ждать результат?</summary>
+            <p>Первые сдвиги&nbsp;— через 2–4&nbsp;недели. Полная постановка звука&nbsp;— 2–4&nbsp;месяца.</p>
+        </details>
+    </div>
+</section>
+
+{# Final CTA #}
+<section class="pl-final-cta" id="lead-form">
+    <div class="pl-final-cta-grid">
+        <div>
+            <span class="pl-eyebrow pl-eyebrow--acid">30&nbsp;минут · бесплатно</span>
+            <h2>Приходите познакомиться</h2>
+            <p>Логопед посмотрит ребёнка, поговорит с&nbsp;вами. Скажем честно: всё в&nbsp;порядке или есть над чем поработать. Без сценария «срочно лечиться».</p>
+        </div>
+        <form class="pl-form" method="post" action="#lead-form">
+            <input class="pl-input" type="text" name="child_name" placeholder="Имя ребёнка и возраст">
+            <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
+            <button class="pl-btn pl-btn--md" type="submit">Записаться</button>
+            <p class="pl-form-meta">Перезвоним в&nbsp;течение часа</p>
+        </form>
+    </div>
+</section>
+
+{% include "components/program_landing/_program_nav.html" %}
