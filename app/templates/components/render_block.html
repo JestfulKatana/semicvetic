@@ -2,6 +2,17 @@
 {% set page_slug = page.slug|default('') %}
 {% set is_home = request.path == '/' %}
 {% set is_program_detail = page.duration_min is defined %}
+{# Папки, где для PNG лежит .webp-дубликат (Round 2 оптимизация) #}
+{% set _webp_dirs = ['img/figma/gallery/', 'img/figma/place/', 'img/figma/programs/'] %}
+{% macro pic(filename, alt='', cls='', loading='lazy', extra='') -%}
+{%- set has_webp = filename.endswith('.png') and (_webp_dirs | select('in', filename) | list | length > 0) -%}
+{%- if has_webp -%}
+{%- set webp_name = filename[:-4] ~ '.webp' -%}
+<picture><source type="image/webp" srcset="{{ url_for('static', filename=webp_name) }}"><img{% if cls %} class="{{ cls }}"{% endif %} src="{{ url_for('static', filename=filename) }}" alt="{{ alt }}" loading="{{ loading }}" decoding="async"{% if extra %} {{ extra | safe }}{% endif %}></picture>
+{%- else -%}
+<img{% if cls %} class="{{ cls }}"{% endif %} src="{{ url_for('static', filename=filename) }}" alt="{{ alt }}" loading="{{ loading }}" decoding="async"{% if extra %} {{ extra | safe }}{% endif %}>
+{%- endif -%}
+{%- endmacro %}
 
 {% if block.component == "speech_hero" %}
 <section class="speech-hero">
@@ -32,7 +43,7 @@
         </div>
         <aside class="speech-hero-panel" aria-label="Когда стоит обратиться к логопеду">
             <div class="speech-tool">
-                <img src="{{ url_for('static', filename=data.visual or 'img/figma/programs/mic.png') }}" alt="">
+                {{ pic(data.visual or 'img/figma/programs/mic.png', alt='') }}
                 <span class="speech-tool-label">диагностика речи</span>
             </div>
             <div class="speech-symptoms">
@@ -218,21 +229,21 @@
     {% if page_slug == 'o-centre' or is_program_detail %}
     <div class="wide-photo">
         {% if page_slug == 'anglijskij' %}
-        <img src="{{ url_for('static', filename='img/figma/gallery/kids-xmas.png') }}" alt="Дети на занятии английского — Семицветик">
+        {{ pic('img/figma/gallery/kids-xmas.png', alt='Дети на занятии английского — Семицветик') }}
         {% elif page_slug == 'izostudia' %}
-        <img src="{{ url_for('static', filename='img/figma/gallery/girl-paints.png') }}" alt="Девочка рисует на занятии изостудии — Семицветик">
+        {{ pic('img/figma/gallery/girl-paints.png', alt='Девочка рисует на занятии изостудии — Семицветик') }}
         {% elif page_slug == 'logoped' %}
-        <img src="{{ url_for('static', filename='img/figma/gallery/bear.png') }}" alt="Логопед — Семицветик">
+        {{ pic('img/figma/gallery/bear.png', alt='Логопед — Семицветик') }}
         {% elif page_slug == 'psiholog' %}
-        <img src="{{ url_for('static', filename='img/figma/gallery/girl-gift.png') }}" alt="Психолог — Семицветик">
+        {{ pic('img/figma/gallery/girl-gift.png', alt='Психолог — Семицветик') }}
         {% elif page_slug == 'rannee-razvitie' %}
-        <img src="{{ url_for('static', filename='img/figma/gallery/croc-family.png') }}" alt="Раннее развитие — Семицветик">
+        {{ pic('img/figma/gallery/croc-family.png', alt='Раннее развитие — Семицветик') }}
         {% elif page_slug == 'podgotovka-k-shkole' %}
-        <img src="{{ url_for('static', filename='img/figma/gallery/graduation.png') }}" alt="Подготовка к школе — Семицветик">
+        {{ pic('img/figma/gallery/graduation.png', alt='Подготовка к школе — Семицветик') }}
         {% elif page_slug == 'otlichnik' %}
-        <img src="{{ url_for('static', filename='img/figma/gallery/letters.png') }}" alt="Отличник — Семицветик">
+        {{ pic('img/figma/gallery/letters.png', alt='Отличник — Семицветик') }}
         {% elif page_slug == 'detskij-lager' %}
-        <img src="{{ url_for('static', filename='img/figma/gallery/balloons.png') }}" alt="Детский лагерь — Семицветик">
+        {{ pic('img/figma/gallery/balloons.png', alt='Детский лагерь — Семицветик') }}
         {% else %}
         <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
         {% endif %}
@@ -295,7 +306,15 @@
 </section>
 
 {% elif block.component == "top_programs" %}
-<section class="section top-programs-section">
+{% set tp_color_by_slug = {
+    'podgotovka-k-shkole': '#6359c2',
+    'anglijskij': '#2d8a3f',
+    'logoped': '#ed7735',
+    'rannee-razvitie': '#d14d20',
+    'izostudia': '#db5eb4',
+    'detskij-lager': '#4c83f1',
+} %}
+<section class="section top-programs-section top-programs-section--cards">
     <div class="top-programs-head">
         <div>
             <h2>{{ data.title or "Топ-программы" }}</h2>
@@ -303,64 +322,33 @@
         </div>
         <a class="soft-button soft-button-arrow" href="/programmy/">Все программы <span class="soft-arrow">→</span></a>
     </div>
-    <div class="top-programs-stage">
-        <nav class="top-programs-tabs" aria-label="Выбор программы">
-            {% for tab in data.get("tabs", []) %}
-            {% set is_active = loop.first %}
-            {% set is_accent = tab.get("accent") %}
-            <a class="top-programs-tab{% if is_active %} is-active{% endif %}{% if is_accent %} is-accent{% endif %}" href="/{{ tab.slug }}/">{{ tab.name }}</a>
-            {% endfor %}
-        </nav>
-        {% set active = data.tabs[0] if data.get("tabs") else none %}
-        {% if active %}
-        <article class="top-programs-card">
-            <div class="top-programs-card-head">
-                <h3>{{ active.name }}</h3>
-                <div class="tag-row tag-row-orange">
-                    {% for tag in active.tags %}<span>{{ tag }}</span>{% endfor %}
+    <div class="tp-card-grid">
+        {% for tab in data.get("tabs", []) %}
+        {% set tp_color = tp_color_by_slug.get(tab.slug, '#5a4f48') %}
+        <article class="tp-card" style="--tp-color: {{ tp_color }};">
+            <div class="tp-card-head">
+                <h3>{{ tab.name }}</h3>
+                {% if tab.tags %}
+                <div class="tp-card-chips" aria-label="Параметры">
+                    {% for tag in tab.tags %}<span class="tp-card-chip">{{ tag }}</span>{% endfor %}
                 </div>
-                <p class="top-programs-desc">{{ active.description }}</p>
+                {% endif %}
             </div>
-            <div class="top-programs-columns">
-                <div class="top-programs-schedule">
-                    <p class="col-label">Расписание занятий</p>
-                    <div class="schedule-scroll">
-                        {% for group in active.groups %}
-                        <div class="schedule-group">
-                            <p class="group-label">{{ group.title }}</p>
-                            <div class="schedule-list">
-                                {% for slot in group.slots %}
-                                <div class="schedule-row"><span>{{ slot.day }}</span><span>{{ slot.time }}</span></div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endfor %}
-                        <div class="schedule-fade" aria-hidden="true"></div>
-                    </div>
+            {% if tab.description %}
+            <p class="tp-card-desc">{{ tab.description }}</p>
+            {% endif %}
+            <div class="tp-card-foot">
+                <div class="tp-card-price">
+                    <strong>{{ tab.price }}</strong>
+                    <small>Абонемент или разово</small>
                 </div>
-                <div class="top-programs-side">
-                    <div class="top-programs-teachers">
-                        <p class="col-label">Преподаватели</p>
-                        <div class="teacher-mini">
-                            <span class="teacher-avatars" aria-hidden="true">
-                                {% for avatar in active.teachers[:2] %}<i style="background: {{ avatar }};"></i>{% endfor %}
-                                {% if active.teachers|length > 2 %}<b class="teacher-more">+{{ active.teachers|length - 2 }}</b>{% endif %}
-                            </span>
-                            <div class="teacher-mini-text">
-                                <strong>{{ active.teachers_count }}</strong>
-                                <small>{{ active.teachers_role }}</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="top-programs-footer">
-                        <strong>{{ active.price }}</strong>
-                        <small class="top-programs-note">Абонемент или разовая оплата</small>
-                        <a class="button button-dark" href="#lead-form">Записаться</a>
-                    </div>
+                <div class="tp-card-cta">
+                    <a class="button button-dark" href="#lead-form">Записаться</a>
+                    <a class="tp-card-link" href="/{{ tab.slug }}/">Подробнее</a>
                 </div>
             </div>
         </article>
-        {% endif %}
+        {% endfor %}
     </div>
 </section>
 
@@ -493,7 +481,7 @@
                  data-category="{{ program.category or '' }}">
             <a class="program-card__photo" href="/{{ program.slug }}/" aria-label="Открыть {{ program.name }}">
                 {% if program.image_url %}
-                <img src="{{ url_for('static', filename=program.image_url) }}" alt="{{ program.name }}" loading="lazy" decoding="async">
+                {{ pic(program.image_url, alt=program.name) }}
                 {% else %}
                 <span class="program-card__photo-mark" aria-hidden="true">{{ program.emoji or "✦" }}</span>
                 {% endif %}
@@ -562,7 +550,7 @@
             </div>
             <a class="program-link" href="/{{ program.slug }}/" aria-label="Открыть {{ program.name }}"></a>
             {% if program.image_url %}
-            <img class="program-object-img" src="{{ url_for('static', filename=program.image_url) }}" alt="">
+            {{ pic(program.image_url, alt='', cls='program-object-img') }}
             {% else %}
             <span class="program-object">{{ program.emoji or "✦" }}</span>
             {% endif %}
@@ -612,6 +600,8 @@
     ('psychology', 'Программа «Отличник»'),
     ('camp', 'Детский лагерь'),
 ] %}
+{# Фильтры/поиск показываем только на странице /pedagogi/. На главной — единый блок без фильтров. #}
+{% set show_teacher_filters = (page_slug == 'pedagogi') and (data.show_search or data.show_chips) %}
 <section class="section teachers-section">
     {% if data.title or data.subtitle %}
     <div class="section-head split-head">
@@ -624,7 +614,7 @@
         {% endif %}
     </div>
     {% endif %}
-    {% if data.show_search or data.show_chips %}
+    {% if show_teacher_filters %}
     <div class="teacher-search">
         {% if data.show_search %}
         <input type="search" placeholder="Найти учителя или предмет" data-teacher-search>
@@ -705,16 +695,18 @@
         </article>
         {% endfor %}
     </div>
-    {% if data.show_search or data.show_chips %}
+    {% if show_teacher_filters %}
     <p class="filter-empty" data-teacher-empty hidden>По&nbsp;запросу ничего не&nbsp;нашлось. Попробуйте сбросить фильтры.</p>
     {% endif %}
     {% set team = data.get('team_stats') %}
     {% if team %}
-    <div class="teachers-team-block">
+    <div class="teachers-team-block{% if page_slug != 'pedagogi' %} teachers-team-block--seamless{% endif %}">
+        {% if page_slug == 'pedagogi' %}
         <div class="teachers-team-head">
             {% if team.eyebrow %}<p class="eyebrow">{{ team.eyebrow }}</p>{% endif %}
             {% if team.title %}<h3>{{ team.title }}</h3>{% endif %}
         </div>
+        {% endif %}
         <div class="team-stats-shell">
             {% if team.quote %}
             <div class="team-stats-quote">
@@ -806,7 +798,7 @@
             </div>
             {% if step.image %}
             <div class="place-photo">
-                <img src="{{ url_for('static', filename=step.image) }}" alt="">
+                {{ pic(step.image, alt='') }}
             </div>
             {% endif %}
         </article>
@@ -1112,11 +1104,11 @@
 <section class="photo-strip photo-strip--izostudia">
     <p class="photo-strip-eyebrow eyebrow">Так выглядят занятия</p>
     <div class="photo-strip-grid">
-        <img src="{{ url_for('static', filename='img/figma/gallery/girl-paints.png') }}" alt="Девочка рисует" loading="lazy">
-        <img src="{{ url_for('static', filename='img/figma/gallery/letters.png') }}" alt="Творческое занятие" loading="lazy">
-        <img src="{{ url_for('static', filename='img/figma/gallery/balloons.png') }}" alt="Дети в центре" loading="lazy">
-        <img src="{{ url_for('static', filename='img/figma/gallery/pumpkins.png') }}" alt="Поделки из глины" loading="lazy">
-        <img src="{{ url_for('static', filename='img/figma/gallery/bear.png') }}" alt="Творческая работа" loading="lazy">
+        {{ pic('img/figma/gallery/girl-paints.png', alt='Девочка рисует') }}
+        {{ pic('img/figma/gallery/letters.png', alt='Творческое занятие') }}
+        {{ pic('img/figma/gallery/balloons.png', alt='Дети в центре') }}
+        {{ pic('img/figma/gallery/pumpkins.png', alt='Поделки из глины') }}
+        {{ pic('img/figma/gallery/bear.png', alt='Творческая работа') }}
     </div>
 </section>
 {% else %}
@@ -1191,7 +1183,7 @@
     </div>
     <div class="video-stage">
         <div class="video-cover">
-            <img class="video-cover-img" src="{{ url_for('static', filename='img/figma/place/video-cover.png') }}" alt="">
+            {{ pic('img/figma/place/video-cover.png', alt='', cls='video-cover-img', loading='eager') }}
             <div class="video-overlay" aria-hidden="true"></div>
             <button class="video-play" type="button" aria-label="Смотреть видео"><span>▶</span></button>
             <p class="video-caption">Загляните в&nbsp;атмосферу нашего детского центра глазами вашего ребёнка</p>
@@ -1203,13 +1195,13 @@
     <div class="photo-strip-row photo-strip-row-1">
         {% set photos_top = data.photos_top or ['img/figma/gallery/pumpkins.png', 'img/figma/gallery/balloons.png', 'img/figma/gallery/girl-paints.png', 'img/figma/gallery/mums-phones.png', 'img/figma/gallery/letters.png', 'img/figma/gallery/graduation.png'] %}
         {% for photo in photos_top %}
-        <img src="{{ url_for('static', filename=photo) }}" alt="" loading="lazy">
+        {{ pic(photo, alt='') }}
         {% endfor %}
     </div>
     <div class="photo-strip-row photo-strip-row-2">
         {% set photos_bottom = data.photos_bottom or ['img/figma/gallery/croc-family.png', 'img/figma/gallery/bear.png', 'img/figma/gallery/girl-xmas.png', 'img/figma/gallery/kids-xmas.png', 'img/figma/gallery/pumpkin-kids.png', 'img/figma/gallery/girl-gift.png'] %}
         {% for photo in photos_bottom %}
-        <img src="{{ url_for('static', filename=photo) }}" alt="" loading="lazy">
+        {{ pic(photo, alt='') }}
         {% endfor %}
     </div>
 </section>

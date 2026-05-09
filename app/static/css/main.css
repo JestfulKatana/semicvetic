@@ -7191,3 +7191,148 @@ body.is-menu-open .wa-float { display: none; }
         flex-wrap: wrap;
     }
 }
+
+/* ================================================================
+   Round 2 (2026-05-09): top_programs → карточки, meet H1 крупнее,
+   teachers grid + team_stats без шва.
+   ================================================================ */
+
+/* Top-programs: сетка карточек вместо табов + правой панели расписания */
+.top-programs-section--cards { gap: 32px; }
+.tp-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+.tp-card {
+    --tp-color: #5a4f48;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 28px 28px 24px;
+    background: var(--tp-color);
+    color: #fcf8f4;
+    border-radius: 24px;
+    min-height: 280px;
+    overflow: hidden;
+}
+.tp-card-head {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.tp-card-head h3 {
+    margin: 0;
+    color: #fcf8f4;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -1px;
+}
+.tp-card-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.tp-card-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(252, 248, 244, 0.18);
+    color: #fcf8f4;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+}
+.tp-card-desc {
+    margin: 0;
+    color: rgba(252, 248, 244, 0.92);
+    font-size: 15px;
+    line-height: 1.35;
+    letter-spacing: -0.3px;
+    flex: 1 1 auto;
+}
+.tp-card-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 8px;
+    margin-top: auto;
+    border-top: 1px solid rgba(252, 248, 244, 0.18);
+}
+.tp-card-price {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.tp-card-price strong {
+    color: #fcf8f4;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+}
+.tp-card-price small {
+    color: rgba(252, 248, 244, 0.78);
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: -0.2px;
+}
+.tp-card-cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.tp-card-cta .button-dark {
+    background: #fcf8f4;
+    color: #332f2e;
+}
+.tp-card-cta .button-dark:hover { background: #ffffff; }
+.tp-card-link {
+    color: #fcf8f4;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    border-bottom: 1px solid rgba(252, 248, 244, 0.45);
+    line-height: 1.2;
+    padding-bottom: 1px;
+}
+.tp-card-link:hover { border-bottom-color: #fcf8f4; }
+
+@media (max-width: 1100px) {
+    .tp-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+    .top-programs-section--cards { padding: 38px 22px; }
+    .tp-card-grid { grid-template-columns: 1fr; gap: 14px; }
+    .tp-card { padding: 24px 22px; min-height: 0; }
+    .tp-card-head h3 { font-size: 22px; letter-spacing: -0.7px; }
+    .tp-card-foot { gap: 12px; }
+    .tp-card-cta { flex-wrap: wrap; }
+    .tp-card-cta .button-dark { width: auto; }
+}
+
+/* Meet «Давайте знакомиться!» — крупный заголовок */
+.meet-copy h2 {
+    font-size: clamp(40px, 5.4vw, 72px);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -2.6px;
+}
+@media (max-width: 860px) {
+    .meet-copy h2 {
+        font-size: clamp(34px, 9vw, 44px);
+        letter-spacing: -1.6px;
+    }
+}
+
+/* Teachers grid + team_stats без визуального шва (на главной и других страницах кроме /pedagogi/) */
+.teachers-team-block--seamless {
+    margin-top: 32px;
+    padding-top: 0;
+    border-top: 0;
+}
