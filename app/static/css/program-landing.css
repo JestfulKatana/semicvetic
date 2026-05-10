@@ -135,21 +135,33 @@
 .pl-section--paper  { background: var(--pl-paper); }
 .pl-section--narrow { padding: 40px 64px; }
 
-/* Pills (общие чипы) */
+/* Pills (общие чипы) — дефолт под бумажный hero;
+   акцент даётся через --soft / --accent / --ghost модификаторы */
 .pl-pill {
     display: inline-flex;
     align-items: center;
     padding: 6px 14px;
     border-radius: 999px;
-    background: rgba(255,255,255,0.18);
-    color: var(--pl-paper);
+    background: var(--pl-accent-paper);
+    color: var(--pl-accent-dark);
     font-size: 13px;
     font-weight: 600;
 }
 .pl-pill--ghost {
+    background: transparent;
+    color: var(--pl-mute2);
+    border: 1px solid rgba(0,0,0,0.08);
+    font-weight: 500;
+}
+/* Внутри pl-section--accent (заливочный блок) — оставляем светлые pill, как раньше */
+.pl-section--accent .pl-pill {
+    background: rgba(255,255,255,0.18);
+    color: var(--pl-paper);
+}
+.pl-section--accent .pl-pill--ghost {
     background: rgba(255,255,255,0.12);
     color: rgba(255,255,255,0.9);
-    font-weight: 500;
+    border: none;
 }
 .pl-pill--soft {
     background: var(--pl-accent-soft);
@@ -174,15 +186,17 @@
     margin-bottom: 24px;
 }
 
-/* HERO */
+/* HERO — бумажный по дефолту, чтобы вписывался в стиль главной;
+   акцент даётся через pill / mark-accent / кнопку, а не заливкой. */
 .pl-hero {
-    background: var(--pl-accent);
+    background: var(--pl-paper);
     border-radius: 28px;
     padding: 64px 64px 56px;
-    color: var(--pl-paper);
+    color: var(--pl-ink);
     position: relative;
     overflow: hidden;
 }
+/* модификатор --paper остаётся для совместимости с шаблонами (no-op) */
 .pl-hero--paper {
     background: var(--pl-paper);
     color: var(--pl-ink);
@@ -212,36 +226,36 @@
     max-width: 540px;
     font-size: 18px;
     line-height: 1.5;
-    color: rgba(255,255,255,0.85);
+    color: var(--pl-soft);
     font-weight: 400;
 }
 .pl-hero--paper p.pl-hero-lead { color: var(--pl-soft); }
 .pl-hero p.pl-hero-sub {
     margin: 14px 0 0;
     font-size: 15px;
-    color: rgba(255,255,255,0.7);
+    color: var(--pl-mute2);
 }
 .pl-hero--paper p.pl-hero-sub { color: var(--pl-mute2); }
 
-.pl-hero-acid { color: var(--pl-acid); font-weight: 700; }
+.pl-hero-acid { color: var(--pl-accent); font-weight: 700; }
 .pl-hero-accent { color: var(--pl-accent); }
-.pl-hero h1 .pl-mark-acid { color: var(--pl-acid); }
+.pl-hero h1 .pl-mark-acid { color: var(--pl-accent); }
 .pl-hero h1 .pl-mark-accent { color: var(--pl-accent); }
 
-/* USP-bar внутри hero (school) */
+/* USP-bar внутри hero (school) — на бумаге используем тонкую цветную плашку */
 .pl-hero-usp {
     margin-top: 28px;
     padding: 18px 22px;
-    background: rgba(255,255,255,0.1);
+    background: var(--pl-accent-paper);
     border-radius: 14px;
     font-size: 16px;
-    color: var(--pl-paper);
+    color: var(--pl-ink);
     line-height: 1.5;
     max-width: 540px;
     font-weight: 500;
 }
-.pl-hero-usp strong { color: var(--pl-acid); font-weight: 700; }
-.pl-hero-usp .pl-muted { color: rgba(255,255,255,0.7); font-weight: 400; }
+.pl-hero-usp strong { color: var(--pl-accent-dark); font-weight: 700; }
+.pl-hero-usp .pl-muted { color: var(--pl-mute2); font-weight: 400; }
 
 /* Hero CTA row */
 .pl-hero-cta {
@@ -270,8 +284,8 @@
     height: 56px;
     padding: 0 28px;
     border-radius: 14px;
-    background: var(--pl-acid);
-    color: var(--pl-dark);
+    background: var(--pl-accent);
+    color: var(--pl-paper);
     border: none;
     font-weight: 600;
     font-size: 15px;
@@ -282,30 +296,36 @@
     align-items: center;
     justify-content: center;
 }
-.pl-btn:hover { filter: brightness(0.97); }
+.pl-btn:hover { filter: brightness(0.96); }
 .pl-btn--accent { background: var(--pl-accent); color: var(--pl-paper); }
+.pl-btn--acid { background: var(--pl-acid); color: var(--pl-dark); }
 .pl-btn--dark { background: var(--pl-dark); color: #fff; }
 .pl-btn--sm { height: 40px; padding: 0 22px; border-radius: 999px; font-size: 14px; }
 .pl-btn--md { height: 52px; padding: 0 24px; font-size: 15px; }
 .pl-btn[disabled] { background: #e0d5d2; color: #a39288; cursor: not-allowed; }
+/* В заливочных pl-section--accent сохраняем «инверсный» вариант — acid на цветном фоне */
+.pl-section--accent .pl-btn:not(.pl-btn--dark):not(.pl-btn--accent) {
+    background: var(--pl-acid);
+    color: var(--pl-dark);
+}
 
 .pl-cta-meta {
     font-size: 13px;
-    color: rgba(255,255,255,0.65);
+    color: var(--pl-mute2);
 }
 .pl-hero--paper .pl-cta-meta { color: var(--pl-mute2); }
 
-/* Schedule board (school hero) */
+/* Schedule board (school hero) — переработан под бумажный hero */
 .pl-board {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
+    background: var(--pl-accent-paper);
+    border: 1px solid rgba(0,0,0,0.06);
     border-radius: 22px;
     padding: 32px;
 }
 .pl-board-meta {
     font-size: 13px;
     font-weight: 600;
-    color: rgba(255,255,255,0.6);
+    color: var(--pl-mute2);
     margin-bottom: 20px;
 }
 .pl-board-rows { display: flex; flex-direction: column; gap: 10px; }
@@ -315,24 +335,24 @@
     gap: 14px;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 .pl-board-row:last-child { border-bottom: none; }
-.pl-board-row.is-break { opacity: 0.5; }
+.pl-board-row.is-break { opacity: 0.55; }
 .pl-board-num {
     font-size: 14px;
     font-weight: 600;
-    color: var(--pl-acid);
+    color: var(--pl-accent-dark);
 }
-.pl-board-row.is-break .pl-board-num { color: rgba(255,255,255,0.5); }
+.pl-board-row.is-break .pl-board-num { color: var(--pl-mute2); }
 .pl-board-name {
     font-size: 16px;
     font-weight: 600;
-    color: var(--pl-paper);
+    color: var(--pl-ink);
 }
 .pl-board-who {
     font-size: 13px;
-    color: rgba(255,255,255,0.7);
+    color: var(--pl-mute2);
 }
 
 /* Speech bubbles (english hero) */
@@ -345,14 +365,14 @@
 .pl-bubble-row--right { justify-content: flex-end; padding-left: 60px; }
 .pl-bubble-row--left { justify-content: flex-start; padding-right: 60px; }
 .pl-bubble {
-    background: var(--pl-paper);
+    background: var(--pl-accent-paper);
     color: var(--pl-ink);
     padding: 14px 18px;
     border-radius: 18px 18px 18px 4px;
     max-width: 280px;
 }
 .pl-bubble-row--right .pl-bubble { border-radius: 18px 18px 4px 18px; }
-.pl-bubble--accent { background: var(--pl-acid); color: var(--pl-dark); }
+.pl-bubble--accent { background: var(--pl-accent); color: var(--pl-paper); }
 .pl-bubble-text {
     font-size: 16px;
     font-weight: 600;
@@ -363,7 +383,7 @@
     color: var(--pl-mute2);
     margin-top: 4px;
 }
-.pl-bubble--accent .pl-bubble-meta { color: #5a6e1f; }
+.pl-bubble--accent .pl-bubble-meta { color: rgba(255,255,255,0.75); }
 
 /* Quote-card (speech hero) */
 .pl-quote-card {
@@ -955,12 +975,12 @@
     line-height: 1.6;
 }
 
-/* Final CTA */
+/* Final CTA — бумажный по дефолту, акцентная кнопка как на главной */
 .pl-final-cta {
-    background: var(--pl-accent);
+    background: var(--pl-paper);
     border-radius: 28px;
     padding: 64px;
-    color: var(--pl-paper);
+    color: var(--pl-ink);
     position: relative;
     overflow: hidden;
 }
@@ -977,12 +997,14 @@
     font-weight: 700;
     letter-spacing: -1.5px;
     line-height: 1.05;
-    color: var(--pl-paper);
+    color: var(--pl-ink);
 }
+.pl-final-cta h2 .pl-mark-acid,
+.pl-final-cta h2 .pl-mark-accent { color: var(--pl-accent); }
 .pl-final-cta p {
     margin: 18px 0 0;
     font-size: 16px;
-    color: rgba(255,255,255,0.85);
+    color: var(--pl-soft);
     line-height: 1.55;
     max-width: 540px;
 }
@@ -992,15 +1014,17 @@
     flex-direction: column;
     gap: 10px;
     padding: 24px;
-    background: rgba(255,255,255,0.06);
+    background: var(--pl-accent-paper);
     border-radius: 18px;
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(0,0,0,0.06);
 }
 .pl-form .pl-input {
     height: 48px;
     border-radius: 12px;
     max-width: none;
     flex: none;
+    background: var(--pl-paper);
+    border: 1.5px solid rgba(0,0,0,0.08);
 }
 .pl-form .pl-btn {
     height: 52px;
@@ -1010,7 +1034,7 @@
 .pl-form-meta {
     margin: 4px 0 0;
     font-size: 12px;
-    color: rgba(255,255,255,0.55);
+    color: var(--pl-mute2);
     text-align: center;
 }
 
