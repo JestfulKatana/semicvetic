@@ -29,24 +29,42 @@ def normalize_phone(raw_phone: str) -> str:
 @limiter.limit(lambda: current_app.config["LEAD_RATE_LIMIT"])
 def create_lead():
     payload = request.get_json(silent=True) or request.form
-    honeypot = (payload.get("company") or "").strip()
+
+    def _s(key, fallback=""):
+        value = payload.get(key)
+        if value is None or value == "":
+            value = fallback
+        if value is None:
+            return ""
+        return str(value).strip()
+
+    honeypot = _s("company")
     if honeypot:
         return jsonify({"ok": True}), 200
 
     try:
-        phone = normalize_phone(payload.get("phone", ""))
+        phone = normalize_phone(_s("phone"))
     except ValueError as exc:
         return jsonify({"ok": False, "message": str(exc)}), 400
 
+    child_age_raw = _s("child_age")
+    if child_age_raw:
+        digits = re.sub(r"\D", "", child_age_raw)
+        if not digits or int(digits) <= 0 or int(digits) > 99:
+            return jsonify({"ok": False, "message": "Возраст ребёнка указан некорректно"}), 400
+        child_age_value = child_age_raw
+    else:
+        child_age_value = None
+
     lead = Lead(
         phone=phone,
-        name=(payload.get("name") or "").strip() or None,
-        child_age=(payload.get("child_age") or "").strip() or None,
-        source_page=(payload.get("source_page") or request.referrer or "").strip() or None,
-        source_block=(payload.get("source_block") or "").strip() or None,
-        utm_source=(payload.get("utm_source") or request.args.get("utm_source") or "").strip() or None,
-        utm_medium=(payload.get("utm_medium") or request.args.get("utm_medium") or "").strip() or None,
-        utm_campaign=(payload.get("utm_campaign") or request.args.get("utm_campaign") or "").strip() or None,
+        name=_s("name") or None,
+        child_age=child_age_value,
+        source_page=_s("source_page", request.referrer or "") or None,
+        source_block=_s("source_block") or None,
+        utm_source=_s("utm_source", request.args.get("utm_source") or "") or None,
+        utm_medium=_s("utm_medium", request.args.get("utm_medium") or "") or None,
+        utm_campaign=_s("utm_campaign", request.args.get("utm_campaign") or "") or None,
     )
     db.session.add(lead)
     db.session.commit()

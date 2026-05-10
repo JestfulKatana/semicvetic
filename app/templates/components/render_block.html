@@ -129,11 +129,11 @@
         </form>
     </div>
     <div class="hero-photo-wrap">
-        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
+        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
         <div class="hero-photo-badges">
-            <span class="photo-badge photo-badge-open"><img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="">Открыто для родителей</span>
-            <span class="photo-badge photo-badge-horoshee"><img src="{{ url_for('static', filename='img/figma/brand/badge-horoshee-mesto.png') }}" alt="">Яндекс: «Хорошее место»</span>
+            <span class="photo-badge photo-badge-open"><img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="" aria-hidden="true">Открыто для родителей</span>
+            <span class="photo-badge photo-badge-horoshee"><img src="{{ url_for('static', filename='img/figma/brand/badge-horoshee-mesto.png') }}" alt="" aria-hidden="true">Яндекс: «Хорошее место»</span>
         </div>
     </div>
 </section>
@@ -245,7 +245,7 @@
         {% elif page_slug == 'detskij-lager' %}
         {{ pic('img/figma/gallery/balloons.png', alt='Детский лагерь — Семицветик') }}
         {% else %}
-        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
+        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
         {% endif %}
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
     </div>
@@ -354,7 +354,8 @@
 
 {% elif block.component == "form_strip" %}
 {# === Концепция A (активна): фото без оверлеев, короткие тезисы списком под подзаголовком === #}
-<section class="section meet-strip">
+{% set _strip_id = 'lead-form' if request.path == '/o-centre/' else '' %}
+<section class="section meet-strip"{% if _strip_id %} id="{{ _strip_id }}"{% endif %}>
     <div class="meet-copy">
         <h2>{{ data.title or "Давайте знакомиться!" }}</h2>
         {% if data.subtitle %}
@@ -503,7 +504,7 @@
                 {% if program.teacher %}
                 <div class="program-card__teacher">
                     {% if program.teacher.photo_url %}
-                    <img class="program-card__teacher-photo" src="{{ url_for('static', filename=program.teacher.photo_url) }}" alt="" loading="lazy">
+                    <img class="program-card__teacher-photo" src="{{ program.teacher.photo_url }}" alt="{{ program.teacher.name }}{% if program.teacher.role %}, {{ program.teacher.role }}{% endif %}" loading="lazy">
                     {% else %}
                     <span class="program-card__teacher-photo program-card__teacher-photo--ph" aria-hidden="true">{{ program.teacher.name[:1] }}</span>
                     {% endif %}
@@ -639,7 +640,7 @@
         <article class="teacher-card{% if is_pedagogi_page %} teacher-card-rich{% endif %}"
                  data-category="{{ teacher.category or '' }}"
                  data-search="{{ (teacher.name ~ ' ' ~ teacher.role ~ ' ' ~ (teacher.specialization or ''))|lower }}">
-            <img src="{{ teacher.photo_url or url_for('static', filename='img/mockup/teacher-' ~ ((loop.index0 % 3) + 1) ~ '.png') }}" alt="">
+            <img src="{{ teacher.photo_url or url_for('static', filename='img/mockup/teacher-' ~ ((loop.index0 % 3) + 1) ~ '.png') }}" alt="{{ teacher.name }}{% if teacher.role %}, {{ teacher.role }}{% endif %}" loading="lazy">
             <div class="teacher-body">
                 <div class="teacher-top">
                     {% if experience_label %}
@@ -1116,17 +1117,18 @@
     {% if data.images %}
     <div class="photo-strip-grid">
         {% for img in data.images %}
-        <img src="{{ url_for('static', filename=img) }}" alt="">
+        <img src="{{ url_for('static', filename=img) }}" alt="Дети на занятии в Семицветике" loading="lazy">
         {% endfor %}
     </div>
     {% else %}
-    <img src="{{ url_for('static', filename='img/mockup/photo-strip.png') }}" alt="">
+    <img src="{{ url_for('static', filename='img/mockup/photo-strip.png') }}" alt="Дети на занятии в Семицветике" loading="lazy">
     {% endif %}
 </section>
 {% endif %}
 
 {% elif block.component == "cta_final" %}
-<section class="section meet-strip meet-strip-green" id="final-cta">
+{# На главной хост якоря — hero-lead, на остальных — этот блок. #}
+<section class="section meet-strip meet-strip-green" id="{{ 'final-cta' if is_home else 'lead-form' }}">
     <div class="meet-copy">
         <h2>{{ data.title or "Записаться на\u00a0личную экскурсию" }}</h2>
         <p class="meet-sub">{% if data.subtitle %}{{ data.subtitle }}{% else %}<span class="meet-sub-accent-yellow">Ответим на&nbsp;вопросы</span> по&nbsp;телефону, и&nbsp;пригласим в&nbsp;детский клуб на&nbsp;экскурсию{% endif %}</p>
@@ -1207,7 +1209,7 @@
 </section>
 {% else %}
 <section class="gallery-strip" aria-label="Фотографии центра">
-    <img src="{{ url_for('static', filename='img/mockup/photo-strip.png') }}" alt="">
+    <img src="{{ url_for('static', filename='img/mockup/photo-strip.png') }}" alt="Фотографии детей и педагогов в детском центре «Семицветик»" loading="lazy">
 </section>
 {% endif %}
 
@@ -1219,7 +1221,7 @@
     </div>
     <div class="card-grid">
         {% for event in data.events %}
-        <article class="event-card">
+        <article class="event-card" id="event-{{ event.slug }}">
             <p class="event-date">{{ event.display_date }}{% if event.event_time %} · {{ event.event_time }}{% endif %}</p>
             <h3>{{ event.title }}</h3>
             <p>{{ event.excerpt }}</p>
@@ -1275,7 +1277,8 @@
         </article>
         {% endfor %}
     </div>
-    <div class="prices-cta" id="lead-form-contact">
+    {% set _prices_lead_id = 'lead-form' if request.path == '/ceny/' else 'lead-form-contact' %}
+    <div class="prices-cta" id="{{ _prices_lead_id }}">
         <div class="prices-cta__copy">
             <h3>Не нашли подходящее? Подберём вместе</h3>
             <p>Оставьте телефон — позвоним, расспросим про ребёнка и предложим программу под запрос.</p>
@@ -1299,11 +1302,12 @@
 {% set variant = 'full' if _force_full else (data.variant or ('compact' if is_home else 'full')) %}
 {% set vk_href = data.settings.get('social_vk') or '#' %}
 {% set tg_href = data.settings.get('social_tg') or '#' %}
-<section class="section contact-section contact-variant-{{ variant }}" id="contact-panel">
+{% set _contact_section_id = 'lead-form' if request.path in ('/programmy/', '/pedagogi/', '/kontakty/') else 'contact-panel' %}
+<section class="section contact-section contact-variant-{{ variant }}" id="{{ _contact_section_id }}">
     {% if data.gallery %}
     <div class="contact-gallery">
         {% for img in data.gallery %}
-        <img src="{{ url_for('static', filename=img) }}" alt="" loading="lazy">
+        <img src="{{ url_for('static', filename=img) }}" alt="Детский центр «Семицветик» — фото изнутри" loading="lazy">
         {% endfor %}
     </div>
     {% endif %}
@@ -1326,7 +1330,7 @@
             <div class="contact-meta">
                 <div>
                     <a class="qr-code" href="{{ tg_href }}" target="_blank" rel="noopener" aria-label="Открыть Telegram Семицветика">
-                        <img src="{{ url_for('static', filename='img/qr-telegram.svg') }}" alt="">
+                        <img src="{{ url_for('static', filename='img/qr-telegram.svg') }}" alt="" aria-hidden="true">
                     </a>
                     <span class="qr-caption">Мы в Telegram</span>
                 </div>
@@ -1421,7 +1425,18 @@
             </span>
             <h3>{{ item.title }}</h3>
             {% if item.description %}<p>{{ item.description }}</p>{% endif %}
-            <a class="credential-tile-link" href="{{ item.link or '#' }}"{% if item.link and item.link.startswith('http') %} target="_blank" rel="noopener"{% endif %}>Посмотреть →</a>
+            {% if item.link and item.link != '#' %}
+            <a class="credential-tile-link" href="{{ item.link }}"{% if item.link.startswith('http') %} target="_blank" rel="noopener"{% endif %}>Посмотреть →</a>
+            {% elif item.title and 'политик' in item.title|lower %}
+            <a class="credential-tile-link" href="/politika-konfidencialnosti/">Открыть политику →</a>
+            {% elif item.title and 'договор' in item.title|lower %}
+            <a class="credential-tile-link" href="/kontakty/#lead-form">Запросить договор →</a>
+            {% elif item.title and ('яндекс' in item.title|lower or 'место' in item.title|lower) %}
+            {% set _ya_url = site_settings.get('yandex_card_url') if site_settings is defined else '' %}
+            <a class="credential-tile-link" href="{{ _ya_url or '/kontakty/' }}"{% if _ya_url %} target="_blank" rel="noopener"{% endif %}>Открыть в Яндекс.Картах →</a>
+            {% else %}
+            <a class="credential-tile-link" href="/o-centre/">Узнать подробнее →</a>
+            {% endif %}
         </article>
         {% endfor %}
     </div>
@@ -1803,7 +1818,7 @@
             {% endif %}
             <h3>{{ event.title }}</h3>
             {% if event.excerpt %}<p>{{ event.excerpt }}</p>{% endif %}
-            <a class="soft-button soft-button-arrow" href="/blog/{{ event.slug }}/">Подробнее <span class="soft-arrow">→</span></a>
+            <a class="soft-button soft-button-arrow" href="/meropriyatiya/#event-{{ event.slug }}">Подробнее <span class="soft-arrow">→</span></a>
         </article>
         {% endfor %}
     </div>
@@ -1827,7 +1842,7 @@
         <article class="articles-teaser-card">
             {% if article.image_url %}
             <div class="articles-teaser-cover">
-                <img src="{{ url_for('static', filename=article.image_url) }}" alt="">
+                <img src="{{ url_for('static', filename=article.image_url) }}" alt="{{ article.title }}" loading="lazy">
             </div>
             {% endif %}
             <p class="articles-teaser-date">{{ article.display_date }}</p>

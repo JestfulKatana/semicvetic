@@ -33,10 +33,14 @@
         </div>
     </div>
 
-    <form class="pl-hero-cta" method="post" action="#lead-form" style="margin-top:24px;">
+    <form class="pl-hero-cta" method="post" action="/api/lead" data-lead-form style="margin-top:24px;">
+        <input type="hidden" name="source_page" value="{{ request.path }}">
+        <input type="hidden" name="source_block" value="pl_early_hero">
+        <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
         <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required style="min-width:220px; max-width:280px;">
         <button class="pl-btn pl-btn--accent" type="submit">Прийти на&nbsp;пробное</button>
         <span class="pl-cta-meta">Бесплатное знакомство, можно с&nbsp;мамой</span>
+        <p class="form-status" data-form-status></p>
     </form>
 </section>
 
@@ -310,11 +314,15 @@
             <h2>Приходите вместе с&nbsp;<span class="pl-mark-acid">малышом</span></h2>
             <p>Для Малышей мама в&nbsp;зале весь час, для остальных&nbsp;— рядом, в&nbsp;зоне видимости. Посмотрите, как ребёнок реагирует на&nbsp;среду.</p>
         </div>
-        <form class="pl-form" method="post" action="#lead-form">
+        <form class="pl-form" method="post" action="/api/lead" data-lead-form>
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="pl_early_final">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
             <input class="pl-input" type="text" name="child_name" placeholder="Имя ребёнка и возраст">
             <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
             <button class="pl-btn pl-btn--md" type="submit">Записать на пробное</button>
             <p class="pl-form-meta">Перезвоним в&nbsp;течение часа</p>
+            <p class="form-status" data-form-status></p>
         </form>
     </div>
 </section>

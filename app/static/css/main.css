@@ -3153,9 +3153,18 @@ select {
 .schedule-slots { display: grid; gap: 6px; }
 @media (max-width: 860px) {
     .schedule-controls { flex-direction: column; align-items: stretch; gap: 14px; }
-    .schedule-age-filters { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; scrollbar-width: none; }
+    .schedule-age-filters {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        margin-inline: -16px;
+        padding-inline: 16px;
+    }
     .schedule-age-filters::-webkit-scrollbar { display: none; }
-    .age-chip { flex: 0 0 auto; }
+    .age-chip { flex: 0 0 auto; white-space: nowrap; }
+    .age-chip span { white-space: nowrap; }
     .schedule-price-toggle { justify-content: space-between; }
     .schedule-section .schedule-group-body { grid-template-columns: 1fr; gap: 22px; }
     .schedule-subjects-grid { grid-template-columns: repeat(2, 1fr); }
@@ -3956,7 +3965,11 @@ select {
     margin-bottom: 0;
 }
 .footer-large-link {
+    display: inline-flex;
+    align-items: center;
     margin-top: 16px;
+    min-height: 44px;
+    padding-block: 8px;
     font-size: 32px !important;
     font-weight: 600 !important;
     letter-spacing: -1.28px;
@@ -4808,6 +4821,12 @@ select {
     .footer-large-link {
         font-size: 22px;
     }
+    .footer-column a {
+        min-height: 44px;
+        padding-block: 6px;
+        display: inline-flex;
+        align-items: center;
+    }
 }
 
 @media (max-width: 360px) {
@@ -5656,6 +5675,104 @@ body.is-menu-open .wa-float { display: none; }
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
+/* ==========================================================================
+   it.10 — финальные фиксы 5 mobile/desktop багов (2026-05-10)
+   ========================================================================== */
+
+/* F1. Mobile hero overflow: защита для всех .page-hero @ ≤520 — никаких выпадаюших h1 */
+@media (max-width: 520px) {
+    .page-hero {
+        overflow-x: clip;
+    }
+    .page-hero h1,
+    .page-hero .page-hero-text,
+    .page-hero .eyebrow {
+        max-width: 100% !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal;
+    }
+    .page-hero-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .page-hero-actions > * {
+        flex: 0 1 auto;
+        max-width: 100%;
+    }
+    /* H1 на детских лендингах — поджимаем размер чтобы не выезжал */
+    .page-program .page-hero--program .page-hero-copy h1,
+    .page-pedagogi .page-hero h1,
+    .page-programmy .page-hero h1 {
+        font-size: clamp(22px, 6.4vw, 28px) !important;
+        line-height: 1.18 !important;
+    }
+}
+
+/* F2. /pedagogi/ mobile: одна колонка, никаких min-height-дыр */
+@media (max-width: 720px) {
+    .page-pedagogi .teacher-grid,
+    .page-pedagogi .teacher-grid-rich {
+        grid-template-columns: 1fr !important;
+        gap: 16px;
+    }
+    .page-pedagogi .teacher-card {
+        min-height: 0;
+    }
+    .page-pedagogi .teacher-search,
+    .page-pedagogi .filter-row {
+        margin-bottom: 16px;
+    }
+}
+
+/* F3. /programmy/ desktop: ровный grid, карточки одинаковой высоты */
+@media (min-width: 981px) {
+    .page-programmy .program-card-grid {
+        grid-auto-rows: 1fr;
+        align-items: stretch;
+    }
+    .page-programmy .program-card-grid .program-card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .page-programmy .program-card__body {
+        flex: 1 1 auto;
+    }
+    .page-programmy .program-card__cta,
+    .page-programmy .program-card__pin,
+    .page-programmy .program-card .button {
+        margin-top: auto;
+    }
+}
+
+/* F4. Float-чип / sticky-CTA не перекрывает submit на /kontakty/ и /meropriyatiya/ */
+@media (max-width: 1024px) {
+    body.has-floating-cta.page-kontakty .lead-form,
+    body.has-floating-cta.page-kontakty form[data-lead-form],
+    body.has-floating-cta.page-kontakty .contact-shell,
+    body.has-floating-cta.page-meropriyatiya .lead-form,
+    body.has-floating-cta.page-meropriyatiya form[data-lead-form],
+    body.has-floating-cta.page-meropriyatiya .events-grid,
+    body.has-floating-cta.page-meropriyatiya .final-lead-cta {
+        padding-bottom: 110px;
+    }
+    /* На самом контейнере form — добавим scroll-margin чтобы при якоре было видно сверху */
+    .lead-form, form[data-lead-form], #lead-form {
+        scroll-margin-top: 80px;
+    }
+}
+
+/* F5. /o-centre/ desktop: H1 не наезжает на header */
+@media (min-width: 981px) {
+    .page-o-centre .page-hero {
+        padding-top: 96px;
+    }
+    .page-o-centre .page-hero h1 {
+        margin-top: 0;
+        padding-top: 8px;
+    }
+}
+
 /* ========= alumni_schools ========= */
 .alumni-schools {
     position: relative;
@@ -6268,6 +6385,17 @@ body.is-menu-open .wa-float { display: none; }
 .page-hero + .section,
 .speech-hero + .section {
     margin-top: 18px;
+}
+
+/* Финальный лид-CTA отделяем от предыдущей секции дополнительным воздухом, */
+/* чтобы фиолетовый блок не приклеивался к карточке секции. */
+.section + .final-lead-cta,
+.page-hero + .final-lead-cta {
+    margin-top: 36px;
+}
+@media (max-width: 860px) {
+    .section + .final-lead-cta,
+    .page-hero + .final-lead-cta { margin-top: 24px; }
 }
 
 /* --- Единая DNA H2 для блоков на программных страницах --- */
@@ -7335,4 +7463,158 @@ body.is-menu-open .wa-float { display: none; }
     margin-top: 32px;
     padding-top: 0;
     border-top: 0;
+}
+
+/* ========================================================
+   Final Lead CTA — рендерится в base.html на страницах, где
+   нет своей лид-формы (только /meropriyatiya/, /politika-...).
+   Бренд-фиолетовый тон, в одном языке с prices-cta и cta_final.
+   ======================================================== */
+.final-lead-cta {
+    padding: 80px 70px;
+    background: var(--purple);
+    color: #fff;
+    border-radius: 28px;
+    box-shadow: 0 28px 60px rgba(60, 50, 130, 0.22);
+    margin: 32px auto;
+    width: min(1580px, calc(100% - 12px));
+}
+.final-lead-cta__shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.final-lead-cta .eyebrow {
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0;
+}
+.final-lead-cta__copy h2 {
+    margin: 14px 0 0;
+    color: #fff;
+    font-size: clamp(28px, 3.2vw, 40px);
+    font-weight: 700;
+    letter-spacing: -1.2px;
+    line-height: 1.15;
+}
+.final-lead-cta__lead {
+    margin: 16px 0 0;
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 520px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+.final-lead-cta__form.lead-inline,
+.final-lead-cta__form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 28px;
+    background: #fff;
+    border-radius: 20px;
+    border: 0;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.12);
+    align-items: stretch;
+}
+.final-lead-cta__form input[type="text"],
+.final-lead-cta__form input[type="tel"] {
+    min-height: 52px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--text);
+    font-size: 16px;
+}
+.final-lead-cta__form .button {
+    grid-column: 1 / -1;
+    min-height: 56px;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 14px;
+}
+.final-lead-cta__disclaimer {
+    grid-column: 1 / -1;
+    margin: 4px 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--muted);
+}
+.final-lead-cta__disclaimer a {
+    color: var(--text);
+    text-decoration: underline;
+}
+.final-lead-cta .form-status {
+    grid-column: 1 / -1;
+    min-height: 18px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* На политике — мягче: блок не должен забивать чтение. */
+body.page-policy .final-lead-cta,
+.page-policy .final-lead-cta {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+    padding: 56px 60px;
+}
+.page-policy .final-lead-cta .eyebrow { color: var(--muted); }
+.page-policy .final-lead-cta__copy h2 { color: var(--text); }
+.page-policy .final-lead-cta__lead { color: var(--muted); }
+.page-policy .final-lead-cta__form { box-shadow: 0 12px 28px rgba(40, 20, 10, 0.08); }
+
+@media (max-width: 1100px) {
+    .final-lead-cta { padding: 64px 48px; }
+    .final-lead-cta__shell { gap: 36px; }
+}
+@media (max-width: 860px) {
+    .final-lead-cta {
+        padding: 56px 28px;
+        border-radius: 24px;
+    }
+    .final-lead-cta__shell {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+    .final-lead-cta__form {
+        grid-template-columns: 1fr 1fr;
+        padding: 22px;
+    }
+    .page-policy .final-lead-cta { padding: 40px 24px; }
+}
+@media (max-width: 520px) {
+    .final-lead-cta {
+        padding: 40px 20px;
+        border-radius: 20px;
+    }
+    .final-lead-cta__form {
+        grid-template-columns: 1fr;
+        padding: 18px;
+        gap: 10px;
+    }
+    .final-lead-cta__form .button { min-height: 52px; }
+}
+
+/* P2-3 — iOS auto-zoom fix: 16px минимум на инпутах */
+@media (max-width: 520px) {
+    input,
+    textarea,
+    select {
+        font-size: 16px;
+    }
+}
+
+/* P2-4 — .meet-photo не должна выезжать за родителя на desktop ~19px.
+   У базового .meet-photo right:-40px width:620px, у .meet-strip-green right:-14px width:680px.
+   В обоих случаях правый край упирается в границу контейнера или вылетает
+   на ≈19 px. Жёстко ограничиваем фото шириной родителя. */
+.meet-photo {
+    max-width: 100%;
+    height: auto;
+}
+.meet-strip-green .meet-photo {
+    max-width: 100%;
 }

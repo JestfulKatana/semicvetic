@@ -10,3 +10,9 @@ docs/figma-export/
 design/
 .claude/logs/
 .claude/settings.local.json
+.lazyweb/
+.designs/
+.codex
+frontend-bundle*/
+frontend-bundle*.zip
+*.zip

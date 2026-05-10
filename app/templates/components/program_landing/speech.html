@@ -18,10 +18,14 @@
             <p class="pl-hero-lead" style="color: var(--pl-soft); max-width:600px;">Каждая мама ребёнка-«молчуна» хоть раз гуглила «когда идти к&nbsp;логопеду». На&nbsp;занятии знакомства мы&nbsp;посмотрим речь, слух, моторику. И&nbsp;скажем правду&nbsp;— а&nbsp;не «срочно к&nbsp;нам».</p>
             <p class="pl-hero-sub">15&nbsp;лет в&nbsp;Сергиевом Посаде. Репутация важнее одной записи.</p>
 
-            <form class="pl-hero-cta" method="post" action="#lead-form" style="margin-top:36px;">
+            <form class="pl-hero-cta" method="post" action="/api/lead" data-lead-form style="margin-top:36px;">
+                <input type="hidden" name="source_page" value="{{ request.path }}">
+                <input type="hidden" name="source_block" value="pl_speech_hero">
+                <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
                 <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required style="min-width:220px; max-width:280px;">
                 <button class="pl-btn pl-btn--accent" type="submit">Прийти познакомиться</button>
                 <span class="pl-cta-meta">30&nbsp;мин · бесплатно</span>
+                <p class="form-status" data-form-status></p>
             </form>
         </div>
 
@@ -336,11 +340,15 @@
             <h2>Приходите познакомиться</h2>
             <p>Логопед посмотрит ребёнка, поговорит с&nbsp;вами. Скажем честно: всё в&nbsp;порядке или есть над чем поработать. Без сценария «срочно лечиться».</p>
         </div>
-        <form class="pl-form" method="post" action="#lead-form">
+        <form class="pl-form" method="post" action="/api/lead" data-lead-form>
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="pl_speech_final">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
             <input class="pl-input" type="text" name="child_name" placeholder="Имя ребёнка и возраст">
             <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
             <button class="pl-btn pl-btn--md" type="submit">Записаться</button>
             <p class="pl-form-meta">Перезвоним в&nbsp;течение часа</p>
+            <p class="form-status" data-form-status></p>
         </form>
     </div>
 </section>

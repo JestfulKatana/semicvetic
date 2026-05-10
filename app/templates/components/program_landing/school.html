@@ -19,10 +19,14 @@
                 <strong>3–4 учителя</strong> на&nbsp;одном занятии. Каждый предмет ведёт свой&nbsp;специалист. <span class="pl-muted">— этого нет нигде в&nbsp;Сергиевом Посаде.</span>
             </div>
 
-            <form class="pl-hero-cta" method="post" action="#lead-form">
+            <form class="pl-hero-cta" method="post" action="/api/lead" data-lead-form>
+                <input type="hidden" name="source_page" value="{{ request.path }}">
+                <input type="hidden" name="source_block" value="pl_school_hero">
+                <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
                 <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
                 <button class="pl-btn" type="submit">Прийти познакомиться</button>
                 <span class="pl-cta-meta">40&nbsp;мин · бесплатно</span>
+                <p class="form-status" data-form-status></p>
             </form>
         </div>
 
@@ -332,11 +336,15 @@
             <h2>Приходите познакомиться с&nbsp;центром</h2>
             <p>Вместе с&nbsp;ребёнком придёте, посмотрите класс, познакомитесь с&nbsp;педагогами. После&nbsp;— поговорим: что у&nbsp;ребёнка получается, что подтянуть к&nbsp;1&nbsp;сентября.</p>
         </div>
-        <form class="pl-form" method="post" action="#lead-form">
+        <form class="pl-form" method="post" action="/api/lead" data-lead-form>
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="pl_school_final">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
             <input class="pl-input" type="text" name="child_name" placeholder="Имя ребёнка">
             <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
             <button class="pl-btn pl-btn--md" type="submit">Записаться</button>
             <p class="pl-form-meta">Перезвоним в&nbsp;течение часа в&nbsp;рабочее время</p>
+            <p class="form-status" data-form-status></p>
         </form>
     </div>
 </section>

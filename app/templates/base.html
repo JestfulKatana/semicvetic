@@ -3,11 +3,38 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ page_title or site_settings.get('site_name', 'Семицветик') }}</title>
-    <meta name="description" content="{{ page_description or site_settings.get('site_description', '') }}">
-    <meta property="og:title" content="{{ page_title or site_settings.get('site_name', 'Семицветик') }}">
-    <meta property="og:description" content="{{ page_description or site_settings.get('site_description', '') }}">
+    {# SEO: title/description с автодополнением, если оригинал слишком короткий. #}
+    {% set _site_name = site_settings.get('site_name', 'Семицветик') %}
+    {% set _raw_title = page_title or _site_name %}
+    {# 1) Если title уже длинный — оставляем как есть.
+       2) Если уже содержит «Семицветик» — добавляем уточнение «детский центр…», но без повторного "| Семицветик".
+       3) Иначе — добавляем уточнение и хвост сайта. #}
+    {% if (_raw_title|length) >= 40 %}
+        {% set _title_full = _raw_title %}
+    {% elif _site_name in _raw_title %}
+        {% set _title_full = _raw_title ~ ' — детский центр в Сергиевом Посаде' %}
+    {% else %}
+        {% set _title_full = _raw_title ~ ' — детский центр в Сергиевом Посаде | ' ~ _site_name %}
+    {% endif %}
+    {% set _raw_desc = page_description or site_settings.get('site_description', '') %}
+    {% set _desc_full = _raw_desc if (_raw_desc|length) >= 70 else ((_raw_desc ~ ' ') if _raw_desc else '') ~ 'Бесплатная консультация в детском центре «Семицветик», Сергиев Посад. ' ~ (site_settings.get('phone_2') or '8 (496) 551-33-85') ~ '.' %}
+    <title>{{ _title_full }}</title>
+    <meta name="description" content="{{ _desc_full }}">
+    {% set _og_image_path = page_og_image or url_for('static', filename='img/og-default.jpg') %}
+    {% set _og_image_abs = request.url_root.rstrip('/') ~ _og_image_path %}
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ _site_name }} — детский центр в Сергиевом Посаде">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:title" content="{{ _title_full }}">
+    <meta property="og:description" content="{{ _desc_full }}">
+    <meta property="og:image" content="{{ _og_image_abs }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ _title_full }}">
+    <meta name="twitter:description" content="{{ _desc_full }}">
+    <meta name="twitter:image" content="{{ _og_image_abs }}">
     <link rel="canonical" href="{{ request.base_url }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo-flower.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/logo-flower.png') }}">
@@ -48,6 +75,9 @@
 {% set vk_url = site_settings.get('social_vk') or '#' %}
 {% set tg_url = site_settings.get('social_tg') or '#' %}
 {% set has_final_cta = blocks is defined and (blocks|selectattr('component', 'equalto', 'cta_final')|list|length > 0) %}
+{# Хост-блоки, в которых уже встроена своя <form data-lead-form>. #}
+{% set _form_components = ['cta_final', 'form_strip', 'prices_table', 'contact_panel'] %}
+{% set has_inline_form_block = blocks is defined and (blocks|selectattr('component', 'in', _form_components)|list|length > 0) %}
 {% set is_program_landing = page is defined and page is not none and page.duration_min is defined %}
 {% set _path = request.path or '/' %}
 {% set body_class_map = {
@@ -57,14 +87,17 @@
     '/pedagogi/': 'page-pedagogi',
     '/ceny/': 'page-prices',
     '/meropriyatiya/': 'page-events',
-    '/kontakty/': 'page-kontakty'
+    '/kontakty/': 'page-kontakty',
+    '/politika-konfidencialnosti/': 'page-policy'
 } %}
 {% set body_page_class = body_class_map.get(_path, '') %}
 {% if not body_page_class and is_program_landing %}{% set body_page_class = 'page-program' %}{% endif %}
 {% if program_landing_e %}{% set body_page_class = body_page_class ~ ' page-pl-e pl-' ~ program_landing_e %}{% endif %}
 {% set has_floating_cta = _path in ('/ceny/', '/meropriyatiya/') or is_program_landing %}
-{% set has_lead_form = _path == '/' or has_final_cta or _path in ('/kontakty/', '/pedagogi/', '/programmy/', '/ceny/') or is_program_landing %}
-{% set cta_anchor = '#lead-form' if has_lead_form else ('#contact-panel' if _path != '/meropriyatiya/' else '/#lead-form') %}
+{# has_lead_form — флаг для подавления авто-вставки финального CTA в base.html.
+   true только там, где id="lead-form" реально есть в блоках страницы. #}
+{% set has_lead_form = _path == '/' or has_final_cta or program_landing_e or has_inline_form_block or _path == '/kontakty/' %}
+{% set cta_anchor = '#lead-form' %}
 <body class="{{ body_page_class }}{% if has_floating_cta %} has-floating-cta{% endif %}">
     <div class="site-shell">
         <header class="site-header">
@@ -155,6 +188,30 @@
 
         <main>
             {% block content %}{% endblock %}
+            {# Финальный лид-CTA — рендерится на любой публичной странице, где ещё нет своего lead-form. #}
+            {% if not has_lead_form %}
+            <section class="section final-lead-cta" id="lead-form">
+                <div class="final-lead-cta__shell">
+                    <div class="final-lead-cta__copy">
+                        <p class="eyebrow">Бесплатная консультация</p>
+                        <h2>Запишитесь — позвоним и подберём программу под ребёнка</h2>
+                        <p class="final-lead-cta__lead">Перезвоним в течение 15 минут в рабочее время, ответим на вопросы и предложим время для бесплатной консультации.</p>
+                    </div>
+                    <form class="final-lead-cta__form lead-inline" data-lead-form>
+                        <input type="hidden" name="source_page" value="{{ request.path }}">
+                        <input type="hidden" name="source_block" value="final_lead_cta">
+                        <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+                        <label class="sr-only" for="final-cta-name">Имя</label>
+                        <input id="final-cta-name" type="text" name="name" placeholder="Как к вам обращаться">
+                        <label class="sr-only" for="final-cta-phone">Телефон</label>
+                        <input id="final-cta-phone" type="tel" name="phone" placeholder="Введите телефон" required>
+                        <button class="button button-orange" type="submit">Записаться на консультацию</button>
+                        <p class="final-lead-cta__disclaimer">Отправляя заявку вы соглашаетесь на обработку персональных данных и принимаете условия <a href="/politika-konfidencialnosti/">политики конфиденциальности</a>.</p>
+                        <p class="form-status" data-form-status></p>
+                    </form>
+                </div>
+            </section>
+            {% endif %}
         </main>
 
         <footer class="site-footer">
