@@ -173,14 +173,18 @@ function initStickyCtaAnchor() {
 }
 
 function initVideoEmbed() {
-  document.querySelectorAll("[data-youtube-id]").forEach((stage) => {
+  document.querySelectorAll("[data-youtube-id], [data-vk-video-url]").forEach((stage) => {
     const btn = stage.querySelector(".video-play");
     if (!btn) return;
     btn.addEventListener("click", () => {
-      const id = stage.dataset.youtubeId;
       const iframe = document.createElement("iframe");
-      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
-      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      if (stage.dataset.youtubeId) {
+        iframe.src = `https://www.youtube-nocookie.com/embed/${stage.dataset.youtubeId}?autoplay=1&rel=0`;
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      } else {
+        iframe.src = stage.dataset.vkVideoUrl;
+        iframe.allow = "autoplay; encrypted-media; fullscreen; picture-in-picture";
+      }
       iframe.allowFullscreen = true;
       iframe.className = "video-iframe";
       iframe.title = "Видео о детском центре Семицветик";

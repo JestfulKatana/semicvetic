@@ -1183,12 +1183,17 @@
         <h2>{{ data.title or "Жизнь нашего центра в одном видео" }}</h2>
         {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
     </div>
-    <div class="video-stage"{% if data.youtube_id %} data-youtube-id="{{ data.youtube_id }}"{% endif %}>
+    {% set _yt_id = data.youtube_id %}
+    {% set _vk_url = data.vk_video_url %}
+    {% set _has_video = _yt_id or _vk_url %}
+    <div class="video-stage"
+        {% if _yt_id %} data-youtube-id="{{ _yt_id }}"{% endif %}
+        {% if _vk_url %} data-vk-video-url="{{ _vk_url }}"{% endif %}>
         <div class="video-cover">
             {{ pic('img/figma/place/video-cover.png', alt='Дети на занятии в детском центре Семицветик в Сергиевом Посаде', cls='video-cover-img', loading='eager') }}
             <div class="video-overlay" aria-hidden="true"></div>
             <p class="video-caption">Загляните в&nbsp;атмосферу нашего детского центра глазами вашего ребёнка</p>
-            {% if data.youtube_id %}
+            {% if _has_video %}
             <button class="video-play" type="button" aria-label="Воспроизвести видео">
                 <span aria-hidden="true">▶</span>
             </button>
