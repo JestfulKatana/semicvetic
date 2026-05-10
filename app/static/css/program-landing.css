@@ -72,6 +72,8 @@
 
 .pl-frame {
     width: 100%;
+    max-width: 1580px;
+    margin: 0 auto;
     background: var(--pl-bg);
     font-family: "Onest", sans-serif;
     color: var(--pl-ink);
