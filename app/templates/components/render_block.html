@@ -129,8 +129,7 @@
         </form>
     </div>
     <div class="hero-photo-wrap">
-        <img src="{{ url_for('static', filename='img/figma/gallery/graduation.webp') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
-        <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
+        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
         <div class="hero-photo-badges">
             <span class="photo-badge photo-badge-open"><img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="" aria-hidden="true">Открыто для родителей</span>
             <span class="photo-badge photo-badge-horoshee"><img src="{{ url_for('static', filename='img/figma/brand/badge-horoshee-mesto.png') }}" alt="" aria-hidden="true">Яндекс: «Хорошее место»</span>
@@ -247,7 +246,6 @@
         {% else %}
         <img src="{{ url_for('static', filename='img/figma/gallery/graduation.webp') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
         {% endif %}
-        <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
     </div>
     {% endif %}
     {% if is_program_detail %}</div>{% endif %}
