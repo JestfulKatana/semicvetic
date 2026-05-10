@@ -619,9 +619,10 @@
     text-align: right;
 }
 .pl-placeholder-note {
-    margin: 18px 0 0;
-    font-size: 12px;
-    color: #a39288;
+    display: none !important;
+}
+.pl-photo-tag {
+    display: none !important;
 }
 
 .pl-grid-2-tilt {

@@ -32,7 +32,7 @@
 
         {# "Доска" — расписание дня #}
         <div class="pl-board">
-            <div class="pl-board-meta">среда, 15&nbsp;мая · расписание дня</div>
+            <div class="pl-board-meta">типичный день · расписание занятий</div>
             <div class="pl-board-rows">
                 <div class="pl-board-row">
                     <span class="pl-board-num">1</span>
@@ -141,14 +141,13 @@
     </div>
 </section>
 
-{# Школы выпускников + история выпускницы #}
-<section class="pl-grid-2-tilt">
-    <div class="pl-section">
-        <span class="pl-eyebrow pl-eyebrow--muted">Куда идут наши</span>
-        <h2 class="pl-h2 pl-h2--sm" style="margin-top:10px;">Школы выпускников Семицветика</h2>
-        <p class="pl-text-body" style="margin: 0 0 28px;">Все школы Сергиева&nbsp;Посада. Учителя началки знают «семицветиковских» с&nbsp;первого дня.</p>
+{# Школы выпускников #}
+<section class="pl-section">
+    <span class="pl-eyebrow pl-eyebrow--muted">Куда идут наши</span>
+    <h2 class="pl-h2 pl-h2--sm" style="margin-top:10px;">Школы выпускников Семицветика</h2>
+    <p class="pl-text-body" style="margin: 0 0 28px; max-width: 640px;">Все школы Сергиева&nbsp;Посада. Учителя началки знают «семицветиковских» с&nbsp;первого дня.</p>
 
-        <div class="pl-schools">
+    <div class="pl-schools" style="max-width: 680px;">
             {# TODO: заменить на реальные данные после согласования с директором #}
             {% set _schools = [
                 ('Гимназия №5', 186, 100),
@@ -168,20 +167,7 @@
             </div>
             {% endfor %}
         </div>
-        <p class="pl-placeholder-note">// плейсхолдер: точные цифры&nbsp;— у&nbsp;Никиты</p>
-    </div>
-
-    <div class="pl-story-card">
-        <span class="pl-eyebrow pl-eyebrow--acid">История выпускника</span>
-        <div class="pl-story-photo">
-            <span class="pl-photo-tag">// фото: выпускница</span>
-        </div>
-        <strong class="pl-story-name">Маша Иванова</strong>
-        <span class="pl-story-meta">выпуск Семицветика&nbsp;— 2014, выпуск Лицея №24&nbsp;— 2024</span>
-        <p class="pl-story-quote">«К&nbsp;1&nbsp;классу я&nbsp;уже читала, считала и&nbsp;знала, что такое урок. В&nbsp;Лицее меня посадили в&nbsp;сильную группу&nbsp;— и&nbsp;я&nbsp;там осталась.»</p>
-        <p class="pl-story-now">Сейчас: МГТУ им.&nbsp;Баумана, 2&nbsp;курс</p>
-        <p class="pl-placeholder-note">// плейсхолдер: согласование с&nbsp;выпускником</p>
-    </div>
+    {# данные школ: уточнить у директора #}
 </section>
 
 {# Преподаватели #}
@@ -239,7 +225,7 @@
             <span class="pl-group-meta">утро · пн/ср/пт</span>
             <span class="pl-group-time">09:00–11:30</span>
             <span class="pl-group-slots">есть 2&nbsp;места</span>
-            <button class="pl-btn pl-btn--dark pl-btn--sm" type="button">Записать</button>
+            <a class="pl-btn pl-btn--dark pl-btn--sm" href="#lead-form">Записать</a>
         </div>
         <div class="pl-group-row is-full">
             <strong class="pl-group-name">Лучики</strong>
@@ -253,7 +239,7 @@
             <span class="pl-group-meta">вечер · пн/ср/пт</span>
             <span class="pl-group-time">17:30–20:00</span>
             <span class="pl-group-slots">есть 4&nbsp;места</span>
-            <button class="pl-btn pl-btn--dark pl-btn--sm" type="button">Записать</button>
+            <a class="pl-btn pl-btn--dark pl-btn--sm" href="#lead-form">Записать</a>
         </div>
     </div>
     <div class="pl-note">

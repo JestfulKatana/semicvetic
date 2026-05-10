@@ -93,6 +93,7 @@
 {% set body_page_class = body_class_map.get(_path, '') %}
 {% if not body_page_class and is_program_landing %}{% set body_page_class = 'page-program' %}{% endif %}
 {% if program_landing_e %}{% set body_page_class = body_page_class ~ ' page-pl-e pl-' ~ program_landing_e %}{% endif %}
+{% if is_program_landing and page is defined and page.slug %}{% set body_page_class = body_page_class ~ ' page-' ~ page.slug %}{% endif %}
 {% set has_floating_cta = _path in ('/ceny/', '/meropriyatiya/') or is_program_landing %}
 {# has_lead_form — флаг для подавления авто-вставки финального CTA в base.html.
    true только там, где id="lead-form" реально есть в блоках страницы. #}
@@ -222,8 +223,6 @@
                     <a href="/o-centre/">О нас</a>
                     <a href="/pedagogi/">Педагоги</a>
                     <a href="/o-centre/#preimushchestva">Преимущества</a>
-                    <a href="/#lead-form">Баннер экскурсия</a>
-                    <a href="/#lead-form">Чем отличаемся от сада</a>
                     <a href="/#reviews">Отзывы</a>
                     <a href="/kontakty/">Контакты</a>
                     <a href="/#video">Видео</a>
@@ -262,6 +261,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
+                <span class="footer-copy">© 2009–2026 Семицветик</span>
                 <a href="/politika-konfidencialnosti/">Политика использования файлов cookie</a>
                 <a href="/politika-konfidencialnosti/">Политика обработки персональных данных</a>
             </div>
