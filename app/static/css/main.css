@@ -1547,7 +1547,7 @@ select {
 .meet-badge-4 { right: 14px; top: 292px; width: 320px; transform: rotate(-6deg); }
 
 .meet-strip-green {
-    background: linear-gradient(135deg, #8bcf3c 0%, #6bbd29 60%, #3fa01e 100%);
+    background: linear-gradient(135deg, #f07030 0%, #e06022 60%, #c04e10 100%);
     color: #fcf8f4;
 }
 .meet-strip-green {
@@ -1577,7 +1577,7 @@ select {
     margin-top: 2px;
 }
 .meet-strip-green .meet-point-ico {
-    color: #ffee51;
+    color: #fcf8f4;
 }
 .meet-strip-green .meet-lead {
     margin-top: 12px;
@@ -1592,7 +1592,7 @@ select {
     max-width: none;
     opacity: 0.96;
     border-radius: 22px;
-    box-shadow: 0 28px 70px rgba(24, 70, 14, 0.26);
+    box-shadow: 0 28px 70px rgba(80, 28, 8, 0.30);
 }
 .meet-strip-green .meet-badge {
     height: auto;
@@ -1613,6 +1613,7 @@ select {
 .meet-strip-green .meet-sub,
 .meet-strip-green .meet-disclaimer { color: #fcf8f4; }
 .meet-sub-accent-yellow { color: #ffee51; }
+.meet-strip-green .meet-sub-accent-yellow { color: #fcf8f4; }
 .button-yellow {
     height: 48px;
     padding: 0 16px;
