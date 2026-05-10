@@ -129,7 +129,7 @@
         </form>
     </div>
     <div class="hero-photo-wrap">
-        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
+        <img src="{{ url_for('static', filename='img/figma/gallery/graduation.webp') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
         <div class="hero-photo-badges">
             <span class="photo-badge photo-badge-open"><img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="" aria-hidden="true">Открыто для родителей</span>
@@ -245,7 +245,7 @@
         {% elif page_slug == 'detskij-lager' %}
         {{ pic('img/figma/gallery/balloons.png', alt='Детский лагерь — Семицветик') }}
         {% else %}
-        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
+        <img src="{{ url_for('static', filename='img/figma/gallery/graduation.webp') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
         {% endif %}
         <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
     </div>
@@ -400,7 +400,7 @@
         </form>
     </div>
     <div class="meet-visual{% if data.visual_variant %} meet-visual-{{ data.visual_variant }}{% endif %}" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename=data.image or 'img/figma/hero-boy-camera.png') }}" alt="">
+        <img class="meet-photo" src="{{ url_for('static', filename=data.image or 'img/figma/gallery/graduation.webp') }}" alt="">
     </div>
 </section>
 {#
@@ -430,7 +430,7 @@
         </form>
     </div>
     <div class="meet-visual" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
+        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/gallery/graduation.webp') }}" alt="">
         <span class="meet-badge-hero">
             <strong>Бесплатная консультация</strong>
             <em>15 минут по&nbsp;телефону</em>
