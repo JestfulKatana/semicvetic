@@ -18,7 +18,7 @@
 <section class="speech-hero">
     <div class="speech-hero-actions">
         <a class="soft-button" href="{{ url_for('main.home') }}">← На главную</a>
-        <button class="soft-button" type="button">Поделиться</button>
+        <button class="soft-button" type="button" data-share>Поделиться</button>
     </div>
     <div class="speech-hero-grid">
         <div class="speech-hero-copy">
@@ -141,7 +141,7 @@
 <section class="page-hero{% if is_program_detail %} page-hero--program{% endif %}">
     <div class="page-hero-actions">
         <a class="soft-button" href="{{ url_for('main.home') }}">← На главную</a>
-        {% if not is_program_detail %}<button class="soft-button" type="button">Поделиться</button>{% endif %}
+        {% if not is_program_detail %}<button class="soft-button" type="button" data-share>Поделиться</button>{% endif %}
     </div>
     {% if is_program_detail %}<div class="page-hero-grid"><div class="page-hero-copy">{% endif %}
     {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
@@ -596,7 +596,6 @@
     ('school', 'Подготовка к\u00a0школе'),
     ('english', 'Английский язык'),
     ('early', 'Комплексное развитие'),
-    ('speech', 'Логопедия'),
     ('art', 'Изостудия и\u00a0Лепка'),
     ('psychology', 'Программа «Отличник»'),
     ('camp', 'Детский лагерь'),
@@ -697,7 +696,10 @@
         {% endfor %}
     </div>
     {% if show_teacher_filters %}
-    <p class="filter-empty" data-teacher-empty hidden>По&nbsp;запросу ничего не&nbsp;нашлось. Попробуйте сбросить фильтры.</p>
+    <div class="filter-empty-wrap" data-teacher-empty hidden>
+        <p>По&nbsp;запросу ничего не&nbsp;нашлось.</p>
+        <button class="chip is-active" type="button" data-teacher-reset>Показать всех педагогов</button>
+    </div>
     {% endif %}
     {% set team = data.get('team_stats') %}
     {% if team %}
@@ -1185,9 +1187,8 @@
     </div>
     <div class="video-stage">
         <div class="video-cover">
-            {{ pic('img/figma/place/video-cover.png', alt='', cls='video-cover-img', loading='eager') }}
+            {{ pic('img/figma/place/video-cover.png', alt='Дети на занятии в детском центре Семицветик в Сергиевом Посаде', cls='video-cover-img', loading='eager') }}
             <div class="video-overlay" aria-hidden="true"></div>
-            <button class="video-play" type="button" aria-label="Смотреть видео"><span>▶</span></button>
             <p class="video-caption">Загляните в&nbsp;атмосферу нашего детского центра глазами вашего ребёнка</p>
         </div>
     </div>

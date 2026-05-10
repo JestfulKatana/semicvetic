@@ -134,6 +134,21 @@ function initTeacherFilters() {
       apply();
     });
   }
+
+  const resetBtn = document.querySelector("[data-teacher-reset]");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      state.cat = "all";
+      state.q = "";
+      if (search) search.value = "";
+      if (filterBar) {
+        filterBar.querySelectorAll(".chip").forEach((node) => {
+          node.classList.toggle("is-active", node.dataset.filterCategory === "all");
+        });
+      }
+      apply();
+    });
+  }
 }
 
 function initScrollState() {
@@ -196,5 +211,12 @@ document.querySelectorAll("[data-lead-form]").forEach((form) => {
         statusNode.textContent = error.message || "Ошибка отправки";
       }
     }
+  });
+});
+
+document.querySelectorAll("[data-share]").forEach((btn) => {
+  if (!navigator.share) { btn.hidden = true; return; }
+  btn.addEventListener("click", () => {
+    navigator.share({ title: document.title, url: location.href }).catch(() => {});
   });
 });
