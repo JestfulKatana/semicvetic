@@ -172,11 +172,30 @@ function initStickyCtaAnchor() {
   });
 }
 
+function initVideoEmbed() {
+  document.querySelectorAll("[data-youtube-id]").forEach((stage) => {
+    const btn = stage.querySelector(".video-play");
+    if (!btn) return;
+    btn.addEventListener("click", () => {
+      const id = stage.dataset.youtubeId;
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      iframe.className = "video-iframe";
+      iframe.title = "Видео о детском центре Семицветик";
+      stage.innerHTML = "";
+      stage.appendChild(iframe);
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initProgramFilters();
   initTeacherFilters();
   initScrollState();
   initStickyCtaAnchor();
+  initVideoEmbed();
 });
 
 document.querySelectorAll("[data-lead-form]").forEach((form) => {
