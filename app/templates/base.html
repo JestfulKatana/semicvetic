@@ -126,7 +126,7 @@
 
                 <div class="header-contact">
                     <a class="header-phone" href="tel:{{ phone|phone_href }}">{{ phone }}</a>
-                    <span class="header-city">{{ address.split(',')[0] if address else 'г. Сергиев Посад' }}</span>
+                    <span class="header-city">{{ address.split(',', 2)[2].strip() if address else 'г. Сергиев Посад' }}</span>
                 </div>
 
                 <div class="header-socials" aria-label="Социальные сети">
