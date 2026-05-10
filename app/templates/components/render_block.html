@@ -1194,13 +1194,13 @@
 {% elif data.variant == "strip" %}
 <section class="photo-strip" aria-label="Фотографии центра">
     <div class="photo-strip-row photo-strip-row-1">
-        {% set photos_top = data.photos_top or ['img/figma/gallery/pumpkins.png', 'img/figma/gallery/balloons.png', 'img/figma/gallery/girl-paints.png', 'img/figma/gallery/mums-phones.png', 'img/figma/gallery/letters.png', 'img/figma/gallery/graduation.png'] %}
+        {% set photos_top = data.photos_top or ['img/figma/gallery/pumpkins.png', 'img/figma/gallery/balloons.png', 'img/figma/gallery/girl-paints.png', 'img/figma/gallery/letters.png', 'img/figma/gallery/graduation.png'] %}
         {% for photo in photos_top %}
         {{ pic(photo, alt='') }}
         {% endfor %}
     </div>
     <div class="photo-strip-row photo-strip-row-2">
-        {% set photos_bottom = data.photos_bottom or ['img/figma/gallery/croc-family.png', 'img/figma/gallery/bear.png', 'img/figma/gallery/girl-xmas.png', 'img/figma/gallery/kids-xmas.png', 'img/figma/gallery/pumpkin-kids.png', 'img/figma/gallery/girl-gift.png'] %}
+        {% set photos_bottom = data.photos_bottom or ['img/figma/gallery/croc-family.png', 'img/figma/gallery/bear.png', 'img/figma/gallery/kids-xmas.png', 'img/figma/gallery/pumpkin-kids.png', 'img/figma/gallery/girl-gift.png'] %}
         {% for photo in photos_bottom %}
         {{ pic(photo, alt='') }}
         {% endfor %}
