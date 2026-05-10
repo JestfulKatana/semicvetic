@@ -46,7 +46,7 @@ h1 { font-size: 64px; font-weight: 760; }
 h2 { font-size: 46px; font-weight: 740; }
 h3 { font-size: 25px; font-weight: 700; }
 
-.site-shell { min-height: 100vh; overflow: hidden; }
+.site-shell { min-height: 100vh; overflow-x: hidden; }
 .sr-only {
     position: absolute;
     width: 1px;
