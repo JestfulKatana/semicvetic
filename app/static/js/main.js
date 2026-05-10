@@ -172,6 +172,25 @@ function initStickyCtaAnchor() {
   });
 }
 
+function initReviewsNav() {
+  const grid = document.querySelector("[data-reviews-grid]");
+  const prev = document.querySelector("[data-reviews-prev]");
+  const next = document.querySelector("[data-reviews-next]");
+  if (!grid || !prev || !next) return;
+
+  const cardWidth = () => (grid.firstElementChild?.offsetWidth || 360) + 14;
+
+  const update = () => {
+    prev.disabled = grid.scrollLeft <= 1;
+    next.disabled = grid.scrollLeft >= grid.scrollWidth - grid.clientWidth - 1;
+  };
+
+  prev.addEventListener("click", () => grid.scrollBy({ left: -cardWidth(), behavior: "smooth" }));
+  next.addEventListener("click", () => grid.scrollBy({ left: cardWidth(), behavior: "smooth" }));
+  grid.addEventListener("scroll", update, { passive: true });
+  update();
+}
+
 function initVideoEmbed() {
   document.querySelectorAll("[data-youtube-id], [data-vk-video-url]").forEach((stage) => {
     const btn = stage.querySelector(".video-play");
@@ -200,6 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollState();
   initStickyCtaAnchor();
   initVideoEmbed();
+  initReviewsNav();
 });
 
 document.querySelectorAll("[data-lead-form]").forEach((form) => {

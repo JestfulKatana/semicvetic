@@ -2584,6 +2584,32 @@ select {
     font-weight: 700;
     letter-spacing: -0.25px;
 }
+.reviews-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+    flex-shrink: 0;
+}
+.reviews-nav {
+    display: flex;
+    gap: 8px;
+}
+.reviews-arrow {
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid rgba(51, 47, 46, 0.15);
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    color: var(--text);
+    transition: background 0.15s, border-color 0.15s;
+    padding: 0;
+}
+.reviews-arrow:hover { background: var(--surface); border-color: rgba(51, 47, 46, 0.3); }
+.reviews-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
 .reviews-summary {
     min-width: 230px;
     padding: 20px 22px;
