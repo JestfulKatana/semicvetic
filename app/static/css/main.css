@@ -530,7 +530,7 @@ body.is-menu-open { overflow: hidden; }
 }
 .hero-photo-badges {
     position: absolute;
-    inset: 22px;
+    inset: 22px 22px 22px 58px;
     display: block;
     z-index: 3;
     pointer-events: none;
@@ -4120,7 +4120,7 @@ select {
     .hero-home {
         grid-template-columns: 1fr;
     }
-    .hero-photo-wrap { min-height: 520px; }
+    .hero-photo-wrap { min-height: 520px; margin-left: 0; }
     .teacher-grid,
     .comparison-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .steps-grid,
