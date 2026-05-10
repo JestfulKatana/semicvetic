@@ -1866,6 +1866,7 @@ select {
 }
 .filter-empty-wrap[hidden] { display: none !important; }
 .program-line[hidden] { display: none !important; }
+.teacher-card[hidden] { display: none !important; }
 .program-list {
     display: grid;
     gap: 36px;
@@ -6996,6 +6997,16 @@ body.is-menu-open .wa-float { display: none; }
 }
 .program-card__text-link:hover {
     color: #333;
+}
+.program-card__text-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+}
+.program-card__cta .button-dark,
+.program-card__photo {
+    position: relative;
+    z-index: 1;
 }
 
 /* ============================================================

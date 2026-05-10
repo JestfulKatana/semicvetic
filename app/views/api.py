@@ -22,7 +22,7 @@ def normalize_phone(raw_phone: str) -> str:
         digits = "7" + digits[1:]
     if len(digits) == 11 and digits.startswith("7"):
         return f"+{digits}"
-    raise ValueError("Укажите телефон в формате +7")
+    raise ValueError("Введите корректный номер телефона — 11 цифр, например: +7 (999) 123-45-67")
 
 
 @bp.post("/lead")

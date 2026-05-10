@@ -59,7 +59,7 @@ function initProgramFilters() {
   const applyFilter = () => {
     const ageRange = parseAge(state.age);
     let visible = 0;
-    list.querySelectorAll(".program-line").forEach((card) => {
+    list.querySelectorAll(".program-card").forEach((card) => {
       const ageMin = Number(card.dataset.ageMin || 0);
       const ageMax = Number(card.dataset.ageMax || 18);
       const priceUnit = (card.dataset.priceUnit || "").toLowerCase();

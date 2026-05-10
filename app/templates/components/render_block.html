@@ -276,7 +276,7 @@
     <div class="trust-grid">
         <article class="trust-card trust-card--red">
             <strong class="trust-card__value">15 лет</strong>
-            <span class="trust-card__label">Работаем и развиваем детей в Сергиевом Посаде</span>
+            <span class="trust-card__label">работаем и развиваем детей в Сергиевом Посаде</span>
         </article>
         <article class="trust-card trust-card--yellow">
             <strong class="trust-card__value">&gt;70%</strong>
@@ -816,7 +816,7 @@
     </div>
     {% if page_slug == 'otlichnik' %}
     <div class="faq-list">
-        <details class="faq-item" open>
+        <details class="faq-item">
             <summary>
                 <span class="faq-question">Вы делаете с ребёнком домашку или просто объясняете?</span>
                 <span class="faq-chevron" aria-hidden="true">⌄</span>
@@ -869,7 +869,7 @@
     </div>
     {% elif page_slug == 'izostudia' %}
     <div class="faq-list">
-        <details class="faq-item" open>
+        <details class="faq-item">
             <summary>
                 <span class="faq-question">Нужно ли приносить материалы?</span>
                 <span class="faq-chevron" aria-hidden="true">⌄</span>
@@ -923,7 +923,7 @@
     {% else %}
     <div class="faq-list">
         {% for item in data.get("items", []) %}
-        <details class="faq-item" {% if loop.first %}open{% endif %}>
+        <details class="faq-item">
             <summary>
                 <span class="faq-question">{{ item.q }}</span>
                 <span class="faq-chevron" aria-hidden="true">⌄</span>
@@ -1327,7 +1327,6 @@
                 {% endfor %}
             </div>
             {% endif %}
-            <a class="button contact-map-btn" href="#contact-map">Открыть карту</a>
             <div class="contact-meta">
                 <div>
                     <a class="qr-code" href="{{ tg_href }}" target="_blank" rel="noopener" aria-label="Открыть Telegram Семицветика">
@@ -1812,9 +1811,10 @@
         {% for event in ev_list %}
         <article class="events-teaser-card">
             {% if event.event_date %}
+            {%- set _ru_months = ['', 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'] -%}
             <div class="events-teaser-date">
-                <strong>{{ event.event_date.strftime('%d') if event.event_date.strftime is defined else event.event_date }}</strong>
-                <span>{{ event.event_date.strftime('%B') if event.event_date.strftime is defined else '' }}</span>
+                <strong>{{ event.event_date.strftime('%d') }}</strong>
+                <span>{{ _ru_months[event.event_date.month] }}</span>
             </div>
             {% endif %}
             <h3>{{ event.title }}</h3>
