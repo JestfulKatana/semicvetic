@@ -247,7 +247,15 @@
                     <p class="footer-address">{{ address }}</p>
                 </div>
                 <div class="footer-qr">
-                    <div class="qr-code" aria-hidden="true"></div>
+                    {% if tg_url and tg_url != '#' %}
+                    <a class="qr-code" href="{{ tg_url }}" target="_blank" rel="noopener" aria-label="Открыть Telegram Семицветика">
+                        <img src="{{ url_for('static', filename='img/qr-telegram.svg') }}" alt="" aria-hidden="true" width="52" height="52">
+                    </a>
+                    {% else %}
+                    <div class="qr-code" aria-hidden="true">
+                        <img src="{{ url_for('static', filename='img/qr-telegram.svg') }}" alt="" aria-hidden="true" width="52" height="52">
+                    </div>
+                    {% endif %}
                     <span>Мы в&nbsp;Telegram</span>
                     <div class="footer-socials">
                         {% if vk_url and vk_url != '#' %}
