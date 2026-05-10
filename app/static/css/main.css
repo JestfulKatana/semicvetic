@@ -4433,6 +4433,17 @@ select {
 .trust-card:nth-child(n+5) {
     grid-column: span 4;
 }
+.trust-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--trust-accent, var(--orange)) 12%, transparent);
+    color: var(--trust-accent, var(--orange));
+    flex-shrink: 0;
+}
 .trust-card__value {
     font-family: 'Onest', sans-serif;
     font-size: clamp(40px, 4vw, 60px);
