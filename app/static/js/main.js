@@ -263,3 +263,19 @@ document.querySelectorAll("[data-share]").forEach((btn) => {
     navigator.share({ title: document.title, url: location.href }).catch(() => {});
   });
 });
+
+function ymGoal(name) {
+  if (typeof ym !== "undefined") ym(window._ymId || 0, "reachGoal", name);
+}
+
+document.querySelectorAll('a[href^="tel:"]').forEach((a) => {
+  a.addEventListener("click", () => ymGoal("goal_phone_click"));
+});
+
+document.querySelectorAll('a[href*="t.me"], a[href*="telegram"]').forEach((a) => {
+  a.addEventListener("click", () => ymGoal("goal_tg_click"));
+});
+
+document.querySelectorAll('a[href*="vk.com"]').forEach((a) => {
+  a.addEventListener("click", () => ymGoal("goal_vk_click"));
+});

@@ -349,7 +349,7 @@
                 </div>
                 <div class="tp-card-cta">
                     <a class="button button-dark" href="#lead-form">Записаться</a>
-                    <a class="tp-card-link" href="/{{ tab.slug }}/">Подробнее</a>
+                    <a class="tp-card-link" href="#lead-form">Подробнее</a>
                 </div>
             </div>
         </article>
@@ -485,7 +485,7 @@
                  data-age-max="{{ program.age_max or 18 }}"
                  data-price-unit="{{ program.price_unit or '' }}"
                  data-category="{{ program.category or '' }}">
-            <a class="program-card__photo" href="/{{ program.slug }}/" aria-label="Открыть {{ program.name }}">
+            <a class="program-card__photo" href="#lead-form" aria-label="Записаться на {{ program.name }}">
                 {% if program.image_url %}
                 {{ pic(program.image_url, alt=program.name) }}
                 {% else %}
@@ -526,7 +526,7 @@
                     </div>
                     <div class="program-card__cta">
                         <a class="button button-dark" href="#lead-form">Записаться</a>
-                        <a class="program-card__text-link" href="/{{ program.slug }}/">Подробнее</a>
+                        <a class="program-card__text-link" href="#lead-form">Подробнее</a>
                     </div>
                 </div>
             </div>
@@ -554,7 +554,7 @@
                     {% if program.price_unit %}<span class="program-price-unit">в {{ program.price_unit }}</span>{% endif %}
                 </div>
             </div>
-            <a class="program-link" href="/{{ program.slug }}/" aria-label="Открыть {{ program.name }}"></a>
+            <a class="program-link" href="#lead-form" aria-label="Записаться на {{ program.name }}"></a>
             {% if program.image_url %}
             {{ pic(program.image_url, alt='', cls='program-object-img') }}
             {% else %}
