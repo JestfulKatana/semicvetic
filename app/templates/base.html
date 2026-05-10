@@ -17,7 +17,7 @@
         {% set _title_full = _raw_title ~ ' — детский центр в Сергиевом Посаде | ' ~ _site_name %}
     {% endif %}
     {% set _raw_desc = page_description or site_settings.get('site_description', '') %}
-    {% set _desc_full = _raw_desc if (_raw_desc|length) >= 70 else ((_raw_desc ~ ' ') if _raw_desc else '') ~ 'Бесплатная консультация в детском центре «Семицветик», Сергиев Посад. ' ~ (site_settings.get('phone_2') or '8 (496) 551-33-85') ~ '.' %}
+    {% set _desc_full = _raw_desc if (_raw_desc|length) >= 70 else ((_raw_desc ~ ' ') if _raw_desc else '') ~ 'Бесплатная консультация в детском центре «Семицветик», Сергиев Посад. 8 (926) 578-03-07.' %}
     <title>{{ _title_full }}</title>
     <meta name="description" content="{{ _desc_full }}">
     {% set _og_image_path = page_og_image or url_for('static', filename='img/og-default.jpg') %}
@@ -69,8 +69,8 @@
     <!-- /Yandex.Metrika counter -->
     {% endif %}
 </head>
-{% set phone = site_settings.get('phone_1') or '8 (926) 366-57-87' %}
-{% set phone2 = site_settings.get('phone_2') or '8 (496) 551-33-85' %}
+{% set phone = '8 (926) 578-03-07' %}
+{% set phone2 = '' %}
 {% set address = site_settings.get('address') or 'г. Сергиев Посад' %}
 {% set vk_url = site_settings.get('social_vk') or '#' %}
 {% set tg_url = site_settings.get('social_tg') or '#' %}
@@ -171,7 +171,6 @@
                 </nav>
                 <div class="mobile-menu-contacts">
                     <a class="mobile-menu-phone" href="tel:{{ phone|phone_href }}">{{ phone }}</a>
-                    <a class="mobile-menu-phone" href="tel:{{ phone2|phone_href }}">{{ phone2 }}</a>
                     <p class="mobile-menu-address">{{ address }}</p>
                     <p class="mobile-menu-hours">{{ site_settings.get('hours', 'Работаем с 9:00 до 21:00') }}</p>
                 </div>
@@ -242,7 +241,6 @@
                     <a class="footer-contact-button" href="/kontakty/">Связаться с нами</a>
                     <strong class="footer-column-title footer-column-title-sm">Контакты</strong>
                     <p class="footer-phone">{{ phone }}</p>
-                    <p class="footer-phone">{{ site_settings.get('phone_2') }}</p>
                     <small>{{ site_settings.get('hours', 'Работаем с 9:00 до 21:00') }}</small>
                     <strong class="footer-column-title footer-column-title-sm">Адрес</strong>
                     <p class="footer-address">{{ address }}</p>
