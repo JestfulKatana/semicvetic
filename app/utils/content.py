@@ -77,11 +77,21 @@ def hydrate_blocks(blocks: list[dict], shared: dict) -> list[dict]:
         elif source == "program_schedule" and shared.get("current_program"):
             program = shared["current_program"]
             groups: dict[str, list] = {}
+            seen_slots: set[tuple[str, str, str]] = set()
             for slot in program.schedule_slots:
                 key = slot.group_name or "Группа"
+                time = slot.time_start if slot.time_start == slot.time_end else f"{slot.time_start}–{slot.time_end}"
+                normalized = (
+                    key.replace("\u00a0", " "),
+                    slot.day_of_week.replace("\u00a0", " "),
+                    time.replace("\u00a0", " "),
+                )
+                if normalized in seen_slots:
+                    continue
+                seen_slots.add(normalized)
                 groups.setdefault(key, []).append({
                     "day": slot.day_of_week,
-                    "time": f"{slot.time_start}–{slot.time_end}",
+                    "time": time,
                 })
             data["groups"] = [
                 {"title": title, "slots": slots}
