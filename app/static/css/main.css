@@ -4627,6 +4627,7 @@ select {
 }
 .soc-vk-svg { background: #0077ff; }
 .soc-tg-svg { background: #2aabee; }
+.soc-max-svg { background: linear-gradient(135deg, #3bc4f2 0%, #7a69ee 100%); }
 .contact-phones {
     display: flex;
     flex-wrap: wrap;

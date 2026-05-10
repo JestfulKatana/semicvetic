@@ -74,6 +74,7 @@
 {% set address = site_settings.get('address') or 'г. Сергиев Посад' %}
 {% set vk_url = site_settings.get('social_vk') or '#' %}
 {% set tg_url = site_settings.get('social_tg') or '#' %}
+{% set max_url = site_settings.get('social_max') %}
 {% set has_final_cta = blocks is defined and (blocks|selectattr('component', 'equalto', 'cta_final')|list|length > 0) %}
 {# Хост-блоки, в которых уже встроена своя <form data-lead-form>. #}
 {% set _form_components = ['cta_final', 'form_strip', 'prices_table', 'contact_panel'] %}
@@ -254,6 +255,9 @@
                         {% endif %}
                         {% if tg_url and tg_url != '#' %}
                         <a href="{{ tg_url }}" target="_blank" rel="noopener" aria-label="Telegram"><span class="soc-icon soc-tg" aria-hidden="true"></span></a>
+                        {% endif %}
+                        {% if max_url %}
+                        <a href="{{ max_url }}" target="_blank" rel="noopener" aria-label="Max"><span class="soc-icon soc-max-svg" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.06L2 22l4.94-1.37A9.96 9.96 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18a8 8 0 0 1-4.09-1.12l-.29-.17-3.02.84.84-3.02-.17-.29A8 8 0 1 1 12 20z"/></svg></span></a>
                         {% endif %}
                     </div>
                 </div>
