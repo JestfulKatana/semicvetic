@@ -131,7 +131,7 @@
     <div class="hero-photo-wrap">
         <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
         <div class="hero-photo-badges">
-            <span class="photo-badge photo-badge-open"><img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="" aria-hidden="true">Открыто для родителей</span>
+            <span class="photo-badge photo-badge-open"><img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="" aria-hidden="true">Социальное предприятие</span>
             <span class="photo-badge photo-badge-horoshee"><img src="{{ url_for('static', filename='img/figma/brand/badge-horoshee-mesto.png') }}" alt="" aria-hidden="true">Яндекс: «Хорошее место»</span>
         </div>
     </div>
@@ -322,8 +322,9 @@
 <section class="section top-programs-section top-programs-section--cards">
     <div class="top-programs-head">
         <div>
-            <h2>{{ data.title or "Топ-программы" }}</h2>
-            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+            <p class="eyebrow">Популярные направления</p>
+            <h2>{% if data.title and data.title != 'Топ-программы' %}{{ data.title }}{% else %}Программы центра{% endif %}</h2>
+            {% if data.subtitle %}<p class="section-lead">{{ data.subtitle }}</p>{% endif %}
         </div>
         <a class="soft-button soft-button-arrow" href="/programmy/">Все программы <span class="soft-arrow">→</span></a>
     </div>
@@ -358,21 +359,17 @@
 </section>
 
 {% elif block.component == "form_strip" %}
-{# === Концепция A (активна): фото без оверлеев, короткие тезисы списком под подзаголовком === #}
 {% set _strip_id = 'lead-form' if request.path == '/o-centre/' else '' %}
 <section class="section meet-strip"{% if _strip_id %} id="{{ _strip_id }}"{% endif %}>
     <div class="meet-copy">
-        <h2>{{ data.title or "Давайте знакомиться!" }}</h2>
+        <p class="eyebrow">Бесплатная консультация</p>
+        <h2>{% if is_home %}Подберём программу ребёнку{% else %}{{ data.title or "Подберём программу ребёнку" }}{% endif %}</h2>
         {% if data.subtitle %}
         <p class="meet-sub">{{ data.subtitle }}</p>
         {% else %}
-        <p class="meet-sub">Оставьте телефон, и&nbsp;убедитесь сами, почему <span class="meet-sub-accent">нам доверяют</span> более 3000 семей</p>
+        <p class="meet-sub">Оставьте телефон — перезвоним за&nbsp;15&nbsp;минут, расскажем о&nbsp;программах и&nbsp;подберём время для пробного занятия.</p>
         {% endif %}
         <ul class="meet-points">
-            <li class="meet-point">
-                <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>Расскажем о&nbsp;программе</span>
-            </li>
             <li class="meet-point">
                 <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 <span>Подберём педагога и&nbsp;время</span>
@@ -393,14 +390,9 @@
             <div class="meet-lead-row">
                 <label class="sr-only" for="strip-phone">Телефон</label>
                 <input id="strip-phone" type="tel" name="phone" placeholder="Введите телефон" required>
-                <button class="button button-acid" type="submit">Получить консультацию</button>
+                <button class="button button-orange" type="submit">Записаться на консультацию</button>
             </div>
             <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
-            <div class="meet-conditions" aria-label="Условия занятий">
-                <span>Пропустили&nbsp;— пересчитаем</span>
-                <span>2-й ребёнок или близнецы&nbsp;— скидка</span>
-                <span>Абонемент или разово&nbsp;— как удобно</span>
-            </div>
             <p class="form-status" data-form-status></p>
         </form>
     </div>
@@ -458,8 +450,9 @@
 <section class="section programs-section">
     <div class="section-head split-head">
         <div>
+            {% if not is_catalog %}<p class="eyebrow">Программы для дошкольников и школьников</p>{% endif %}
             <h2>{{ data.title }}</h2>
-            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+            {% if data.subtitle %}<p class="section-lead">{{ data.subtitle }}</p>{% endif %}
         </div>
         <a class="soft-button" href="/programmy/">Все программы →</a>
     </div>
@@ -725,8 +718,11 @@
             </div>
             {% endif %}
             {% if team.stats %}
+            {# Swap первых двух карточек: «100% с педагогическим образованием» раньше «14 педагогов в штате» — лучшая иерархия trust-факторов #}
+            {% set _ts = team.stats %}
+            {% set team_stats_ordered = ([_ts[1], _ts[0]] + (_ts[2:]|list)) if (_ts|length) >= 2 else _ts %}
             <div class="team-stats-grid">
-                {% for stat in team.stats %}
+                {% for stat in team_stats_ordered %}
                 <div class="team-stat">
                     <strong>{{ stat.value }}</strong>
                     <span>{{ stat.label }}</span>
@@ -1147,8 +1143,9 @@
 {# На главной хост якоря — hero-lead, на остальных — этот блок. #}
 <section class="section meet-strip meet-strip-green" id="{{ 'final-cta' if is_home else 'lead-form' }}">
     <div class="meet-copy">
+        <p class="eyebrow">Приходите на пробное</p>
         <h2>{{ data.title or "Записаться на\u00a0личную экскурсию" }}</h2>
-        <p class="meet-sub">{% if data.subtitle %}{{ data.subtitle }}{% else %}<span class="meet-sub-accent-yellow">Ответим на&nbsp;вопросы</span> по&nbsp;телефону, и&nbsp;пригласим в&nbsp;детский клуб на&nbsp;экскурсию{% endif %}</p>
+        <p class="meet-sub">{% if data.subtitle %}{{ data.subtitle }}{% else %}Перезвоним за&nbsp;15&nbsp;минут, ответим на&nbsp;вопросы и&nbsp;запишем на&nbsp;экскурсию по&nbsp;центру.{% endif %}</p>
         {% if data.points %}
         <ul class="meet-points meet-points-final">
             {% for point in data.points %}
@@ -1169,27 +1166,11 @@
                 <button class="button button-yellow" type="submit">Получить консультацию</button>
             </div>
             <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
-            <div class="meet-conditions" aria-label="Условия занятий">
-                <span>Пропустили&nbsp;— пересчитаем</span>
-                <span>2-й ребёнок или близнецы&nbsp;— скидка</span>
-                <span>Абонемент или разово&nbsp;— как удобно</span>
-            </div>
             <p class="form-status" data-form-status></p>
         </form>
     </div>
     <div class="meet-visual" aria-hidden="true">
         <img class="meet-photo" src="{{ url_for('static', filename='img/mockup/cta-kids.png') }}" alt="">
-        {% if page_slug == 'izostudia' %}
-        <span class="meet-badge meet-badge-1">✦ Все материалы включены</span>
-        <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Работы забирают домой</span>
-        <span class="meet-badge meet-badge-3 meet-badge-orange">✦ Без оценок и сравнений</span>
-        <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Группа до 8 детей</span>
-        {% else %}
-        <span class="meet-badge meet-badge-1">✦ Педагоги-практики</span>
-        <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Всё в&nbsp;одном центре</span>
-        <span class="meet-badge meet-badge-3 meet-badge-orange">✦ Пробное без&nbsp;спешки</span>
-        <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Группа по&nbsp;возрасту и&nbsp;уровню</span>
-        {% endif %}
     </div>
 </section>
 
