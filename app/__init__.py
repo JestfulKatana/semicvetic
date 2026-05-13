@@ -67,6 +67,20 @@ def create_app() -> Flask:
 
         return phone_href(value)
 
+    @app.context_processor
+    def inject_static_version():
+        static_dir = os.path.join(app.root_path, "static")
+        def _mtime(rel):
+            try:
+                return int(os.path.getmtime(os.path.join(static_dir, rel)))
+            except OSError:
+                return 0
+        return {
+            "css_main_v": _mtime("css/main.css"),
+            "css_pl_v": _mtime("css/program-landing.css"),
+            "js_main_v": _mtime("js/main.js"),
+        }
+
     with app.app_context():
         db.create_all()
         if app.config["AUTO_SEED"]:

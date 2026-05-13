@@ -1581,14 +1581,99 @@ select {
 .meet-badge-3 { right: 56px; top: 208px; width: 280px; transform: rotate(-2deg); }
 .meet-badge-4 { right: 14px; top: 292px; width: 320px; transform: rotate(-6deg); }
 
-.meet-strip-green {
-    background: linear-gradient(135deg, #f07030 0%, #d95818 100%);
+.meet-strip-green,
+.meet-strip-violet {
     color: #fcf8f4;
     border: 0;
     grid-template-columns: minmax(0, 1fr) minmax(320px, 460px);
     align-items: center;
     padding: 56px 56px;
     gap: 40px;
+    position: relative;
+    overflow: hidden;
+}
+.meet-strip-green {
+    background: linear-gradient(135deg, #f07030 0%, #d95818 100%);
+}
+.meet-strip-violet {
+    background: linear-gradient(135deg, #6359c2 0%, #4d44a8 100%);
+}
+/* Decorative petal in background */
+.meet-strip-green::before,
+.meet-strip-violet::before {
+    content: "";
+    position: absolute;
+    left: -60px;
+    bottom: -80px;
+    width: 280px;
+    height: 280px;
+    background: center/contain no-repeat;
+    opacity: 0.18;
+    transform: rotate(-18deg);
+    pointer-events: none;
+    z-index: 0;
+}
+.meet-strip-green::before { background-image: url("../img/figma/brand/petal-fill-green.svg"); }
+.meet-strip-violet::before { background-image: url("../img/figma/brand/petal-fill-yellow.svg"); }
+.meet-strip-green > *,
+.meet-strip-violet > * { position: relative; z-index: 1; }
+/* Violet variant — same skeleton as green */
+.meet-strip-violet .meet-copy { gap: 16px; max-width: 620px; }
+.meet-strip-violet .meet-copy > .eyebrow { color: #ffee51; }
+.meet-strip-violet .meet-copy h2 {
+    max-width: 620px;
+    font-size: clamp(28px, 3.2vw, 40px);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: #fcf8f4;
+}
+.meet-strip-violet .meet-sub {
+    max-width: 520px;
+    margin-top: 0;
+    color: rgba(252, 248, 244, 0.92);
+    font-size: 17px;
+    line-height: 1.45;
+}
+.meet-strip-violet .meet-point { color: rgba(252, 248, 244, 0.96); }
+.meet-strip-violet .meet-point-ico { color: #ffee51; }
+.meet-strip-violet .meet-lead { margin-top: 8px; }
+.meet-strip-violet .meet-lead-row input {
+    background: rgba(252, 248, 244, 0.94);
+    border-color: transparent;
+    color: var(--text);
+}
+.meet-strip-violet .meet-lead-row input:focus-visible {
+    border-color: #ffee51;
+    box-shadow: 0 0 0 3px rgba(255, 238, 81, 0.32);
+}
+.meet-strip-violet .meet-lead-row .button-yellow {
+    background: #ffee51;
+    color: #2d1d0a;
+    border-radius: 14px;
+    height: 52px;
+    padding: 0 22px;
+    font-weight: 700;
+}
+.meet-strip-violet .meet-lead-row .button-yellow:hover { background: #fce63a; }
+.meet-strip-violet .meet-disclaimer { color: rgba(252, 248, 244, 0.78); }
+.meet-strip-violet .meet-conditions { display: none; }
+.meet-strip-violet .meet-visual {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    aspect-ratio: auto;
+    border-radius: 22px;
+    overflow: hidden;
+}
+.meet-strip-violet .meet-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 22px;
+    object-fit: cover;
+    transform: none;
+    box-shadow: none;
 }
 .meet-strip-green .meet-copy {
     gap: 16px;
@@ -1640,8 +1725,9 @@ select {
 /* Photo: clean cover, no rotation */
 .meet-strip-green .meet-visual {
     position: relative;
-    min-height: 320px;
-    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: 360px;
+    aspect-ratio: auto;
     border-radius: 22px;
     overflow: hidden;
 }

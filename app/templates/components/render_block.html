@@ -360,7 +360,7 @@
 
 {% elif block.component == "form_strip" %}
 {% set _strip_id = 'lead-form' if request.path == '/o-centre/' else '' %}
-<section class="section meet-strip"{% if _strip_id %} id="{{ _strip_id }}"{% endif %}>
+<section class="section meet-strip meet-strip-violet"{% if _strip_id %} id="{{ _strip_id }}"{% endif %}>
     <div class="meet-copy">
         <p class="eyebrow">Бесплатная консультация</p>
         <h2>{% if is_home %}Подберём программу ребёнку{% else %}{{ data.title or "Подберём программу ребёнку" }}{% endif %}</h2>
@@ -390,14 +390,14 @@
             <div class="meet-lead-row">
                 <label class="sr-only" for="strip-phone">Телефон</label>
                 <input id="strip-phone" type="tel" name="phone" placeholder="Введите телефон" required>
-                <button class="button button-orange" type="submit">Записаться</button>
+                <button class="button button-yellow" type="submit">Получить консультацию</button>
             </div>
             <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
             <p class="form-status" data-form-status></p>
         </form>
     </div>
-    <div class="meet-visual{% if data.visual_variant %} meet-visual-{{ data.visual_variant }}{% endif %}" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename=data.image or 'img/figma/gallery/graduation.webp') }}" alt="">
+    <div class="meet-visual" aria-hidden="true">
+        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/gallery/girl-paints.png') }}" alt="">
     </div>
 </section>
 {#
@@ -1178,7 +1178,7 @@
         </form>
     </div>
     <div class="meet-visual" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename='img/mockup/cta-kids.png') }}" alt="">
+        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/gallery/kids-xmas.png') }}" alt="">
     </div>
 </section>
 
