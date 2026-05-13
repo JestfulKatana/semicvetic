@@ -40,6 +40,9 @@
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/logo-flower.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {% if site_settings.get('yandex_metrika_id') %}<link rel="preconnect" href="https://mc.yandex.ru" crossorigin>{% endif %}
+    <link rel="dns-prefetch" href="https://vk.com">
+    <link rel="dns-prefetch" href="https://t.me">
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v={{ css_main_v }}">
     {% if program_landing_e %}
