@@ -129,7 +129,7 @@
         </form>
     </div>
     <div class="hero-photo-wrap">
-        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок на занятии в детском центре «Семицветик»">
+        <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="Ребёнок на занятии в детском центре «Семицветик»" loading="eager" fetchpriority="high" decoding="async" width="640" height="640">
         <div class="hero-photo-badges">
             <span class="photo-badge photo-badge-open"><img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="" aria-hidden="true">Социальное предприятие</span>
             <span class="photo-badge photo-badge-horoshee"><img src="{{ url_for('static', filename='img/figma/brand/badge-horoshee-mesto.png') }}" alt="" aria-hidden="true">Яндекс: «Хорошее место»</span>
@@ -397,7 +397,7 @@
         </form>
     </div>
     <div class="meet-visual" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/gallery/girl-paints.png') }}" alt="">
+        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/gallery/girl-paints.png') }}" alt="" loading="lazy" decoding="async" width="720" height="540">
     </div>
 </section>
 {#
@@ -427,7 +427,7 @@
         </form>
     </div>
     <div class="meet-visual" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/gallery/graduation.webp') }}" alt="">
+        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/gallery/graduation.webp') }}" alt="" loading="lazy" decoding="async" width="720" height="540">
         <span class="meet-badge-hero">
             <strong>Бесплатная консультация</strong>
             <em>15 минут по&nbsp;телефону</em>
@@ -1178,7 +1178,7 @@
         </form>
     </div>
     <div class="meet-visual" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/gallery/kids-xmas.png') }}" alt="">
+        <img class="meet-photo" src="{{ url_for('static', filename='img/figma/gallery/kids-xmas.png') }}" alt="" loading="lazy" decoding="async" width="720" height="540">
     </div>
 </section>
 
