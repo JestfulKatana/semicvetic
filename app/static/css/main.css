@@ -1388,9 +1388,9 @@ select {
 .meet-strip {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
-    gap: 48px;
-    padding: 64px 56px;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 56px;
+    padding: 56px 56px;
     overflow: hidden;
     background: var(--surface);
     border: 1px solid var(--line);
@@ -1404,14 +1404,16 @@ select {
     display: flex;
     flex-direction: column;
     gap: 18px;
-    max-width: 560px;
+    max-width: 620px;
+    min-width: 0;
 }
 .meet-copy > .eyebrow { margin-bottom: 0; }
 .meet-copy h2 {
     margin: 0;
-    font-size: clamp(32px, 3.6vw, 44px);
+    max-width: 520px;
+    font-size: clamp(28px, 2.6vw, 38px);
     font-weight: 700;
-    line-height: 1.06;
+    line-height: 1.08;
     letter-spacing: -0.02em;
     color: var(--text);
 }
@@ -1465,8 +1467,9 @@ select {
     flex-wrap: wrap;
 }
 .meet-lead-row input {
-    flex: 1 1 240px;
+    flex: 1 1 200px;
     min-width: 0;
+    max-width: 280px;
     height: 52px;
     padding: 14px 18px;
     border: 1px solid var(--line);
@@ -1477,6 +1480,9 @@ select {
     letter-spacing: 0;
     transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
+.meet-lead-row .button-acid,
+.meet-lead-row .button-orange,
+.meet-lead-row .button-yellow { flex: 0 0 auto; }
 .meet-lead-row input:focus-visible {
     outline: 0;
     border-color: var(--orange);
@@ -4399,58 +4405,23 @@ select {
 .photo-badge-open { bottom: 0; left: 0; }
 .photo-badge-horoshee { top: 0; right: 0; }
 
-/* Programs grid — calm version: light surface + accent stripe */
+/* Programs grid — plush PNG instead of emoji */
 .program-object-img {
     position: absolute;
     right: 22px;
     bottom: 22px;
-    width: 160px;
-    height: 160px;
+    width: 200px;
+    height: 200px;
     object-fit: contain;
-    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.10));
-    opacity: 0.92;
+    filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.22));
     pointer-events: none;
 }
-.programs-section .program-tile {
-    min-height: 220px;
-    padding: 28px 32px;
-    background: var(--surface) !important;
-    color: var(--text);
-    border: 1px solid var(--line);
-    border-left: 4px solid var(--accent, var(--orange));
-    border-radius: 22px;
-    gap: 18px;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-.programs-section .program-tile:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 18px 40px rgba(45, 39, 37, 0.08);
-}
-.programs-section .program-tile h3,
-.programs-section .program-tile strong { color: var(--text); }
-.programs-section .program-tile .program-desc,
-.programs-section .program-tile p { color: var(--muted); opacity: 1; }
-.programs-section .program-tile .program-chip {
-    background: rgba(0, 0, 0, 0.04);
-    color: var(--text);
-    backdrop-filter: none;
-    border: 1px solid var(--line);
-    font-weight: 500;
-}
-.programs-section .program-tile .program-meta,
-.programs-section .program-tile .program-age { color: var(--muted); opacity: 1; }
-.programs-section .program-tile .program-price strong { color: var(--text); font-size: 26px; }
-.programs-section .program-tile .program-price-unit {
-    background: rgba(0, 0, 0, 0.04);
-    color: var(--muted);
-    backdrop-filter: none;
-    border: 1px solid var(--line);
-}
-/* Figma colors now power only the accent stripe + chip tint, not the whole bg */
-.program-tile-1 { --accent: #ed7735; }
-.program-tile-2 { --accent: #d14d20; }
-.program-tile-3 { --accent: #6359c2; }
-.program-tile-4 { --accent: #2d8a3f; }
+.program-tile { min-height: 360px; }
+/* Figma colors for home grid: orange, red, purple, green */
+.program-tile-1 { background: #ed7735 !important; }
+.program-tile-2 { background: #d14d20 !important; }
+.program-tile-3 { background: #6359c2 !important; }
+.program-tile-4 { background: #2d8a3f !important; }
 
 /* Trust block — clean rainbow grid (4+3 cards, no central image) */
 .trust-section {

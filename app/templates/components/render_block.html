@@ -390,7 +390,7 @@
             <div class="meet-lead-row">
                 <label class="sr-only" for="strip-phone">Телефон</label>
                 <input id="strip-phone" type="tel" name="phone" placeholder="Введите телефон" required>
-                <button class="button button-orange" type="submit">Записаться на консультацию</button>
+                <button class="button button-orange" type="submit">Записаться</button>
             </div>
             <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
             <p class="form-status" data-form-status></p>
@@ -450,9 +450,8 @@
 <section class="section programs-section">
     <div class="section-head split-head">
         <div>
-            {% if not is_catalog %}<p class="eyebrow">Программы для дошкольников и школьников</p>{% endif %}
             <h2>{{ data.title }}</h2>
-            {% if data.subtitle %}<p class="section-lead">{{ data.subtitle }}</p>{% endif %}
+            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
         </div>
         <a class="soft-button" href="/programmy/">Все программы →</a>
     </div>
@@ -718,15 +717,24 @@
             </div>
             {% endif %}
             {% if team.stats %}
-            {# Swap первых двух карточек: «100% с педагогическим образованием» раньше «14 педагогов в штате» — лучшая иерархия trust-факторов #}
-            {% set _ts = team.stats %}
-            {% set team_stats_ordered = ([_ts[1], _ts[0]] + (_ts[2:]|list)) if (_ts|length) >= 2 else _ts %}
+            {# Swap карточек «14 педагогов в штате» ↔ «100% с педагогическим образованием» по содержимому, не по индексу #}
+            {% set _idx14 = namespace(v=-1) %}
+            {% set _idx100 = namespace(v=-1) %}
+            {% for s in team.stats %}
+                {% set _v = (s.value or '')|string %}
+                {% set _l = (s.label or '')|string %}
+                {% if _v == '14' and 'педагог' in _l %}{% set _idx14.v = loop.index0 %}{% endif %}
+                {% if '100' in _v and 'образован' in _l %}{% set _idx100.v = loop.index0 %}{% endif %}
+            {% endfor %}
             <div class="team-stats-grid">
-                {% for stat in team_stats_ordered %}
-                <div class="team-stat">
-                    <strong>{{ stat.value }}</strong>
-                    <span>{{ stat.label }}</span>
-                </div>
+                {% for stat in team.stats %}
+                    {% set _ns = namespace(stat=stat) %}
+                    {% if _idx14.v >= 0 and _idx100.v >= 0 and loop.index0 == _idx14.v %}{% set _ns.stat = team.stats[_idx100.v] %}{% endif %}
+                    {% if _idx14.v >= 0 and _idx100.v >= 0 and loop.index0 == _idx100.v %}{% set _ns.stat = team.stats[_idx14.v] %}{% endif %}
+                    <div class="team-stat">
+                        <strong>{{ _ns.stat.value }}</strong>
+                        <span>{{ _ns.stat.label }}</span>
+                    </div>
                 {% endfor %}
             </div>
             {% endif %}
@@ -1472,12 +1480,24 @@
         </div>
         {% endif %}
         {% if data.stats %}
+        {# Swap карточек «14 педагогов в штате» ↔ «100% с педагогическим образованием» по содержимому #}
+        {% set _idx14 = namespace(v=-1) %}
+        {% set _idx100 = namespace(v=-1) %}
+        {% for s in data.stats %}
+            {% set _v = (s.value or '')|string %}
+            {% set _l = (s.label or '')|string %}
+            {% if _v == '14' and 'педагог' in _l %}{% set _idx14.v = loop.index0 %}{% endif %}
+            {% if '100' in _v and 'образован' in _l %}{% set _idx100.v = loop.index0 %}{% endif %}
+        {% endfor %}
         <div class="team-stats-grid">
             {% for stat in data.stats %}
-            <div class="team-stat">
-                <strong>{{ stat.value }}</strong>
-                <span>{{ stat.label }}</span>
-            </div>
+                {% set _ns = namespace(stat=stat) %}
+                {% if _idx14.v >= 0 and _idx100.v >= 0 and loop.index0 == _idx14.v %}{% set _ns.stat = data.stats[_idx100.v] %}{% endif %}
+                {% if _idx14.v >= 0 and _idx100.v >= 0 and loop.index0 == _idx100.v %}{% set _ns.stat = data.stats[_idx14.v] %}{% endif %}
+                <div class="team-stat">
+                    <strong>{{ _ns.stat.value }}</strong>
+                    <span>{{ _ns.stat.label }}</span>
+                </div>
             {% endfor %}
         </div>
         {% endif %}
