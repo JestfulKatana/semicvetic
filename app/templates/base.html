@@ -101,6 +101,7 @@
 {% set has_lead_form = _path == '/' or has_final_cta or program_landing_e or has_inline_form_block or _path == '/kontakty/' %}
 {% set cta_anchor = '#lead-form' %}
 <body class="{{ body_page_class }}{% if has_floating_cta %} has-floating-cta{% endif %}">
+    <a class="skip-link sr-only" href="#main-content">Перейти к содержимому</a>
     <div class="site-shell">
         <header class="site-header">
             <div class="header-row">
@@ -171,7 +172,7 @@
             </div>
         </div>
 
-        <main>
+        <main id="main-content" tabindex="-1">
             {% block content %}{% endblock %}
             {# Финальный лид-CTA — рендерится на любой публичной странице, где ещё нет своего lead-form. #}
             {% if not has_lead_form %}
