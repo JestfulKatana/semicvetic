@@ -59,7 +59,7 @@ def home():
     page = Page.query.filter_by(slug="home", is_published=True).first_or_404()
     ctx = shared_context()
     return render_template(
-        "pages/content_page.html",
+        "pages/home.html",
         page=page,
         blocks=hydrate_blocks(page.blocks, ctx),
         page_title=page.meta_title or page.title,

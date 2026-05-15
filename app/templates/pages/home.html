@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {# Рендерим все блоки из БД как обычно #}
+    {% for block in blocks %}
+        {% set _idx = loop.index0 %}
+        {% include "components/render_block.html" %}
+
+        {# После hero (1-й блок) — вставляем секцию «Выберите возраст ребёнка» #}
+        {% if _idx == 0 %}
+            {% include "components/home/age_groups.html" %}
+        {% endif %}
+
+        {# После top_programs (3-й блок) — секция «Сезонные программы» #}
+        {% if _idx == 2 %}
+            {% include "components/home/seasonal.html" %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
