@@ -12,7 +12,7 @@ from config import Config
 
 from .admin import SecureAdminIndexView, init_admin
 from .demo_seed import seed_database
-from .extensions import admin, db, limiter, login_manager, metrics, migrate
+from .extensions import admin, csrf, db, limiter, login_manager, metrics, migrate
 from .models import AdminUser
 from .views import admin_media, api, auth, design, main, news_admin
 from .views.design_age import design_age_bp
@@ -47,6 +47,11 @@ def create_app() -> Flask:
     metrics.init_app(app)
     admin.init_app(app, index_view=SecureAdminIndexView())
     init_admin()
+    csrf.init_app(app)
+    # /api/lead — публичная форма заявки, токен в HTML-форму прокидывать
+    # через JS-фронт сложнее, чем обеспечить SameSite=Lax + honeypot + rate-limit,
+    # поэтому именно этот endpoint оставляем без CSRF (это публичный лид-форм).
+    csrf.exempt(api.bp)
 
     app.register_blueprint(main.bp)
     app.register_blueprint(api.bp)

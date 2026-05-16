@@ -23,6 +23,7 @@
 </div>
 
 <form id="news-form" method="POST" action="{{ form_action }}" autocomplete="off">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="na-form-grid">
         <div class="na-form-main">
             <input type="text"
@@ -113,17 +114,25 @@
             {% if post %}
             <div class="na-panel">
                 <p class="na-panel-title">Опасная зона</p>
-                <form method="POST" action="{{ url_for('news_admin.delete', post_id=post.id) }}"
-                      onsubmit="return confirm('Удалить новость без возможности восстановления?');">
-                    <button type="submit" class="na-btn na-btn--danger" style="width: 100%; justify-content: center;">
-                        Удалить новость
-                    </button>
-                </form>
+                <button type="button" id="delete-trigger"
+                        class="na-btn na-btn--danger"
+                        style="width: 100%; justify-content: center;">
+                    Удалить новость
+                </button>
             </div>
             {% endif %}
         </aside>
     </div>
 </form>
+
+{% if post %}
+{# Форма удаления — отдельно от основной, чтобы не было nested-form. #}
+<form id="delete-form" method="POST"
+      action="{{ url_for('news_admin.delete', post_id=post.id) }}"
+      style="display:none;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
@@ -131,6 +140,7 @@
 <script>
 (function () {
     const UPLOAD_URL = "{{ url_for('admin_media.upload_image') }}";
+    const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
     const initialHtml = document.getElementById('body-html-output').value || '';
 
     /* ───── Quill ───── */
@@ -163,7 +173,7 @@
         const formData = new FormData();
         formData.append('file', file);
         try {
-            const res = await fetch(UPLOAD_URL, { method: 'POST', body: formData, credentials: 'same-origin' });
+            const res = await fetch(UPLOAD_URL, { method: 'POST', body: formData, credentials: 'same-origin', headers: { 'X-CSRFToken': CSRF_TOKEN } });
             const data = await res.json();
             if (!data.ok) { alert(data.error || 'Не удалось загрузить'); return; }
             const range = quill.getSelection(true);
@@ -215,7 +225,7 @@
         if (!file) return;
         const fd = new FormData();
         fd.append('file', file);
-        const res = await fetch(UPLOAD_URL, { method: 'POST', body: fd, credentials: 'same-origin' });
+        const res = await fetch(UPLOAD_URL, { method: 'POST', body: fd, credentials: 'same-origin', headers: { 'X-CSRFToken': CSRF_TOKEN } });
         const data = await res.json();
         if (data.ok) renderCover(data.url);
         else alert(data.error || 'Не удалось загрузить');
@@ -230,7 +240,7 @@
         const file = e.dataTransfer.files?.[0];
         if (!file || !file.type.startsWith('image/')) return;
         const fd = new FormData(); fd.append('file', file);
-        const res = await fetch(UPLOAD_URL, { method: 'POST', body: fd, credentials: 'same-origin' });
+        const res = await fetch(UPLOAD_URL, { method: 'POST', body: fd, credentials: 'same-origin', headers: { 'X-CSRFToken': CSRF_TOKEN } });
         const data = await res.json();
         if (data.ok) renderCover(data.url);
         else alert(data.error || 'Не удалось загрузить');
@@ -264,6 +274,20 @@
     document.getElementById('news-form').addEventListener('submit', () => {
         document.getElementById('body-html-output').value = quill.root.innerHTML;
     });
+
+    /* ───── Delete (отдельная форма, не nested) ───── */
+    const deleteTrigger = document.getElementById('delete-trigger');
+    const deleteForm = document.getElementById('delete-form');
+    if (deleteTrigger && deleteForm) {
+        deleteTrigger.addEventListener('click', () => {
+            if (confirm('Удалить новость без возможности восстановления?')) {
+                deleteForm.submit();
+            }
+        });
+    }
+
+    /* ───── Сменим placeholder для slug, если он 'auto' случайно введён ───── */
+    if (slugInput.value.trim().toLowerCase() === 'auto') slugInput.value = '';
 })();
 </script>
 {% endblock %}
