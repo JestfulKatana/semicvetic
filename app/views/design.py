@@ -15,6 +15,17 @@ from flask import Blueprint, render_template
 bp = Blueprint("design", __name__, url_prefix="/design")
 
 
+@bp.route("/all")
+@bp.route("/all/")
+@bp.route("/overview")
+@bp.route("/overview/")
+def overview():
+    return render_template(
+        "design/overview.html",
+        page_title="Все варианты редизайна",
+    )
+
+
 @bp.route("/cta")
 @bp.route("/cta/")
 def cta_index():

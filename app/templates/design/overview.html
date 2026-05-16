@@ -1,0 +1,387 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    html { scroll-behavior: smooth; }
+
+    .design-overview {
+        max-width: 1280px;
+        margin: 32px auto 96px;
+        padding: 0 20px;
+        font-family: 'Onest', system-ui, sans-serif;
+        color: var(--text);
+    }
+
+    .do-hero {
+        padding: 36px 8px 24px;
+    }
+    .do-hero .eyebrow {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(99, 89, 194, 0.12);
+        color: #4d44a6;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+    }
+    .do-hero h1 {
+        margin: 0 0 12px;
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: -2px;
+        line-height: 1.05;
+    }
+    .do-hero p {
+        max-width: 760px;
+        margin: 0 0 22px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.5;
+    }
+
+    .do-anchors {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 12px 0 4px;
+    }
+    .do-anchor {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: var(--surface);
+        border-radius: 999px;
+        text-decoration: none;
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 6px 18px rgba(53, 45, 42, 0.06);
+        border: 1px solid rgba(53, 45, 42, 0.05);
+        transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .do-anchor:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 28px rgba(53, 45, 42, 0.1);
+    }
+    .do-anchor .dot {
+        width: 8px; height: 8px; border-radius: 50%;
+    }
+    .do-anchor.cta .dot { background: var(--orange); }
+    .do-anchor.teachers .dot { background: var(--purple); }
+    .do-anchor.programs .dot { background: var(--blue); }
+    .do-anchor.age .dot { background: var(--pink); }
+
+    .do-section {
+        margin-top: 56px;
+        scroll-margin-top: 24px;
+    }
+    .do-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 16px;
+        margin: 0 0 22px;
+        padding: 0 4px;
+    }
+    .do-section-head h2 {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -1px;
+        line-height: 1.15;
+    }
+    .do-section-head .sub {
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+    }
+    .do-section-head .index-link {
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        border-bottom: 1px dashed rgba(53, 45, 42, 0.25);
+    }
+    .do-section-head .index-link:hover { color: var(--orange); border-bottom-color: var(--orange); }
+
+    .do-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .do-card {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 26px 26px 22px;
+        background: var(--surface);
+        border-radius: 24px;
+        text-decoration: none;
+        color: var(--text);
+        box-shadow: 0 16px 50px rgba(53, 45, 42, 0.07);
+        border: 1px solid rgba(53, 45, 42, 0.05);
+        transition: transform .18s ease, box-shadow .18s ease;
+        min-height: 280px;
+    }
+    .do-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 70px rgba(53, 45, 42, 0.12);
+    }
+
+    .do-card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+    }
+    .do-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+    }
+    .do-tag.safe   { background: rgba(0, 180, 60, 0.16); color: #1d7c2c; }
+    .do-tag.evolve { background: rgba(99, 89, 194, 0.16); color: #3a3193; }
+    .do-tag.bold   { background: rgba(237, 119, 53, 0.18); color: #a14609; }
+
+    .do-pick {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 11px;
+        border-radius: 999px;
+        background: rgba(255, 238, 81, 0.45);
+        color: #6a5800;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+    }
+    .do-pick::before {
+        content: "✓";
+        font-weight: 800;
+    }
+
+    .do-card h3 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.6px;
+        line-height: 1.15;
+    }
+    .do-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+        flex: 1;
+    }
+    .do-card .open {
+        margin-top: 4px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(53, 45, 42, 0.08);
+        color: var(--orange);
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .do-foot {
+        margin-top: 56px;
+        padding: 22px 24px;
+        background: rgba(99, 89, 194, 0.06);
+        border-left: 3px solid var(--purple);
+        border-radius: 14px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+    }
+    .do-foot strong { color: var(--text); }
+
+    @media (max-width: 960px) {
+        .do-cards { grid-template-columns: 1fr; }
+        .do-hero h1 { font-size: 34px; letter-spacing: -1.2px; }
+        .do-section-head h2 { font-size: 24px; }
+        .do-section-head .index-link { margin-left: 0; }
+    }
+</style>
+
+<div class="design-overview">
+    <header class="do-hero">
+        <span class="eyebrow">Design preview · 12 вариантов</span>
+        <h1>Все варианты редизайна</h1>
+        <p>Выберите по одному из каждого блока — соберём финальную главную. Все варианты рендерятся в реальной обвязке сайта: шапка, футер, шрифты, палитра — те же, что в проде. Прод-главная не тронута.</p>
+
+        <nav class="do-anchors" aria-label="Разделы">
+            <a class="do-anchor cta"      href="#cta"><span class="dot"></span>CTA</a>
+            <a class="do-anchor teachers" href="#teachers"><span class="dot"></span>Педагоги</a>
+            <a class="do-anchor programs" href="#programs"><span class="dot"></span>Программы</a>
+            <a class="do-anchor age"      href="#age"><span class="dot"></span>Возраст</a>
+        </nav>
+    </header>
+
+    {# ===================== CTA ===================== #}
+    <section class="do-section" id="cta">
+        <div class="do-section-head">
+            <h2>CTA — «Подберём программу ребёнку»</h2>
+            <a class="index-link" href="{{ url_for('design.cta_index') }}">Открыть индекс CTA →</a>
+        </div>
+
+        <div class="do-cards">
+            <a class="do-card" href="{{ url_for('design.cta_v1') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag safe">V1 · Safe</span>
+                </div>
+                <h3>Тёплый разговор</h3>
+                <p>Доверие через человека. Плашка «Бесплатный звонок · 15 минут», 4 буллета снимают боль «куда я отправляю свой номер»: никаких скриптов, ответ за 30 минут, номер не передаём. Под формой — карточка администратора с фото и временем ответа.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+
+            <a class="do-card" href="{{ url_for('design.cta_v2') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag evolve">V2 · Evolve</span>
+                    <span class="do-pick">Рекомендация дизайнера</span>
+                </div>
+                <h3>Пробное за 1 клик</h3>
+                <p>JTBD «попробовать без риска». Слот-чипы (день и время) превращают форму в бронь — родитель уже мысленно в четверге в 17:00. Badge «3 места на неделе» добавляет лёгкую срочность без давления.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+
+            <a class="do-card" href="{{ url_for('design.cta_v3') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag bold">V3 · Bold</span>
+                </div>
+                <h3>Голос родителя</h3>
+                <p>Заголовок-вопрос про боль («…чтобы ребёнку было куда идти после школы»), цитата мамы с фото прямо внутри CTA, 3 мини-метрики. Социальное доказательство встроено в форму, а не висит отдельной секцией.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+        </div>
+    </section>
+
+    {# ===================== TEACHERS ===================== #}
+    <section class="do-section" id="teachers">
+        <div class="do-section-head">
+            <h2>Педагоги — «Педагоги, которые знают школьные требования»</h2>
+            <a class="index-link" href="{{ url_for('design_teachers.teachers_index') }}">Открыть индекс педагогов →</a>
+        </div>
+
+        <div class="do-cards">
+            <a class="do-card" href="{{ url_for('design_teachers.teachers_v1') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag safe">V1 · Safe</span>
+                    <span class="do-pick">Рекомендация дизайнера</span>
+                </div>
+                <h3>Команда у входа</h3>
+                <p>Большая тёмная карточка директора Буровой с цитатой и тремя ключевыми цифрами. Рядом — 3 равные карточки действующих учителей. Бирка-стаж стала мини-чипом, статистика ушла узкой лентой вниз.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+
+            <a class="do-card" href="{{ url_for('design_teachers.teachers_v2') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag evolve">V2 · Evolve</span>
+                </div>
+                <h3>Анатомия команды</h3>
+                <p>Команда показана как разрез ролей: коллаж из 5 лиц с капсулами «Директор / Учитель школы / Логопед / Психолог» и пятый тайл «+ Творческое крыло». Справа — три тезис-карточки, снизу — статистика-сводка.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+
+            <a class="do-card" href="{{ url_for('design_teachers.teachers_v3') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag bold">V3 · Bold</span>
+                </div>
+                <h3>Лента действующих учителей</h3>
+                <p>Горизонтально скроллящаяся карусель 6+ карточек с большими портретами. Директор первым с маркером «Руководитель центра». Цитата живёт ВНУТРИ ленты как отдельная тёмная карточка.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+        </div>
+    </section>
+
+    {# ===================== PROGRAMS ===================== #}
+    <section class="do-section" id="programs">
+        <div class="do-section-head">
+            <h2>Программы — «Программы центра»</h2>
+            <a class="index-link" href="{{ url_for('design_programs.programs_index') }}">Открыть индекс программ →</a>
+        </div>
+
+        <div class="do-cards">
+            <a class="do-card" href="{{ url_for('design_programs.programs_v1') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag safe">V1 · Safe</span>
+                    <span class="do-pick">Рекомендация дизайнера</span>
+                </div>
+                <h3>Возраст-чип во главе</h3>
+                <p>Чип возраста превращается в крупную плашку-заголовок — родитель видит «3–5 лет» сразу. Цветная полоска убрана: одна цветная CTA «Записаться», «Подробнее» — мелкая ссылка.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+
+            <a class="do-card" href="{{ url_for('design_programs.programs_v2') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag evolve">V2 · Evolve</span>
+                </div>
+                <h3>Список-сравнение + фильтр</h3>
+                <p>Карточки превращаются в строки таблицы: иконка, название, возраст, формат, цена, CTA. Слева — sticky-панель фильтра по возрасту со счётчиками. Решение скорее для каталога.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+
+            <a class="do-card" href="{{ url_for('design_programs.programs_v3') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag bold">V3 · Bold</span>
+                </div>
+                <h3>Цветные плитки-знакомства</h3>
+                <p>Каждая программа — большая цветная плитка из палитры. Эмодзи-объект сверху, возраст 88px, одна выгода вместо описания, цена мелким, белая CTA.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+        </div>
+    </section>
+
+    {# ===================== AGE ===================== #}
+    <section class="do-section" id="age">
+        <div class="do-section-head">
+            <h2>Возраст — «С какого года ваш ребёнок?»</h2>
+            <a class="index-link" href="{{ url_for('design_age.age_index') }}">Открыть индекс возрастов →</a>
+        </div>
+
+        <div class="do-cards">
+            <a class="do-card" href="{{ url_for('design_age.age_v1') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag safe">V1 · Safe</span>
+                    <span class="do-pick">Рекомендация дизайнера</span>
+                </div>
+                <h3>Возрастной свитчер</h3>
+                <p>Возраст становится главным героем: цифра 96pt, одна строка-обещание, метатег сверху (С мамой / Без мамы / К школе / Школьники). Буллеты выкошены, фоны — системные градиенты, watermark-цифра в углу.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+
+            <a class="do-card" href="{{ url_for('design_age.age_v2') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag evolve">V2 · Evolve</span>
+                </div>
+                <h3>Таймлайн взросления</h3>
+                <p>Горизонтальная шкала 1–14 лет в цветах системы, 4 кликабельные точки. Справа — подсказка, которая переключается JS-обработчиком и подкрашивается под выбранный возраст.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+
+            <a class="do-card" href="{{ url_for('design_age.age_v3') }}">
+                <div class="do-card-tags">
+                    <span class="do-tag bold">V3 · Bold</span>
+                </div>
+                <h3>Что нужно ребёнку сейчас</h3>
+                <p>Вход через задачу родителя: «Только начинаем», «Учим самостоятельности», «Готовимся к школе», «Школьник, нужно подтянуть». Возраст — внутри карточки, не во главе.</p>
+                <span class="open">Открыть вариант →</span>
+            </a>
+        </div>
+    </section>
+
+    <div class="do-foot">
+        <strong>Как читать.</strong> Выберите по одному варианту из каждой секции — на их основе соберём финальную главную. Все макеты живут на проде только в `/design/*`, прод-главная (`/`) не тронута. Лид-формы внутри CTA-макетов работают по-настоящему, поэтому не нажимай «Отправить», если не хочешь тестового лида в админке.
+    </div>
+</div>
+{% endblock %}
