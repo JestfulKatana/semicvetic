@@ -48,10 +48,6 @@ def create_app() -> Flask:
     admin.init_app(app, index_view=SecureAdminIndexView())
     init_admin()
     csrf.init_app(app)
-    # /api/lead — публичная форма заявки, токен в HTML-форму прокидывать
-    # через JS-фронт сложнее, чем обеспечить SameSite=Lax + honeypot + rate-limit,
-    # поэтому именно этот endpoint оставляем без CSRF (это публичный лид-форм).
-    csrf.exempt(api.bp)
 
     app.register_blueprint(main.bp)
     app.register_blueprint(api.bp)
@@ -62,6 +58,12 @@ def create_app() -> Flask:
     app.register_blueprint(design_teachers_bp)
     app.register_blueprint(design_programs_bp)
     app.register_blueprint(design_age_bp)
+
+    # /api/lead — публичная форма заявки. Прокидывать токен через JS-фронт
+    # сложнее, чем обеспечить SameSite=Lax + honeypot + rate-limit, поэтому
+    # именно этот blueprint оставляем без CSRF. Exempt после register, чтобы
+    # Flask-WTF корректно зарегистрировал имена endpoints.
+    csrf.exempt(api.bp)
 
     login_manager.login_view = "auth.login"
 

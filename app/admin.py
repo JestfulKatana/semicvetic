@@ -65,6 +65,13 @@ class JsonModelView(SecureModelView):
     }
 
 
+class EventAdminView(JsonModelView):
+    # body_html и is_pinned правятся через /admin/news/, где есть WYSIWYG и
+    # серверный sanitize. В обычной таблице Flask-Admin их редактировать опасно
+    # (plain textarea = вставка <script> и пр.), поэтому прячем.
+    form_excluded_columns = ("body_html",)
+
+
 def init_admin() -> None:
     if any(getattr(view, "name", "") == "Настройки" for view in admin._views):
         return
@@ -76,6 +83,6 @@ def init_admin() -> None:
     admin.add_view(SecureModelView(ProgramSubject, db.session, name="Предметы"))
     admin.add_view(JsonModelView(Teacher, db.session, name="Педагоги"))
     admin.add_view(JsonModelView(Review, db.session, name="Отзывы"))
-    admin.add_view(JsonModelView(Event, db.session, name="События и статьи"))
+    admin.add_view(EventAdminView(Event, db.session, name="События и статьи"))
     admin.add_view(JsonModelView(Lead, db.session, name="Заявки"))
     admin.add_view(AdminUserView(AdminUser, db.session, name="Админы"))

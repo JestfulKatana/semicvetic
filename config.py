@@ -20,6 +20,9 @@ class Config:
     SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "change-me")
     SQLALCHEMY_DATABASE_URI = normalize_database_url(os.getenv("DATABASE_URL"))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # Жёсткий cap для аплоадов: картинки до 12 МБ, всё крупное режется
+    # на уровне Werkzeug до того, как попадёт в наш view.
+    MAX_CONTENT_LENGTH = 12 * 1024 * 1024
     SITE_URL = os.getenv("SITE_URL", "http://127.0.0.1:5000").rstrip("/")
     ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
     ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
