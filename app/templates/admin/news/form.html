@@ -7,6 +7,16 @@
 {% endblock %}
 
 {% block content %}
+{% set fd = form_data or {} %}
+{% set v_title = fd.get('title') if form_data else (post.title if post else '') %}
+{% set v_slug = fd.get('slug') if form_data else (post.slug if post else '') %}
+{% set v_excerpt = fd.get('excerpt') if form_data else (post.excerpt if post else '') %}
+{% set v_body = fd.get('body_html') if form_data else (post.body_html if post else '') %}
+{% set v_image = fd.get('image_url') if form_data else (post.image_url if post else '') %}
+{% set v_event_date = fd.get('event_date_raw') if form_data else (post.event_date.isoformat() if post and post.event_date else today_str) %}
+{% set v_category = fd.get('category') if form_data else (post.category if post else '') %}
+{% set v_published = fd.get('is_published') if form_data else (post.is_published if post else True) %}
+{% set v_pinned = fd.get('is_pinned') if form_data else (post.is_pinned if post else False) %}
 <div class="na-page-head">
     <div>
         <a class="na-link" href="{{ url_for('news_admin.index') }}">← К списку новостей</a>
@@ -30,7 +40,7 @@
                    name="title"
                    class="na-title-input"
                    placeholder="Заголовок новости"
-                   value="{{ post.title if post else '' }}"
+                   value="{{ v_title or '' }}"
                    required
                    maxlength="255">
 
@@ -38,12 +48,12 @@
                 <p class="na-panel-title">Краткое описание (для карточек)</p>
                 <textarea name="excerpt"
                           placeholder="1–2 предложения, что внутри. Показывается на главной и в списке."
-                          maxlength="400">{{ post.excerpt or '' }}</textarea>
+                          maxlength="400">{{ v_excerpt or '' }}</textarea>
             </div>
 
             <div class="na-panel na-panel--editor">
                 <div id="quill-editor" class="na-editor-host"></div>
-                <textarea name="body_html" id="body-html-output" hidden>{{ post.body_html or '' }}</textarea>
+                <textarea name="body_html" id="body-html-output" hidden>{{ v_body or '' }}</textarea>
             </div>
         </div>
 
@@ -51,12 +61,12 @@
             <div class="na-panel">
                 <p class="na-panel-title">Публикация</p>
                 <label class="na-toggle">
-                    <input type="checkbox" name="is_published" value="1" {% if not post or post.is_published %}checked{% endif %}>
+                    <input type="checkbox" name="is_published" value="1" {% if v_published %}checked{% endif %}>
                     <span>Опубликовано на сайте</span>
                 </label>
                 <div style="height: 10px;"></div>
                 <label class="na-toggle">
-                    <input type="checkbox" name="is_pinned" value="1" {% if post and post.is_pinned %}checked{% endif %}>
+                    <input type="checkbox" name="is_pinned" value="1" {% if v_pinned %}checked{% endif %}>
                     <span>Закрепить наверху</span>
                 </label>
 
@@ -71,19 +81,19 @@
             <div class="na-panel">
                 <p class="na-panel-title">Обложка</p>
                 <div id="cover-uploader"
-                     class="na-cover {% if post and post.image_url %}na-cover--has-image{% endif %}"
+                     class="na-cover {% if v_image %}na-cover--has-image{% endif %}"
                      data-empty-text="Нажмите или перетащите файл сюда">
-                    {% if post and post.image_url %}
-                    <img src="{{ post.image_url }}" alt="">
+                    {% if v_image %}
+                    <img src="{{ v_image }}" alt="">
                     <div class="na-cover-actions">
                         <button type="button" class="na-btn na-btn--sm" data-action="replace">Заменить</button>
                         <button type="button" class="na-btn na-btn--sm na-btn--danger" data-action="clear">Убрать</button>
                     </div>
                     {% else %}
-                    <div class="na-cover-empty-text">📷 Нажмите или перетащите файл сюда<br><span style="font-size:11px;">JPG, PNG, WEBP до 10 МБ</span></div>
+                    <div class="na-cover-empty-text">📷 Нажмите или перетащите файл сюда<br><span style="font-size:11px;">JPG, PNG, WEBP, GIF до 10 МБ</span></div>
                     {% endif %}
                 </div>
-                <input type="hidden" name="image_url" id="image-url-field" value="{{ post.image_url or '' }}">
+                <input type="hidden" name="image_url" id="image-url-field" value="{{ v_image or '' }}">
                 <input type="file" id="cover-file" accept="image/*" hidden>
             </div>
 
@@ -92,21 +102,21 @@
                 <div class="na-field">
                     <label for="event-date">Дата публикации</label>
                     <input type="date" name="event_date" id="event-date"
-                           value="{{ post.event_date.isoformat() if post and post.event_date else today_str }}">
+                           value="{{ v_event_date or today_str }}">
                 </div>
                 <div class="na-field">
                     <label for="category">Рубрика</label>
                     <input type="text" name="category" id="category"
-                           value="{{ post.category or '' }}"
+                           value="{{ v_category or '' }}"
                            placeholder="Например: События">
                 </div>
                 <div class="na-field">
                     <label for="slug">URL (slug)</label>
                     <input type="text" name="slug" id="slug"
-                           value="{{ post.slug if post else '' }}"
-                           placeholder="auto — сгенерируем из заголовка">
+                           value="{{ v_slug or '' }}"
+                           placeholder="оставьте пустым — сгенерируем из заголовка">
                     <div class="na-field-help">
-                        Финальный адрес: <code>/novosti/<span id="slug-preview">{{ post.slug if post else 'novaya-zapis' }}</span>/</code>
+                        Финальный адрес: <code>/novosti/<span id="slug-preview">{{ v_slug or 'novost' }}</span>/</code>
                     </div>
                 </div>
             </div>
@@ -209,7 +219,7 @@
                 </div>`;
         } else {
             cover.classList.remove('na-cover--has-image');
-            cover.innerHTML = `<div class="na-cover-empty-text">📷 Нажмите или перетащите файл сюда<br><span style="font-size:11px;">JPG, PNG, WEBP до 10 МБ</span></div>`;
+            cover.innerHTML = `<div class="na-cover-empty-text">📷 Нажмите или перетащите файл сюда<br><span style="font-size:11px;">JPG, PNG, WEBP, GIF до 10 МБ</span></div>`;
         }
         imageUrlField.value = url || '';
     }
@@ -286,8 +296,6 @@
         });
     }
 
-    /* ───── Сменим placeholder для slug, если он 'auto' случайно введён ───── */
-    if (slugInput.value.trim().toLowerCase() === 'auto') slugInput.value = '';
 })();
 </script>
 {% endblock %}

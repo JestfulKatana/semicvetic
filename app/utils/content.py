@@ -38,6 +38,17 @@ _ALLOWED_CSS_PROPERTIES = [
 _CSS_SANITIZER = CSSSanitizer(allowed_css_properties=_ALLOWED_CSS_PROPERTIES)
 
 
+def _link_safe_callback(attrs, new=False):
+    """Все внешние ссылки получают rel="noopener nofollow noreferrer"
+    и target="_blank". Защищает от reverse tabnabbing и от утечки SEO-веса
+    на ссылки, которые мама может вставить в новости."""
+    href = attrs.get((None, "href"), "")
+    if href.startswith(("http://", "https://")):
+        attrs[(None, "target")] = "_blank"
+        attrs[(None, "rel")] = "noopener nofollow noreferrer"
+    return attrs
+
+
 def sanitize_html(value: str | None) -> str:
     if not value:
         return ""
@@ -49,7 +60,12 @@ def sanitize_html(value: str | None) -> str:
         css_sanitizer=_CSS_SANITIZER,
         strip=True,
     )
-    return bleach.linkify(cleaned, parse_email=False, skip_tags={"pre", "code"})
+    return bleach.linkify(
+        cleaned,
+        callbacks=[_link_safe_callback],
+        parse_email=False,
+        skip_tags={"pre", "code"},
+    )
 
 
 def phone_href(phone: str | None) -> str:

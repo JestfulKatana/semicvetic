@@ -57,7 +57,7 @@ def upload_image():
     try:
         with Image.open(file.stream) as img:
             img.verify()
-    except (UnidentifiedImageError, OSError, ValueError):
+    except (UnidentifiedImageError, OSError, ValueError, SyntaxError):
         return jsonify({"ok": False, "error": "Файл не является корректной картинкой"}), 400
     file.stream.seek(0)
 

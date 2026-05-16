@@ -4,7 +4,7 @@
 <div class="na-page-head">
     <div>
         <h1 class="na-page-title">Новости центра</h1>
-        <p class="na-page-subtitle">{{ (pinned|length) + (posts|length) }} материалов · последние сверху</p>
+        <p class="na-page-subtitle">{{ count_label }} · последние сверху</p>
     </div>
     <a class="na-btn na-btn--primary" href="{{ url_for('news_admin.new') }}">
         <span>+ Новая запись</span>

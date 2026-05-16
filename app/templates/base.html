@@ -7,7 +7,10 @@
     <meta name="description" content="{{ page_description or site_settings.get('site_description', '') }}">
     <meta property="og:title" content="{{ page_title or site_settings.get('site_name', 'Семицветик') }}">
     <meta property="og:description" content="{{ page_description or site_settings.get('site_description', '') }}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ og_type|default('website') }}">
+    <meta property="og:image" content="{{ og_image or url_for('static', filename='img/logo-flower.png', _external=True) }}">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="{{ request.base_url }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo-flower.png') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/logo-flower.png') }}">

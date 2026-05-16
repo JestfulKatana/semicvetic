@@ -91,20 +91,30 @@ def news_detail(slug: str):
     post = Event.query.filter_by(slug=slug, type="news", is_published=True).first_or_404()
     ctx = shared_context()
     related = [n for n in ctx["news"] if n.id != post.id][:3]
+    site_url = current_app.config["SITE_URL"].rstrip("/")
+    image_abs = (
+        (site_url + post.image_url)
+        if post.image_url and post.image_url.startswith("/")
+        else post.image_url
+    )
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": post.title,
+        "description": post.excerpt,
+        "datePublished": (post.event_date or post.created_at.date()).isoformat(),
+    }
+    if image_abs:
+        schema["image"] = image_abs
     return render_template(
         "pages/news_detail.html",
         post=post,
         related=related,
         page_title=post.title,
         page_description=post.excerpt or (post.title + " — новости центра Семицветик"),
-        page_schema={
-            "@context": "https://schema.org",
-            "@type": "NewsArticle",
-            "headline": post.title,
-            "description": post.excerpt,
-            "datePublished": (post.event_date or post.created_at.date()).isoformat(),
-            "image": post.image_url,
-        },
+        og_image=image_abs,
+        og_type="article",
+        page_schema=schema,
     )
 
 

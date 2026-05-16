@@ -4,7 +4,6 @@ from datetime import date, datetime
 
 from flask import (
     Blueprint,
-    abort,
     flash,
     redirect,
     render_template,
@@ -12,6 +11,7 @@ from flask import (
     url_for,
 )
 from flask_login import login_required
+from sqlalchemy.exc import IntegrityError
 
 from ..extensions import db
 from ..models import Event
@@ -31,6 +31,18 @@ def _parse_date(raw: str | None) -> date | None:
         return None
 
 
+def _ru_plural(n: int, forms: tuple[str, str, str]) -> str:
+    n = abs(n) % 100
+    n1 = n % 10
+    if 10 < n < 20:
+        return forms[2]
+    if 1 < n1 < 5:
+        return forms[1]
+    if n1 == 1:
+        return forms[0]
+    return forms[2]
+
+
 @bp.get("/")
 @login_required
 def index():
@@ -44,10 +56,13 @@ def index():
         .order_by(Event.event_date.desc().nullslast(), Event.created_at.desc())
         .all()
     )
+    total = len(pinned) + len(rest)
+    count_label = f"{total} {_ru_plural(total, ('материал', 'материала', 'материалов'))}"
     return render_template(
         "admin/news/list.html",
         pinned=pinned,
         posts=rest,
+        count_label=count_label,
     )
 
 
@@ -60,16 +75,39 @@ def new():
         post=None,
         form_action=url_for("news_admin.create"),
         today_str=today_str,
+        form_data=None,
     )
 
 
 @bp.post("/new")
 @login_required
 def create():
+    cleaned, error = _validate_form(request.form)
+    if error:
+        flash(error, "error")
+        return render_template(
+            "admin/news/form.html",
+            post=None,
+            form_action=url_for("news_admin.create"),
+            today_str=date.today().isoformat(),
+            form_data=cleaned,
+        )
+
     post = Event(type="news")
-    _apply_form(post, request.form, is_new=True)
+    _apply_cleaned(post, cleaned, is_new=True)
     db.session.add(post)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        flash("Не удалось сохранить — slug уже занят, попробуйте другой.", "error")
+        return render_template(
+            "admin/news/form.html",
+            post=None,
+            form_action=url_for("news_admin.create"),
+            today_str=date.today().isoformat(),
+            form_data=cleaned,
+        )
     flash("Новость создана", "success")
     return redirect(url_for("news_admin.edit", post_id=post.id))
 
@@ -83,6 +121,7 @@ def edit(post_id: int):
         post=post,
         form_action=url_for("news_admin.update", post_id=post.id),
         today_str=date.today().isoformat(),
+        form_data=None,
     )
 
 
@@ -90,8 +129,30 @@ def edit(post_id: int):
 @login_required
 def update(post_id: int):
     post = Event.query.filter_by(id=post_id, type="news").first_or_404()
-    _apply_form(post, request.form, is_new=False)
-    db.session.commit()
+    cleaned, error = _validate_form(request.form)
+    if error:
+        flash(error, "error")
+        return render_template(
+            "admin/news/form.html",
+            post=post,
+            form_action=url_for("news_admin.update", post_id=post.id),
+            today_str=date.today().isoformat(),
+            form_data=cleaned,
+        )
+
+    _apply_cleaned(post, cleaned, is_new=False)
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        flash("Не удалось сохранить — slug уже занят, попробуйте другой.", "error")
+        return render_template(
+            "admin/news/form.html",
+            post=post,
+            form_action=url_for("news_admin.update", post_id=post.id),
+            today_str=date.today().isoformat(),
+            form_data=cleaned,
+        )
     flash("Изменения сохранены", "success")
     return redirect(url_for("news_admin.edit", post_id=post.id))
 
@@ -106,28 +167,36 @@ def delete(post_id: int):
     return redirect(url_for("news_admin.index"))
 
 
-def _apply_form(post: Event, form, *, is_new: bool) -> None:
+def _validate_form(form) -> tuple[dict, str | None]:
     title = (form.get("title") or "").strip()
+    cleaned = {
+        "title": title,
+        "slug": (form.get("slug") or "").strip(),
+        "excerpt": (form.get("excerpt") or "").strip(),
+        "body_html": form.get("body_html") or "",
+        "image_url": (form.get("image_url") or "").strip(),
+        "event_date_raw": form.get("event_date") or "",
+        "category": (form.get("category") or "").strip(),
+        "is_published": bool(form.get("is_published")),
+        "is_pinned": bool(form.get("is_pinned")),
+    }
     if not title:
-        abort(400, "Заголовок обязателен")
-    post.title = title
+        return cleaned, "Заголовок обязателен."
+    if len(title) > 255:
+        return cleaned, "Заголовок слишком длинный (максимум 255 символов)."
+    return cleaned, None
 
-    slug_input = (form.get("slug") or "").strip()
-    base_slug = slugify(slug_input or title)
+
+def _apply_cleaned(post: Event, cleaned: dict, *, is_new: bool) -> None:
+    post.title = cleaned["title"]
+    base_slug = slugify(cleaned["slug"] or cleaned["title"])
     post.slug = ensure_unique_slug(base_slug, Event, exclude_id=None if is_new else post.id)
-
-    post.excerpt = (form.get("excerpt") or "").strip() or None
-    post.body_html = sanitize_html(form.get("body_html") or "") or None
-    post.image_url = (form.get("image_url") or "").strip() or None
-    post.event_date = _parse_date(form.get("event_date"))
-    post.category = (form.get("category") or "").strip() or None
-    post.is_published = bool(form.get("is_published"))
-    post.is_pinned = bool(form.get("is_pinned"))
-    # Зеркалим в content для обратной совместимости /blog/<slug>/ и пр.,
-    # храним plain-fallback вырезая теги.
-    if post.body_html:
-        from html import unescape
-        import re as _re
-
-        plain = _re.sub(r"<[^>]+>", "", post.body_html)
-        post.content = unescape(plain).strip() or None
+    post.excerpt = cleaned["excerpt"] or None
+    post.body_html = sanitize_html(cleaned["body_html"]) or None
+    post.image_url = cleaned["image_url"] or None
+    post.event_date = _parse_date(cleaned["event_date_raw"]) or date.today()
+    post.category = cleaned["category"] or None
+    post.is_published = cleaned["is_published"]
+    post.is_pinned = cleaned["is_pinned"]
+    # В content не зеркалим — это поле обслуживает /blog/<slug>/ через markdown,
+    # смешивать форматы вредно. news_detail.html читает body_html напрямую.
