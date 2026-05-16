@@ -160,11 +160,31 @@ def health():
     return {"ok": True}
 
 
+# Slug -> название включаемого шаблона компонента из templates/components/program_landing/
+# для специальных продакт-лендингов (E-варианты из handoff 2026-05-09).
+PROGRAM_LANDING_E = {
+    "podgotovka-k-shkole": "school",
+    "anglijskij": "english",
+    "logoped": "speech",
+    "rannee-razvitie": "early",
+}
+
+
 @bp.route("/<slug>/")
 def slug_router(slug: str):
     program = Program.query.filter_by(slug=slug, is_published=True).first()
     if program:
         ctx = shared_context(current_program=program)
+        landing_e = PROGRAM_LANDING_E.get(slug)
+        if landing_e:
+            return render_template(
+                "pages/program_landing_e.html",
+                page=program,
+                program_landing_e=landing_e,
+                page_title=program.name,
+                page_description=program.tagline,
+                page_schema=build_course_schema(program),
+            )
         return render_template(
             "pages/content_page.html",
             page=program,

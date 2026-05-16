@@ -188,6 +188,9 @@ document.querySelectorAll("[data-lead-form]").forEach((form) => {
       if (statusNode) {
         statusNode.textContent = result.message;
       }
+      if (typeof ym !== 'undefined') {
+        ym(window._ymId || 0, 'reachGoal', 'goal_lead_submit');
+      }
     } catch (error) {
       if (statusNode) {
         statusNode.textContent = error.message || "Ошибка отправки";
