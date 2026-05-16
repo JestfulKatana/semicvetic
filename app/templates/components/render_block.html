@@ -602,6 +602,89 @@
 ] %}
 {# Фильтры/поиск показываем только на странице /pedagogi/. На главной — единый блок без фильтров. #}
 {% set show_teacher_filters = (page_slug == 'pedagogi') and (data.show_search or data.show_chips) %}
+{% if page_slug != 'pedagogi' %}
+{# Главная — V1 «Команда у входа»: директор крупной карточкой + равные карточки учителей + статистика лентой. #}
+{% set teachers_list = data.teachers or [] %}
+{% set director = teachers_list[0] if teachers_list else none %}
+{% set co_teachers = teachers_list[1:4] %}
+{% set team = data.get('team_stats') %}
+<section class="section home-teachers-v1">
+    <div class="htv1-head">
+        <div class="htv1-head-main">
+            <span class="htv1-eyebrow">Команда центра{% if team and team.eyebrow %} · <b>{{ team.eyebrow }}</b>{% endif %}</span>
+            {% if data.title %}<h2>{{ data.title }}</h2>{% endif %}
+        </div>
+        <div class="htv1-head-side">
+            {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+            <a class="soft-button" href="/pedagogi/">Все преподаватели →</a>
+        </div>
+    </div>
+
+    <div class="htv1-grid">
+        {% if director %}
+        <article class="htv1-director">
+            <div class="htv1-director-photo"{% if director.photo_url %} style="background-image: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.35) 100%), url('{{ url_for('static', filename=director.photo_url) }}');"{% endif %}>
+                <span class="htv1-director-badge"><i></i>Директор центра</span>
+            </div>
+            <div class="htv1-director-body">
+                <div class="htv1-director-name">
+                    <h3>{{ director.name }}</h3>
+                    <span>{{ director.role }}{% if director.specialization %} · {{ director.specialization }}{% endif %}</span>
+                </div>
+                {% if team and team.stats %}
+                <div class="htv1-director-stat">
+                    {% for stat in team.stats[:3] %}
+                    <div><strong>{{ stat.value }}</strong><small>{{ stat.label }}</small></div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% set director_quote = director.quote or (team.quote if team else '') %}
+                {% if director_quote %}
+                <blockquote class="htv1-director-quote">«{{ director_quote }}»</blockquote>
+                {% endif %}
+            </div>
+        </article>
+        {% endif %}
+
+        {% for teacher in co_teachers %}
+        <article class="htv1-card">
+            <div class="htv1-card-photo"{% if teacher.photo_url %} style="background-image: url('{{ url_for('static', filename=teacher.photo_url) }}');"{% endif %}>
+                <span class="htv1-card-tag"><i></i>{{ teacher.role or 'Педагог центра' }}</span>
+            </div>
+            <div class="htv1-card-body">
+                <h3>{{ teacher.name }}</h3>
+                {% if teacher.specialization %}<p class="htv1-card-role">{{ teacher.specialization }}</p>{% endif %}
+                {% if teacher.experience_years %}
+                <div class="htv1-card-meta">
+                    <span>стаж <b>{{ teacher.experience_years }} {% if teacher.experience_years == 1 %}год{% elif teacher.experience_years in [2,3,4] %}года{% else %}лет{% endif %}</b></span>
+                    {% if teacher.at_center_since %}<span>в центре с <b>{{ teacher.at_center_since }}</b></span>{% endif %}
+                </div>
+                {% endif %}
+                {% if teacher.programs %}
+                <div class="htv1-card-subjects">
+                    {% for program in teacher.programs[:2] %}
+                    <span>{{ program.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    {% if team and team.stats %}
+    <div class="htv1-stats">
+        <div class="htv1-stats-title">
+            <small>Команда в цифрах</small>
+            {% if team.title %}<strong>{{ team.title }}</strong>{% endif %}
+        </div>
+        {% for stat in team.stats %}
+        <div class="htv1-stat"><b>{{ stat.value }}</b><span>{{ stat.label }}</span></div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+{% else %}
 <section class="section teachers-section">
     {% if data.title or data.subtitle %}
     <div class="section-head split-head">
@@ -730,6 +813,7 @@
     </div>
     {% endif %}
 </section>
+{% endif %}
 
 {% elif block.component == "reviews_grid" %}
 <section class="section reviews-section" id="reviews">
