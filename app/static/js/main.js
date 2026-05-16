@@ -233,3 +233,59 @@ document.querySelectorAll("[data-lead-form]").forEach((form) => {
     updateState();
   });
 })();
+
+// === home-cta-v2: чипы-даты + апдейт текста submit ===
+(function () {
+  const root = document.querySelector(".home-cta-v2");
+  if (!root) return;
+  const days = root.querySelectorAll(".home-cta-v2-day");
+  if (!days.length) return;
+  const submitBtn = root.querySelector("[data-cta-submit]");
+  const slotInput = root.querySelector("[data-cta-slot-selected]");
+
+  const DOW = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
+  const MON = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let activeLabel = "";
+
+  function pad(n) { return String(n).padStart(2, "0"); }
+  function iso(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function fmt(d) { return DOW[d.getDay()] + " " + d.getDate() + " " + MON[d.getMonth()]; }
+
+  days.forEach((label, idx) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() + idx);
+    const input = label.querySelector("input");
+    const dow = label.querySelector(".dow");
+    const dnum = label.querySelector(".dnum");
+    const dmon = label.querySelector(".dmon");
+    if (input) input.value = iso(d);
+    if (dow) dow.textContent = DOW[d.getDay()];
+    if (dnum) dnum.textContent = String(d.getDate());
+    if (dmon) dmon.textContent = MON[d.getMonth()];
+    label.dataset.ctaDayLabel = fmt(d);
+    if (label.classList.contains("is-active")) {
+      activeLabel = fmt(d);
+    }
+  });
+
+  function refresh() {
+    if (submitBtn) submitBtn.textContent = "Записаться на " + activeLabel;
+    if (slotInput) slotInput.value = activeLabel;
+  }
+  refresh();
+
+  days.forEach((label) => {
+    label.addEventListener("click", () => {
+      days.forEach((x) => x.classList.remove("is-active"));
+      label.classList.add("is-active");
+      const input = label.querySelector("input");
+      if (input) input.checked = true;
+      activeLabel = label.dataset.ctaDayLabel || activeLabel;
+      refresh();
+    });
+  });
+})();

@@ -353,53 +353,72 @@
 </section>
 
 {% elif block.component == "form_strip" %}
-{# === Концепция A (активна): фото без оверлеев, короткие тезисы списком под подзаголовком === #}
-<section class="section meet-strip">
-    <div class="meet-copy">
-        <h2>{{ data.title or "Давайте знакомиться!" }}</h2>
-        {% if data.subtitle %}
-        <p class="meet-sub">{{ data.subtitle }}</p>
-        {% else %}
-        <p class="meet-sub">Оставьте телефон, и&nbsp;убедитесь сами, почему <span class="meet-sub-accent">нам доверяют</span> более 3000 семей</p>
-        {% endif %}
-        <ul class="meet-points">
-            <li class="meet-point">
-                <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>Расскажем о&nbsp;программе</span>
+{# === Прод-блок CTA V2 «Пробное за 1 клик» (без матрицы день×время) === #}
+<section class="section home-cta-v2">
+    <div class="home-cta-v2-copy">
+        <span class="home-cta-v2-eyebrow">
+            Пробное занятие
+            <b>бесплатно</b>
+        </span>
+        <h2>{{ data.title or "Запишитесь на пробное занятие — выберите удобный день" }}</h2>
+        <p class="home-cta-v2-sub">{{ data.subtitle or "Покажем центр, познакомим с педагогом, проведём 30 минут с ребёнком — и вы спокойно решаете, продолжать или нет." }}</p>
+        <ul class="home-cta-v2-bullets">
+            <li>
+                <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Без оплаты вперёд
             </li>
-            <li class="meet-point">
-                <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>Подберём педагога и&nbsp;время</span>
+            <li>
+                <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Родитель присутствует
             </li>
-            <li class="meet-point">
-                <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>Запишем на&nbsp;пробное занятие</span>
+            <li>
+                <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                30&nbsp;минут
             </li>
-            <li class="meet-point">
-                <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>Расскажем об&nbsp;оплате и&nbsp;льготах</span>
+            <li>
+                <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Подберём педагога под&nbsp;ребёнка
             </li>
         </ul>
-        <form class="lead-inline meet-lead" data-lead-form>
+    </div>
+
+    <div class="home-cta-v2-card">
+        <span class="home-cta-v2-badge">3 места на&nbsp;этой неделе</span>
+        <div class="home-cta-v2-card-head">
+            <strong>Свободное время</strong>
+            <span>Воробьёвская, 16А</span>
+        </div>
+        <p class="home-cta-v2-card-lede">Выберите день — администратор перезвонит и&nbsp;согласует время.</p>
+
+        <div class="home-cta-v2-card-step"><b>1</b>Какой день вам удобен?</div>
+        <div class="home-cta-v2-days" role="radiogroup" aria-label="День пробного занятия" data-cta-days>
+            {# 7 пустых чипов — заполняются JS-ом ближайшими датами от сегодня #}
+            {% for i in range(7) %}
+            <label class="home-cta-v2-day{% if loop.first %} is-active{% endif %}" data-cta-day-offset="{{ loop.index0 }}">
+                <input type="radio" name="cta_slot_day" value=""{% if loop.first %} checked{% endif %}>
+                <span class="dow"></span>
+                <span class="dnum"></span>
+                <span class="dmon"></span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <form class="home-cta-v2-form" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
-            <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
+            <input type="hidden" name="source_block" value="{{ data.source_block or 'home_cta_v2' }}">
+            <input type="hidden" name="slot_selected" value="" data-cta-slot-selected>
             <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
-            <div class="meet-lead-row">
-                <label class="sr-only" for="strip-phone">Телефон</label>
-                <input id="strip-phone" type="tel" name="phone" placeholder="Введите телефон" required>
-                <button class="button button-acid" type="submit">Получить консультацию</button>
-            </div>
-            <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
-            <div class="meet-conditions" aria-label="Условия занятий">
-                <span>Пропустили&nbsp;— пересчитаем</span>
-                <span>2-й ребёнок или близнецы&nbsp;— скидка</span>
-                <span>Абонемент или разово&nbsp;— как удобно</span>
-            </div>
+            <div class="home-cta-v2-card-step home-cta-v2-card-step--inline"><b>2</b>Ваш телефон</div>
+            <label class="sr-only" for="home-cta-v2-phone">Телефон</label>
+            <input id="home-cta-v2-phone" type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+            <button type="submit" data-cta-submit>Записаться</button>
+            <p class="home-cta-v2-after">Администратор перезвонит и&nbsp;согласует удобное время.</p>
             <p class="form-status" data-form-status></p>
         </form>
-    </div>
-    <div class="meet-visual{% if data.visual_variant %} meet-visual-{{ data.visual_variant }}{% endif %}" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename=data.image or 'img/figma/hero-boy-camera.png') }}" alt="">
+
+        <p class="home-cta-v2-card-foot">
+            Нажимая «Записаться», вы&nbsp;соглашаетесь с&nbsp;<u>политикой обработки персональных данных</u>.
+        </p>
     </div>
 </section>
 {#
@@ -530,30 +549,48 @@
     </div>
     <p class="filter-empty" data-filter-empty hidden>По&nbsp;вашему запросу ничего не&nbsp;нашлось. Сбросьте фильтры&nbsp;— и&nbsp;мы&nbsp;покажем все программы.</p>
     {% else %}
-    <div class="program-card-grid">
+    <div class="home-programs-v1">
         {% for program in data.programs %}
-        <article class="program-tile program-tile-{{ loop.index }}" style="--accent: {{ program.color or '#f36f32' }}; background: {{ program.color or '#f36f32' }};">
-            <div class="program-copy">
-                <div class="program-labels">
-                    <span class="program-chip">Длительность от {{ program.duration_min or 40 }} минут</span>
-                </div>
-                <p class="program-meta">{{ program.frequency }}</p>
-                <h3>{{ program.name }}</h3>
-                <p class="program-desc">{{ program.tagline }}</p>
+        {% set accent = program.color or '#ed7735' %}
+        <article class="home-programs-v1-card{% if loop.first %} home-programs-v1-card--wide{% endif %}"
+                 style="--hpv1-accent: {{ accent }};">
+            <a class="home-programs-v1-details" href="/{{ program.slug }}/">Подробнее →</a>
+
+            <div class="home-programs-v1-card-top">
+                <span class="home-programs-v1-age">
+                    {{ program.age_label or '—' }}
+                    <small>возраст</small>
+                </span>
+                <span class="home-programs-v1-icon" aria-hidden="true">
+                    {% if program.image_url %}
+                    {{ pic(program.image_url, alt='', cls='home-programs-v1-icon-img') }}
+                    {% else %}
+                    <span class="home-programs-v1-icon-emoji">{{ program.emoji or '✦' }}</span>
+                    {% endif %}
+                </span>
             </div>
-            <div class="program-bottom">
-                <span class="program-age">{{ program.age_label }}</span>
-                <div class="program-price">
+
+            <h3>{{ program.name }}</h3>
+            {% if program.tagline %}<p class="home-programs-v1-tagline">{{ program.tagline }}</p>{% endif %}
+
+            <ul class="home-programs-v1-meta" aria-label="Параметры">
+                <li>{{ program.duration_min or 45 }} мин</li>
+                {% if program.frequency %}<li>{{ program.frequency }}</li>{% endif %}
+                {% if program.format %}<li>{{ program.format }}</li>{% endif %}
+            </ul>
+
+            <div class="home-programs-v1-foot">
+                <div class="home-programs-v1-price">
                     <strong>{{ program.price_label }}</strong>
-                    {% if program.price_unit %}<span class="program-price-unit">в {{ program.price_unit }}</span>{% endif %}
+                    {% if program.price_unit %}<small>в {{ program.price_unit }} · абонемент или разово</small>{% endif %}
                 </div>
+                <a class="home-programs-v1-cta" href="#lead-form">
+                    Записаться
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
             </div>
-            <a class="program-link" href="/{{ program.slug }}/" aria-label="Открыть {{ program.name }}"></a>
-            {% if program.image_url %}
-            {{ pic(program.image_url, alt='', cls='program-object-img') }}
-            {% else %}
-            <span class="program-object">{{ program.emoji or "✦" }}</span>
-            {% endif %}
         </article>
         {% endfor %}
     </div>

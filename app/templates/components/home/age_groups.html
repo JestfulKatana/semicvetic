@@ -1,69 +1,101 @@
-<section class="section home-age-groups">
-    <div class="section-head">
-        <p class="eyebrow">Выберите возраст</p>
-        <h2>С какого года ваш ребёнок?</h2>
-        <p class="section-lead">Подберём подходящую программу: от занятий с мамой для&nbsp;малышей до&nbsp;подготовки к&nbsp;школе и&nbsp;английского для&nbsp;младших&nbsp;классов.</p>
+<section class="section home-age-v1">
+    <div class="home-age-v1-head">
+        <div class="home-age-v1-head-text">
+            <span class="eyebrow">Выберите возраст</span>
+            <h2>Сколько лет ребёнку? <span class="accent">Подберём подходящее.</span></h2>
+        </div>
+        <a class="home-age-v1-head-aside" href="#lead-form">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7v5l3 2"/>
+            </svg>
+            <span>Не уверены? <b>Поможем выбрать за 5 минут</b></span>
+        </a>
     </div>
-    <div class="age-grid">
-        <a class="age-card age-card--green" href="{{ url_for('main.slug_router', slug='programmy') }}#early">
-            <div class="age-card-ico" aria-hidden="true">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="M5 12a7 7 0 0 1 14 0c0 5-3 8-7 10-4-2-7-5-7-10z"/></svg>
+
+    <div class="home-age-v1-grid">
+        <a class="home-age-v1-card home-age-v1-card--green" href="{{ url_for('main.slug_router', slug='programmy') }}#early">
+            <div class="home-age-v1-card-top">
+                <span><span class="dot"></span> С мамой</span>
+                <span>Сб 10:30</span>
             </div>
-            <div class="age-card-body">
-                <h3>1–3 года</h3>
-                <p class="age-card-sub">От 1 года · С родителями</p>
-                <ul>
-                    <li>Сенсорика и моторика</li>
-                    <li>Музыка, песенки, игры</li>
-                    <li>Каждую субботу 10:30</li>
-                </ul>
+            <div class="home-age-v1-card-main">
+                <p class="home-age-v1-card-age">1–3<span class="yr">года</span></p>
+                <p class="home-age-v1-card-promise">Первые занятия — <b>вместе с мамой</b>. Привыкаем к&nbsp;центру.</p>
             </div>
-            <span class="age-card-link">К программе&nbsp;→</span>
+            <div class="home-age-v1-card-bottom">
+                <span class="meta">Сенсорика · Музыка</span>
+                <span class="home-age-v1-card-cta">
+                    К программе
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+            </div>
+            <span class="watermark">1</span>
         </a>
-        <a class="age-card age-card--orange" href="{{ url_for('main.slug_router', slug='programmy') }}#early-dev">
-            <div class="age-card-ico" aria-hidden="true">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.5 6.5L21 11l-5 4.5L17 22l-5-3-5 3 1-6.5L3 11l6.5-1.5L12 3z"/></svg>
+
+        <a class="home-age-v1-card home-age-v1-card--orange" href="{{ url_for('main.slug_router', slug='programmy') }}#early-dev">
+            <div class="home-age-v1-card-top">
+                <span><span class="dot"></span> Без мамы</span>
+                <span>2 раза в нед.</span>
             </div>
-            <div class="age-card-body">
-                <h3>4–5 лет</h3>
-                <p class="age-card-sub">Без родителей · 2 раза в неделю</p>
-                <ul>
-                    <li>Росточки и Цветики</li>
-                    <li>Речь, мышление, моторика</li>
-                    <li>Малые группы</li>
-                </ul>
+            <div class="home-age-v1-card-main">
+                <p class="home-age-v1-card-age">4–5<span class="yr">лет</span></p>
+                <p class="home-age-v1-card-promise">Учимся <b>самостоятельности</b>: речь, мышление, общение в&nbsp;группе.</p>
             </div>
-            <span class="age-card-link">К программе&nbsp;→</span>
+            <div class="home-age-v1-card-bottom">
+                <span class="meta">Росточки · Цветики</span>
+                <span class="home-age-v1-card-cta">
+                    К программе
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+            </div>
+            <span class="watermark">4</span>
         </a>
-        <a class="age-card age-card--purple" href="{{ url_for('main.slug_router', slug='programmy') }}#school">
-            <div class="age-card-ico" aria-hidden="true">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v6c0 3 4 5 9 5s9-2 9-5V7"/></svg>
+
+        <a class="home-age-v1-card home-age-v1-card--purple" href="{{ url_for('main.slug_router', slug='programmy') }}#school">
+            <div class="home-age-v1-card-top">
+                <span><span class="dot"></span> К школе</span>
+                <span>2,5 часа</span>
             </div>
-            <div class="age-card-body">
-                <h3>6–7 лет</h3>
-                <p class="age-card-sub">2 раза в неделю · 2,5 часа</p>
-                <ul>
-                    <li>Чтение, математика</li>
-                    <li>Психолог, окруж. мир</li>
-                    <li>ИЗО и&nbsp;лепка</li>
-                </ul>
+            <div class="home-age-v1-card-main">
+                <p class="home-age-v1-card-age">6–7<span class="yr">лет</span></p>
+                <p class="home-age-v1-card-promise">Готовимся к&nbsp;1&nbsp;классу: <b>чтение, математика, психолог</b>.</p>
             </div>
-            <span class="age-card-link">К программе&nbsp;→</span>
+            <div class="home-age-v1-card-bottom">
+                <span class="meta">5 блоков</span>
+                <span class="home-age-v1-card-cta">
+                    К программе
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+            </div>
+            <span class="watermark">6</span>
         </a>
-        <a class="age-card age-card--blue" href="{{ url_for('main.slug_router', slug='programmy') }}#speech">
-            <div class="age-card-ico" aria-hidden="true">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+
+        <a class="home-age-v1-card home-age-v1-card--blue" href="{{ url_for('main.slug_router', slug='programmy') }}#speech">
+            <div class="home-age-v1-card-top">
+                <span><span class="dot"></span> Школьники</span>
+                <span>Англ. · Лагерь</span>
             </div>
-            <div class="age-card-body">
-                <h3>8–14 лет</h3>
-                <p class="age-card-sub">Школьники · Подростки</p>
-                <ul>
-                    <li>Лагерь: английский, наука</li>
-                    <li>Психолог, логопед</li>
-                    <li>4 летних смены</li>
-                </ul>
+            <div class="home-age-v1-card-main">
+                <p class="home-age-v1-card-age">8–14<span class="yr">лет</span></p>
+                <p class="home-age-v1-card-promise">Английский, наука, психолог — <b>под школьную программу</b>.</p>
             </div>
-            <span class="age-card-link">К программе&nbsp;→</span>
+            <div class="home-age-v1-card-bottom">
+                <span class="meta">4 смены</span>
+                <span class="home-age-v1-card-cta">
+                    К программе
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+            </div>
+            <span class="watermark">8</span>
+        </a>
+    </div>
+
+    <div class="home-age-v1-helper">
+        <p>Не нашли свой возраст или сомневаетесь? <b>Расскажите о ребёнке — подберём программу под него</b>, а не наоборот.</p>
+        <a class="home-age-v1-helper-btn" href="#lead-form">
+            Подобрать индивидуально
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
     </div>
 </section>
