@@ -1,0 +1,269 @@
+{% extends "admin/news/_layout.html" %}
+
+{% block title %}{{ 'Редактирование' if post else 'Новая запись' }} — Новости{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css">
+{% endblock %}
+
+{% block content %}
+<div class="na-page-head">
+    <div>
+        <a class="na-link" href="{{ url_for('news_admin.index') }}">← К списку новостей</a>
+        <h1 class="na-page-title" style="margin-top: 6px;">
+            {% if post %}Редактирование новости{% else %}Новая новость{% endif %}
+        </h1>
+        {% if post %}
+        <p class="na-page-subtitle">
+            ID #{{ post.id }} · создано {{ post.created_at.strftime('%d.%m.%Y %H:%M') }} ·
+            <a href="/novosti/{{ post.slug }}/" target="_blank" rel="noopener">/novosti/{{ post.slug }}/</a>
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<form id="news-form" method="POST" action="{{ form_action }}" autocomplete="off">
+    <div class="na-form-grid">
+        <div class="na-form-main">
+            <input type="text"
+                   name="title"
+                   class="na-title-input"
+                   placeholder="Заголовок новости"
+                   value="{{ post.title if post else '' }}"
+                   required
+                   maxlength="255">
+
+            <div class="na-panel">
+                <p class="na-panel-title">Краткое описание (для карточек)</p>
+                <textarea name="excerpt"
+                          placeholder="1–2 предложения, что внутри. Показывается на главной и в списке."
+                          maxlength="400">{{ post.excerpt or '' }}</textarea>
+            </div>
+
+            <div class="na-panel na-panel--editor">
+                <div id="quill-editor" class="na-editor-host"></div>
+                <textarea name="body_html" id="body-html-output" hidden>{{ post.body_html or '' }}</textarea>
+            </div>
+        </div>
+
+        <aside class="na-form-side">
+            <div class="na-panel">
+                <p class="na-panel-title">Публикация</p>
+                <label class="na-toggle">
+                    <input type="checkbox" name="is_published" value="1" {% if not post or post.is_published %}checked{% endif %}>
+                    <span>Опубликовано на сайте</span>
+                </label>
+                <div style="height: 10px;"></div>
+                <label class="na-toggle">
+                    <input type="checkbox" name="is_pinned" value="1" {% if post and post.is_pinned %}checked{% endif %}>
+                    <span>Закрепить наверху</span>
+                </label>
+
+                <div style="height: 16px;"></div>
+                <div class="na-form-actions">
+                    <button type="submit" class="na-btn na-btn--primary" style="flex:1; justify-content:center;">
+                        Сохранить
+                    </button>
+                </div>
+            </div>
+
+            <div class="na-panel">
+                <p class="na-panel-title">Обложка</p>
+                <div id="cover-uploader"
+                     class="na-cover {% if post and post.image_url %}na-cover--has-image{% endif %}"
+                     data-empty-text="Нажмите или перетащите файл сюда">
+                    {% if post and post.image_url %}
+                    <img src="{{ post.image_url }}" alt="">
+                    <div class="na-cover-actions">
+                        <button type="button" class="na-btn na-btn--sm" data-action="replace">Заменить</button>
+                        <button type="button" class="na-btn na-btn--sm na-btn--danger" data-action="clear">Убрать</button>
+                    </div>
+                    {% else %}
+                    <div class="na-cover-empty-text">📷 Нажмите или перетащите файл сюда<br><span style="font-size:11px;">JPG, PNG, WEBP до 10 МБ</span></div>
+                    {% endif %}
+                </div>
+                <input type="hidden" name="image_url" id="image-url-field" value="{{ post.image_url or '' }}">
+                <input type="file" id="cover-file" accept="image/*" hidden>
+            </div>
+
+            <div class="na-panel">
+                <p class="na-panel-title">Метаданные</p>
+                <div class="na-field">
+                    <label for="event-date">Дата публикации</label>
+                    <input type="date" name="event_date" id="event-date"
+                           value="{{ post.event_date.isoformat() if post and post.event_date else today_str }}">
+                </div>
+                <div class="na-field">
+                    <label for="category">Рубрика</label>
+                    <input type="text" name="category" id="category"
+                           value="{{ post.category or '' }}"
+                           placeholder="Например: События">
+                </div>
+                <div class="na-field">
+                    <label for="slug">URL (slug)</label>
+                    <input type="text" name="slug" id="slug"
+                           value="{{ post.slug if post else '' }}"
+                           placeholder="auto — сгенерируем из заголовка">
+                    <div class="na-field-help">
+                        Финальный адрес: <code>/novosti/<span id="slug-preview">{{ post.slug if post else 'novaya-zapis' }}</span>/</code>
+                    </div>
+                </div>
+            </div>
+
+            {% if post %}
+            <div class="na-panel">
+                <p class="na-panel-title">Опасная зона</p>
+                <form method="POST" action="{{ url_for('news_admin.delete', post_id=post.id) }}"
+                      onsubmit="return confirm('Удалить новость без возможности восстановления?');">
+                    <button type="submit" class="na-btn na-btn--danger" style="width: 100%; justify-content: center;">
+                        Удалить новость
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </aside>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+(function () {
+    const UPLOAD_URL = "{{ url_for('admin_media.upload_image') }}";
+    const initialHtml = document.getElementById('body-html-output').value || '';
+
+    /* ───── Quill ───── */
+    const toolbarOptions = [
+        [{ header: [2, 3, 4, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['blockquote', 'link', 'image'],
+        [{ align: [] }],
+        ['clean'],
+    ];
+    const quill = new Quill('#quill-editor', {
+        theme: 'snow',
+        placeholder: 'Расскажите подробнее: что произошло, кого ждём, как записаться…',
+        modules: { toolbar: { container: toolbarOptions, handlers: { image: customImageHandler } } },
+    });
+    if (initialHtml) {
+        quill.clipboard.dangerouslyPasteHTML(initialHtml, 'silent');
+    }
+
+    function customImageHandler() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = () => input.files[0] && uploadAndInsert(input.files[0]);
+        input.click();
+    }
+
+    async function uploadAndInsert(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+            const res = await fetch(UPLOAD_URL, { method: 'POST', body: formData, credentials: 'same-origin' });
+            const data = await res.json();
+            if (!data.ok) { alert(data.error || 'Не удалось загрузить'); return; }
+            const range = quill.getSelection(true);
+            quill.insertEmbed(range.index, 'image', data.url, 'user');
+            quill.setSelection(range.index + 1, 0, 'silent');
+        } catch (err) {
+            alert('Ошибка загрузки картинки: ' + err);
+        }
+    }
+
+    /* drag-n-drop изображений в редактор */
+    const editorEl = document.querySelector('#quill-editor .ql-editor');
+    ['dragover', 'drop'].forEach(evt => editorEl.addEventListener(evt, e => e.preventDefault()));
+    editorEl.addEventListener('drop', e => {
+        if (!e.dataTransfer.files || !e.dataTransfer.files.length) return;
+        const file = e.dataTransfer.files[0];
+        if (file.type.startsWith('image/')) uploadAndInsert(file);
+    });
+
+    /* ───── Cover uploader ───── */
+    const cover = document.getElementById('cover-uploader');
+    const coverFile = document.getElementById('cover-file');
+    const imageUrlField = document.getElementById('image-url-field');
+
+    function renderCover(url) {
+        if (url) {
+            cover.classList.add('na-cover--has-image');
+            cover.innerHTML = `
+                <img src="${url}" alt="">
+                <div class="na-cover-actions">
+                    <button type="button" class="na-btn na-btn--sm" data-action="replace">Заменить</button>
+                    <button type="button" class="na-btn na-btn--sm na-btn--danger" data-action="clear">Убрать</button>
+                </div>`;
+        } else {
+            cover.classList.remove('na-cover--has-image');
+            cover.innerHTML = `<div class="na-cover-empty-text">📷 Нажмите или перетащите файл сюда<br><span style="font-size:11px;">JPG, PNG, WEBP до 10 МБ</span></div>`;
+        }
+        imageUrlField.value = url || '';
+    }
+
+    cover.addEventListener('click', e => {
+        const action = e.target.closest('[data-action]')?.dataset.action;
+        if (action === 'clear') { e.stopPropagation(); renderCover(''); return; }
+        coverFile.click();
+    });
+
+    coverFile.addEventListener('change', async () => {
+        const file = coverFile.files[0];
+        if (!file) return;
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch(UPLOAD_URL, { method: 'POST', body: fd, credentials: 'same-origin' });
+        const data = await res.json();
+        if (data.ok) renderCover(data.url);
+        else alert(data.error || 'Не удалось загрузить');
+        coverFile.value = '';
+    });
+
+    /* drag-n-drop на cover */
+    cover.addEventListener('dragover', e => { e.preventDefault(); cover.style.borderColor = '#7558ff'; });
+    cover.addEventListener('dragleave', () => { cover.style.borderColor = ''; });
+    cover.addEventListener('drop', async e => {
+        e.preventDefault(); cover.style.borderColor = '';
+        const file = e.dataTransfer.files?.[0];
+        if (!file || !file.type.startsWith('image/')) return;
+        const fd = new FormData(); fd.append('file', file);
+        const res = await fetch(UPLOAD_URL, { method: 'POST', body: fd, credentials: 'same-origin' });
+        const data = await res.json();
+        if (data.ok) renderCover(data.url);
+        else alert(data.error || 'Не удалось загрузить');
+    });
+
+    /* ───── Auto-slug preview ───── */
+    const titleInput = document.querySelector('input[name="title"]');
+    const slugInput = document.getElementById('slug');
+    const slugPreview = document.getElementById('slug-preview');
+
+    const TRANSLIT = {"а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"e","ж":"zh","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"h","ц":"ts","ч":"ch","ш":"sh","щ":"sch","ъ":"","ы":"y","ь":"","э":"e","ю":"yu","я":"ya"};
+    function slugify(v) {
+        v = (v || '').toLowerCase().trim();
+        let out = '';
+        for (const ch of v) {
+            if (ch in TRANSLIT) out += TRANSLIT[ch];
+            else if (/[a-z0-9\-_]/.test(ch)) out += ch;
+            else if (/\s|—|–/.test(ch)) out += '-';
+        }
+        return out.replace(/-+/g, '-').replace(/^-|-$/g, '').slice(0, 80);
+    }
+
+    function updatePreview() {
+        const slug = slugify(slugInput.value || titleInput.value);
+        slugPreview.textContent = slug || 'novost';
+    }
+    titleInput.addEventListener('input', updatePreview);
+    slugInput.addEventListener('input', updatePreview);
+
+    /* ───── Submit hook ───── */
+    document.getElementById('news-form').addEventListener('submit', () => {
+        document.getElementById('body-html-output').value = quill.root.innerHTML;
+    });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% if news %}
+<section class="section home-news" id="news">
+    <div class="home-news-head">
+        <div>
+            <p class="eyebrow">Новости центра</p>
+            <h2>Что у нас происходит</h2>
+        </div>
+        <a class="home-news-all" href="/novosti/">Все новости →</a>
+    </div>
+    <div class="news-grid">
+        {% for post in news[:3] %}
+        <article class="news-tile {% if post.is_pinned %}news-tile--pinned{% endif %}">
+            <a class="news-tile-cover" href="/novosti/{{ post.slug }}/">
+                {% if post.image_url %}
+                    <img src="{{ post.image_url }}" alt="{{ post.title }}" loading="lazy">
+                {% else %}
+                    <div class="news-tile-placeholder" aria-hidden="true">🌸</div>
+                {% endif %}
+                {% if post.is_pinned %}<span class="news-tile-pin">Закреплено</span>{% endif %}
+            </a>
+            <div class="news-tile-body">
+                <p class="news-tile-meta">
+                    <time>{{ post.display_date }}</time>
+                    {% if post.category %}<span class="news-tile-dot">·</span><span>{{ post.category }}</span>{% endif %}
+                </p>
+                <h3 class="news-tile-title">
+                    <a href="/novosti/{{ post.slug }}/">{{ post.title }}</a>
+                </h3>
+                {% if post.excerpt %}
+                <p class="news-tile-excerpt">{{ post.excerpt|truncate(140) }}</p>
+                {% endif %}
+                <a class="news-tile-link" href="/novosti/{{ post.slug }}/">Читать →</a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}

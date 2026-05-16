@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section news-detail-section">
+    <div class="container news-detail-shell">
+        <p class="eyebrow">
+            <a href="/novosti/" class="news-breadcrumb">Новости</a> · {{ post.display_date }}
+            {% if post.category %} · {{ post.category }}{% endif %}
+        </p>
+        <h1>{{ post.title }}</h1>
+        {% if post.excerpt %}
+        <p class="lead-text news-detail-lead">{{ post.excerpt }}</p>
+        {% endif %}
+
+        {% if post.image_url %}
+        <figure class="news-detail-hero">
+            <img src="{{ post.image_url }}" alt="{{ post.title }}" loading="eager">
+        </figure>
+        {% endif %}
+
+        <article class="prose news-prose">
+            {% if post.has_rich_body %}
+                {{ post.body_html|safe }}
+            {% elif post.content %}
+                {{ post.content|markdown|safe }}
+            {% endif %}
+        </article>
+
+        <div class="news-detail-footer">
+            <a class="button button-ghost" href="/novosti/">← Все новости</a>
+            <a class="button button-primary" href="/#lead-form">Записаться на занятие</a>
+        </div>
+    </div>
+</section>
+
+{% if related %}
+<section class="section news-related-section">
+    <div class="container">
+        <h2 class="news-related-title">Ещё новости</h2>
+        <div class="news-grid news-grid--compact">
+            {% for post in related %}
+            <article class="news-tile">
+                <a class="news-tile-cover" href="/novosti/{{ post.slug }}/">
+                    {% if post.image_url %}
+                        <img src="{{ post.image_url }}" alt="{{ post.title }}" loading="lazy">
+                    {% else %}
+                        <div class="news-tile-placeholder" aria-hidden="true">🌸</div>
+                    {% endif %}
+                </a>
+                <div class="news-tile-body">
+                    <p class="news-tile-meta"><time>{{ post.display_date }}</time></p>
+                    <h3 class="news-tile-title"><a href="/novosti/{{ post.slug }}/">{{ post.title }}</a></h3>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

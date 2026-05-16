@@ -15,4 +15,14 @@
     <loc>{{ request.url_root.rstrip('/') }}/blog/{{ article.slug }}/</loc>
   </url>
   {% endfor %}
+  {% if news is defined %}
+  <url>
+    <loc>{{ request.url_root.rstrip('/') }}/novosti/</loc>
+  </url>
+  {% for post in news %}
+  <url>
+    <loc>{{ request.url_root.rstrip('/') }}/novosti/{{ post.slug }}/</loc>
+  </url>
+  {% endfor %}
+  {% endif %}
 </urlset>

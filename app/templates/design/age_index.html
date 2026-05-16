@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .age-index {
+        max-width: 1400px;
+        margin: 32px auto 64px;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .age-index h1 {
+        font-size: 38px;
+        font-weight: 700;
+        letter-spacing: -1.2px;
+        color: var(--text);
+        margin: 0 0 8px;
+    }
+    .age-index p.lead {
+        font-size: 16px;
+        color: var(--muted);
+        margin: 0 0 32px;
+        max-width: 700px;
+    }
+    .age-index-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+    .age-index-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 28px 28px 24px;
+        background: var(--surface);
+        border-radius: 24px;
+        text-decoration: none;
+        color: inherit;
+        transition: transform .2s ease, box-shadow .2s ease;
+        border: 1px solid rgba(53,45,42,.06);
+    }
+    .age-index-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 50px rgba(53,45,42,.12);
+    }
+    .age-index-card .tag {
+        display: inline-flex;
+        align-self: flex-start;
+        padding: 6px 14px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        border-radius: 999px;
+        background: var(--surface-2);
+        color: var(--muted);
+    }
+    .age-index-card.v1 .tag { background: rgba(0,180,60,.18); color: #1d8a2e; }
+    .age-index-card.v2 .tag { background: rgba(99,89,194,.18); color: var(--purple); }
+    .age-index-card.v3 .tag { background: rgba(219,94,180,.18); color: var(--pink); }
+    .age-index-card h2 {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 8px 0 4px;
+        letter-spacing: -0.6px;
+    }
+    .age-index-card p {
+        font-size: 14.5px;
+        line-height: 1.5;
+        color: var(--muted);
+        margin: 0;
+    }
+    .age-index-card .open {
+        margin-top: 14px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--orange);
+    }
+</style>
+
+<div class="age-index">
+    <h1>Блок «С какого года ваш ребёнок?» — 3 концепции</h1>
+    <p class="lead">
+        Текущая реализация: 4 пёстрых карточки в ряд с буллетами. Идея хорошая, но выбор возраста тонет в шуме.
+        Ниже — три разных подхода к одной задаче: помочь родителю быстро попасть на нужную программу.
+    </p>
+
+    <div class="age-index-grid">
+        <a class="age-index-card v1" href="{{ url_for('design_age.age_v1') }}">
+            <span class="tag">V1 · Safe</span>
+            <h2>Возрастной свитчер</h2>
+            <p>
+                4 огромные плитки с возрастом размером в полстраницы. Никаких буллетов — одна сильная строка-обещание.
+                Родитель видит свой возраст за&nbsp;полсекунды и&nbsp;кликает.
+            </p>
+            <span class="open">Открыть V1 →</span>
+        </a>
+        <a class="age-index-card v2" href="{{ url_for('design_age.age_v2') }}">
+            <span class="tag">V2 · Evolve</span>
+            <h2>Таймлайн взросления</h2>
+            <p>
+                Горизонтальная линия от&nbsp;1 до&nbsp;14 лет с&nbsp;кликабельными точками.
+                Подсказка справа меняется при наведении: что ребёнок умеет, какую программу подобрать.
+            </p>
+            <span class="open">Открыть V2 →</span>
+        </a>
+        <a class="age-index-card v3" href="{{ url_for('design_age.age_v3') }}">
+            <span class="tag">V3 · Bold</span>
+            <h2>Что нужно ребёнку сейчас</h2>
+            <p>
+                Вход не&nbsp;через возраст, а&nbsp;через задачу родителя: «только начинаем»,
+                «готовимся к&nbsp;школе», «школьник, тяжело», «подросток, английский».
+                Возрастная вилка — внутри.
+            </p>
+            <span class="open">Открыть V3 →</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

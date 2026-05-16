@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% set news_injected = namespace(done=False) %}
     {# Рендерим все блоки из БД как обычно #}
     {% for block in blocks %}
         {% set _idx = loop.index0 %}
@@ -15,5 +16,16 @@
         {% if _idx == 2 %}
             {% include "components/home/seasonal.html" %}
         {% endif %}
+
+        {# После блока «Отзывы» — секция «Новости» (одна попытка) #}
+        {% if not news_injected.done and block.component == 'reviews_grid' %}
+            {% include "components/home/news.html" %}
+            {% set news_injected.done = True %}
+        {% endif %}
     {% endfor %}
+
+    {# Если блок reviews не встретился — рендерим новости перед закрытием контента #}
+    {% if not news_injected.done %}
+        {% include "components/home/news.html" %}
+    {% endif %}
 {% endblock %}

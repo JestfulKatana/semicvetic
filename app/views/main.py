@@ -27,6 +27,11 @@ def shared_context(current_program=None) -> dict:
         .order_by(Event.created_at.desc())
         .all()
     )
+    news = (
+        Event.query.filter_by(type="news", is_published=True)
+        .order_by(Event.is_pinned.desc(), Event.event_date.desc().nullslast(), Event.created_at.desc())
+        .all()
+    )
     nav_pages = (
         Page.query.filter(Page.is_published.is_(True), Page.slug != "home")
         .order_by(Page.sort_order, Page.title)
@@ -39,6 +44,7 @@ def shared_context(current_program=None) -> dict:
         "reviews": reviews,
         "events": events,
         "articles": articles,
+        "news": news,
         "nav_pages": nav_pages,
         "current_program": current_program,
     }
@@ -51,6 +57,7 @@ def inject_global_context():
         "site_settings": ctx["settings"],
         "nav_pages": ctx["nav_pages"],
         "programs": ctx["programs"],
+        "news": ctx["news"],
     }
 
 
@@ -65,6 +72,39 @@ def home():
         page_title=page.meta_title or page.title,
         page_description=page.meta_description or page.hero_subtitle,
         page_schema=build_org_schema(ctx["settings"]),
+    )
+
+
+@bp.route("/novosti/")
+def news_list():
+    ctx = shared_context()
+    return render_template(
+        "pages/news_list.html",
+        news=ctx["news"],
+        page_title="Новости центра «Семицветик»",
+        page_description="Что происходит в центре: события, наборы, поздравления и новости из жизни наших ребят.",
+    )
+
+
+@bp.route("/novosti/<slug>/")
+def news_detail(slug: str):
+    post = Event.query.filter_by(slug=slug, type="news", is_published=True).first_or_404()
+    ctx = shared_context()
+    related = [n for n in ctx["news"] if n.id != post.id][:3]
+    return render_template(
+        "pages/news_detail.html",
+        post=post,
+        related=related,
+        page_title=post.title,
+        page_description=post.excerpt or (post.title + " — новости центра Семицветик"),
+        page_schema={
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            "headline": post.title,
+            "description": post.excerpt,
+            "datePublished": (post.event_date or post.created_at.date()).isoformat(),
+            "image": post.image_url,
+        },
     )
 
 
@@ -92,8 +132,15 @@ def sitemap():
     pages = Page.query.filter_by(is_published=True).all()
     programs = Program.query.filter_by(is_published=True).all()
     articles = Event.query.filter_by(is_published=True, type="article").all()
+    news = Event.query.filter_by(is_published=True, type="news").all()
     response = make_response(
-        render_template("sitemap.xml", pages=pages, programs=programs, articles=articles)
+        render_template(
+            "sitemap.xml",
+            pages=pages,
+            programs=programs,
+            articles=articles,
+            news=news,
+        )
     )
     response.headers["Content-Type"] = "application/xml"
     return response

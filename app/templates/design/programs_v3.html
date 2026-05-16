@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V3 — Цветные плитки-знакомства ============================ */
+    .pgv3-section {
+        padding: 68px 70px;
+    }
+    .pgv3-head {
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 32px;
+    }
+    .pgv3-head .eyebrow {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--orange);
+        font-weight: 700;
+        font-size: 14px;
+    }
+    .pgv3-head h2 {
+        margin: 0;
+        font-size: 46px;
+        font-weight: 740;
+        letter-spacing: -1.4px;
+        line-height: 1.04;
+    }
+    .pgv3-head p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 17px;
+        max-width: 560px;
+    }
+    .pgv3-head-link {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 18px;
+        height: 44px;
+        background: #f1e9e6;
+        color: var(--text);
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+    }
+
+    /* === grid with asymmetric tiles === */
+    .pgv3-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: 320px;
+        gap: 14px;
+    }
+    /* раскладка: широкая первая, потом 4 равных, длинная пятая */
+    .pgv3-tile:nth-child(1) { grid-column: span 3; grid-row: span 1; }
+    .pgv3-tile:nth-child(2) { grid-column: span 3; grid-row: span 1; }
+    .pgv3-tile:nth-child(3) { grid-column: span 2; grid-row: span 1; }
+    .pgv3-tile:nth-child(4) { grid-column: span 2; grid-row: span 1; }
+    .pgv3-tile:nth-child(5) { grid-column: span 2; grid-row: span 1; }
+
+    .pgv3-tile {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 30px 32px;
+        background: var(--accent);
+        border-radius: 24px;
+        color: #fff;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .pgv3-tile:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 60px rgba(53, 45, 42, 0.18);
+    }
+    .pgv3-tile::before {
+        content: "";
+        position: absolute;
+        top: -40%;
+        right: -20%;
+        width: 70%;
+        height: 140%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .pgv3-tile::after {
+        content: "";
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 50%;
+        height: 80%;
+        background: radial-gradient(circle, rgba(0, 0, 0, 0.10) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    /* верх плитки */
+    .pgv3-top {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .pgv3-cat {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        background: rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        backdrop-filter: blur(4px);
+    }
+    .pgv3-emoji {
+        font-size: 52px;
+        line-height: 1;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.18));
+    }
+
+    /* центр — крупный возраст */
+    .pgv3-center {
+        position: relative;
+        z-index: 2;
+        margin: 18px 0 14px;
+    }
+    .pgv3-age-big {
+        margin: 0;
+        font-size: 88px;
+        font-weight: 700;
+        letter-spacing: -4px;
+        line-height: 0.92;
+        color: #fff;
+    }
+    .pgv3-tile:nth-child(n+3) .pgv3-age-big { font-size: 72px; letter-spacing: -3px; }
+    .pgv3-age-label {
+        margin: 4px 0 0;
+        font-size: 14px;
+        font-weight: 600;
+        opacity: 0.85;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        color: #fff;
+    }
+
+    /* низ — название + выгода + цена + CTA */
+    .pgv3-bottom {
+        position: relative;
+        z-index: 2;
+    }
+    .pgv3-tile h3 {
+        margin: 0 0 6px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.6px;
+        line-height: 1.1;
+        color: #fff;
+    }
+    .pgv3-tile:nth-child(n+3) h3 { font-size: 22px; }
+    .pgv3-benefit {
+        margin: 0 0 18px;
+        font-size: 15px;
+        line-height: 1.35;
+        color: #fff;
+        opacity: 0.92;
+        font-weight: 500;
+    }
+    .pgv3-benefit::before {
+        content: "→ ";
+        font-weight: 700;
+        opacity: 0.7;
+    }
+    .pgv3-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.22);
+    }
+    .pgv3-price {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.85);
+    }
+    .pgv3-price strong {
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.3px;
+    }
+    .pgv3-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 18px;
+        height: 42px;
+        background: #fff;
+        color: var(--text);
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        transition: transform 0.16s ease;
+    }
+    .pgv3-cta:hover { transform: scale(1.04); }
+    .pgv3-cta svg { transition: transform 0.16s ease; }
+    .pgv3-cta:hover svg { transform: translateX(3px); }
+
+    /* «вся карточка кликабельна» — невидимая ссылка для перехода в детальный лендинг */
+    .pgv3-tile-link {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        text-decoration: none;
+    }
+    /* но CTA-кнопка выше */
+    .pgv3-cta { position: relative; z-index: 3; }
+
+    @media (max-width: 1100px) {
+        .pgv3-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 300px; }
+        .pgv3-tile:nth-child(n) { grid-column: span 1 !important; }
+        .pgv3-tile:nth-child(1) { grid-column: span 2 !important; }
+    }
+    @media (max-width: 720px) {
+        .pgv3-section { padding: 36px 20px; }
+        .pgv3-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+        .pgv3-head h2 { font-size: 32px; letter-spacing: -1px; }
+        .pgv3-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+        .pgv3-tile:nth-child(n) { grid-column: span 1 !important; min-height: 320px; padding: 24px 22px; }
+        .pgv3-age-big { font-size: 64px !important; letter-spacing: -2.5px !important; }
+        .pgv3-cta { width: auto; }
+    }
+
+    .design-preview-bar {
+        width: min(1580px, calc(100% - 12px));
+        margin: 10px auto 0;
+        padding: 14px 24px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 6px 18px rgba(53, 45, 42, 0.06);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--muted);
+    }
+    .design-preview-bar strong { color: var(--text); }
+    .design-preview-bar a { color: var(--orange); font-weight: 600; }
+</style>
+
+<div class="design-preview-bar">
+    <span><strong>V3 · Bold</strong> — Цветные плитки-знакомства. Возраст огромными цифрами, одна выгода, белая CTA на цвете. Оммаж Lingokids под нашу палитру.</span>
+    <a href="{{ url_for('design_programs.programs_index') }}">← Все варианты</a>
+</div>
+
+<section class="section pgv3-section">
+    <div class="pgv3-head">
+        <div>
+            <span class="eyebrow">Популярные направления</span>
+            <h2>Программы центра</h2>
+            <p>Каждая программа — отдельный мир. Выберите тот, в&nbsp;котором ребёнку будет хорошо.</p>
+        </div>
+        <a class="pgv3-head-link" href="/programmy/">Все программы →</a>
+    </div>
+
+    <div class="pgv3-grid">
+        {% for program in programs %}
+        <article class="pgv3-tile" style="--accent: {{ program.color }};">
+            <a class="pgv3-tile-link" href="/{{ program.slug }}/" aria-label="Открыть {{ program.name }}"></a>
+
+            <div class="pgv3-top">
+                <span class="pgv3-cat">{{ program.format }}</span>
+                <span class="pgv3-emoji" aria-hidden="true">{{ program.emoji }}</span>
+            </div>
+
+            <div class="pgv3-center">
+                <p class="pgv3-age-big">{{ program.age_label }}</p>
+                <p class="pgv3-age-label">{{ program.frequency }}</p>
+            </div>
+
+            <div class="pgv3-bottom">
+                <h3>{{ program.name }}</h3>
+                <p class="pgv3-benefit">{{ program.benefit }}</p>
+                <div class="pgv3-foot">
+                    <div class="pgv3-price">
+                        <strong>{{ program.price_label }}</strong>
+                        <span>в {{ program.price_unit }}</span>
+                    </div>
+                    <a class="pgv3-cta" href="#lead-form">
+                        Записаться
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -14,7 +14,10 @@ from .admin import SecureAdminIndexView, init_admin
 from .demo_seed import seed_database
 from .extensions import admin, db, limiter, login_manager, metrics, migrate
 from .models import AdminUser
-from .views import api, auth, main
+from .views import admin_media, api, auth, design, main, news_admin
+from .views.design_age import design_age_bp
+from .views.design_programs import design_programs_bp
+from .views.design_teachers import design_teachers_bp
 
 
 def configure_logging() -> None:
@@ -48,6 +51,12 @@ def create_app() -> Flask:
     app.register_blueprint(main.bp)
     app.register_blueprint(api.bp)
     app.register_blueprint(auth.bp)
+    app.register_blueprint(admin_media.bp)
+    app.register_blueprint(news_admin.bp)
+    app.register_blueprint(design.bp)
+    app.register_blueprint(design_teachers_bp)
+    app.register_blueprint(design_programs_bp)
+    app.register_blueprint(design_age_bp)
 
     login_manager.login_view = "auth.login"
 
@@ -69,6 +78,9 @@ def create_app() -> Flask:
 
     with app.app_context():
         db.create_all()
+        from .utils.db_migrations import ensure_runtime_schema
+
+        ensure_runtime_schema(db)
         if app.config["AUTO_SEED"]:
             seed_database()
 

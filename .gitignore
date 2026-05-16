@@ -8,5 +8,10 @@ data/backups/
 *.pyc
 docs/figma-export/
 design/
+!app/templates/design/
+!app/views/design.py
+!app/views/design_*.py
 .claude/logs/
 .claude/settings.local.json
+app/static/uploads/news/*
+!app/static/uploads/news/.gitkeep

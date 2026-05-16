@@ -205,7 +205,7 @@
             <span class="trust-card__label">Работаем и развиваем детей в Сергиевом Посаде</span>
         </article>
         <article class="trust-card trust-card--yellow">
-            <strong class="trust-card__value">&gt;70%</strong>
+            <strong class="trust-card__value">70%</strong>
             <span class="trust-card__label">детей из детского сада приходит за дополнительными занятиями</span>
         </article>
         <article class="trust-card trust-card--blue">
@@ -213,7 +213,7 @@
             <span class="trust-card__label">скидка детям участников СВО и вторым детям в семье</span>
         </article>
         <article class="trust-card trust-card--pink">
-            <strong class="trust-card__value">&gt;80%</strong>
+            <strong class="trust-card__value">80%</strong>
             <span class="trust-card__label">рекомендуют друзьям и приводят младших сестёр и братьев</span>
         </article>
         <article class="trust-card trust-card--purple">
@@ -225,7 +225,7 @@
             <span class="trust-card__label">дети идут с удовольствием в клуб</span>
         </article>
         <article class="trust-card trust-card--green">
-            <strong class="trust-card__value">~1,5 ч</strong>
+            <strong class="trust-card__value">1,5 ч</strong>
             <span class="trust-card__label">гарантированного живого развития без смартфонов</span>
         </article>
     </div>
@@ -690,14 +690,26 @@
             </div>
             {% endif %}
         </div>
-        <div class="reviews-summary" aria-label="Сводка отзывов">
-            <strong>5.0</strong>
-            <span>средняя оценка</span>
-            <small>Яндекс · 2ГИС · VK</small>
+        <div class="reviews-aside">
+            <div class="reviews-summary" aria-label="Сводка отзывов">
+                <strong>5.0</strong>
+                <span>средняя оценка</span>
+                <small>Яндекс · 2ГИС · VK</small>
+            </div>
+            {% if data.reviews and data.reviews|length > 1 %}
+            <div class="reviews-nav" role="group" aria-label="Листать отзывы">
+                <button type="button" class="reviews-nav__btn" data-reviews-prev aria-label="Предыдущий отзыв">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+                </button>
+                <button type="button" class="reviews-nav__btn" data-reviews-next aria-label="Следующий отзыв">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+                </button>
+            </div>
+            {% endif %}
         </div>
     </div>
     {% if data.reviews %}
-    <div class="reviews-grid">
+    <div class="reviews-grid" data-reviews-track>
         {% for review in data.reviews[:6] %}
         <article class="review-card">
             <div class="review-card-head">
@@ -1191,13 +1203,7 @@
 {% set vk_href = data.settings.get('social_vk') or '#' %}
 {% set tg_href = data.settings.get('social_tg') or '#' %}
 <section class="section contact-section contact-variant-{{ variant }}" id="contact-panel">
-    {% if data.gallery %}
-    <div class="contact-gallery">
-        {% for img in data.gallery %}
-        <img src="{{ url_for('static', filename=img) }}" alt="" loading="lazy">
-        {% endfor %}
-    </div>
-    {% endif %}
+    {# Фото-полоса перед картой убрана по UX-решению: главная уже содержит gallery variant=strip выше. #}
     <div class="contact-shell contact-shell-{{ variant }}">
         <div class="contact-info">
             <div>

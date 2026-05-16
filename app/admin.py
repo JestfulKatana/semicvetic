@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from flask import redirect, request, url_for
 from flask_admin import AdminIndexView
+from flask_admin.base import MenuLink
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from wtforms import PasswordField, TextAreaField
@@ -67,6 +68,7 @@ class JsonModelView(SecureModelView):
 def init_admin() -> None:
     if any(getattr(view, "name", "") == "Настройки" for view in admin._views):
         return
+    admin.add_link(MenuLink(name="Новости", url="/admin/news/", category=None))
     admin.add_view(JsonModelView(SiteSetting, db.session, name="Настройки"))
     admin.add_view(JsonModelView(Page, db.session, name="Страницы"))
     admin.add_view(JsonModelView(Program, db.session, name="Программы"))

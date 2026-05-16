@@ -1,0 +1,672 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V2 — Таймлайн взросления ================================ */
+    .design-frame {
+        max-width: 1580px;
+        margin: 22px auto;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .design-frame-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 0 8px;
+    }
+    .design-frame-head h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.6px;
+    }
+    .design-frame-head p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+        max-width: 720px;
+    }
+    .design-frame-head a {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--orange);
+        text-decoration: none;
+    }
+
+    .age-v2 {
+        background: var(--surface);
+        border-radius: 28px;
+        padding: 68px 70px 60px;
+        box-shadow: 0 24px 70px rgba(53,45,42,0.06);
+    }
+    .age-v2-head {
+        max-width: 760px;
+        margin-bottom: 56px;
+    }
+    .age-v2-head .eyebrow {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--orange);
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        display: block;
+    }
+    .age-v2-head h2 {
+        margin: 0 0 14px;
+        font-size: 46px;
+        font-weight: 740;
+        letter-spacing: -1.6px;
+        line-height: 1.04;
+        color: var(--text);
+    }
+    .age-v2-head p {
+        margin: 0;
+        font-size: 16px;
+        color: var(--muted);
+        max-width: 640px;
+        line-height: 1.5;
+    }
+
+    /* Главная композиция: таймлайн + подсказка */
+    .age-v2-stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(360px, 0.95fr);
+        gap: 48px;
+        align-items: start;
+    }
+
+    /* ---- Таймлайн */
+    .timeline-wrap {
+        position: relative;
+        padding: 60px 12px 90px;
+    }
+    .timeline {
+        position: relative;
+        height: 4px;
+        background: linear-gradient(
+            90deg,
+            #4fb800 0%,
+            #4fb800 22%,
+            var(--orange) 22%,
+            var(--orange) 46%,
+            var(--purple) 46%,
+            var(--purple) 70%,
+            var(--blue) 70%,
+            var(--blue) 100%
+        );
+        border-radius: 4px;
+    }
+    .timeline-segment-label {
+        position: absolute;
+        bottom: calc(100% + 18px);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+    }
+    .timeline-segment-label::before {
+        content: '';
+        display: block;
+        width: 36px;
+        height: 2px;
+        margin-bottom: 6px;
+        background: currentColor;
+        border-radius: 2px;
+    }
+    .seg-toddler { left: 4%; color: #1d8a2e; }
+    .seg-mid { left: 28%; color: var(--orange); }
+    .seg-school { left: 52%; color: var(--purple); }
+    .seg-teen { left: 76%; color: var(--blue); }
+
+    .timeline-tick {
+        position: absolute;
+        top: 50%;
+        width: 0;
+        height: 0;
+        transform: translate(-50%, -50%);
+    }
+    .timeline-tick::before {
+        content: '';
+        display: block;
+        width: 10px;
+        height: 10px;
+        background: var(--surface);
+        border: 2px solid rgba(53,45,42,.28);
+        border-radius: 50%;
+        margin: -5px;
+    }
+    .timeline-tick .tick-label {
+        position: absolute;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+        font-weight: 500;
+    }
+
+    /* большие кликабельные дотсы */
+    .age-dot {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font-family: inherit;
+        color: inherit;
+    }
+    .age-dot-pin {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--surface);
+        border: 3px solid currentColor;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.4px;
+        box-shadow: 0 8px 24px rgba(53,45,42,.10);
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .age-dot-label {
+        position: absolute;
+        top: 64px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+    }
+    .age-dot-label small {
+        display: block;
+        font-size: 11.5px;
+        font-weight: 500;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+    .age-dot:hover .age-dot-pin,
+    .age-dot.is-active .age-dot-pin {
+        transform: scale(1.12);
+        box-shadow: 0 14px 36px rgba(53,45,42,.18);
+    }
+    .age-dot.is-active .age-dot-pin {
+        background: currentColor;
+        color: var(--surface);
+    }
+    .age-dot.is-active .age-dot-pin span { color: var(--surface); }
+
+    .dot-1-3 { left: 11%; color: #1d8a2e; }
+    .dot-4-5 { left: 34%; color: var(--orange); }
+    .dot-6-7 { left: 58%; color: var(--purple); }
+    .dot-8-14 { left: 86%; color: var(--blue); }
+
+    .timeline-floor {
+        margin-top: 70px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--muted-light);
+        font-weight: 500;
+    }
+
+    /* ---- Карточка-подсказка справа */
+    .age-hint {
+        position: relative;
+        padding: 32px 32px 28px;
+        background: var(--surface-2);
+        border-radius: 24px;
+        border: 1px solid rgba(53,45,42,.06);
+        min-height: 340px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .age-hint-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+    .age-hint-top .badge {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--orange);
+    }
+    .age-hint h3 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -1px;
+        color: var(--text);
+        line-height: 1.05;
+    }
+    .age-hint h3 .dim {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--muted);
+        margin-top: 6px;
+        letter-spacing: 0;
+    }
+    .age-hint-promise {
+        font-size: 16px;
+        color: var(--text);
+        line-height: 1.45;
+        margin: 0;
+    }
+    .age-hint-promise b { color: var(--text); font-weight: 600; }
+    .age-hint-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: auto;
+        padding-top: 8px;
+    }
+    .age-hint-tags span {
+        font-size: 12.5px;
+        padding: 6px 12px;
+        background: var(--surface);
+        color: var(--text);
+        border-radius: 999px;
+        font-weight: 500;
+        border: 1px solid rgba(53,45,42,.08);
+    }
+    .age-hint-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 4px;
+    }
+    .age-hint-actions a.primary {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 14px 18px;
+        background: var(--orange);
+        color: #fff;
+        font-size: 14.5px;
+        font-weight: 600;
+        border-radius: 14px;
+        text-decoration: none;
+        transition: filter .15s ease;
+    }
+    .age-hint-actions a.primary:hover { filter: brightness(1.05); }
+    .age-hint-actions a.secondary {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 14px 16px;
+        background: var(--surface);
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 14px;
+        text-decoration: none;
+        border: 1px solid rgba(53,45,42,.10);
+    }
+    .age-hint-actions a.secondary:hover { background: var(--bg); }
+
+    /* подкрашиваем подсказку под цвет точки */
+    .age-hint.tone-green .age-hint-top .badge { background: #1d8a2e; }
+    .age-hint.tone-green .age-hint-actions a.primary { background: #1d8a2e; }
+    .age-hint.tone-orange .age-hint-top .badge { background: var(--orange); }
+    .age-hint.tone-orange .age-hint-actions a.primary { background: var(--orange); }
+    .age-hint.tone-purple .age-hint-top .badge { background: var(--purple); }
+    .age-hint.tone-purple .age-hint-actions a.primary { background: var(--purple); }
+    .age-hint.tone-blue .age-hint-top .badge { background: var(--blue); }
+    .age-hint.tone-blue .age-hint-actions a.primary { background: var(--blue); }
+
+    /* секции-варианты подсказки (показываем active) */
+    .hint-panel { display: none; flex-direction: column; gap: 16px; flex: 1; }
+    .hint-panel.is-active { display: flex; }
+
+    /* Нижний помощник */
+    .age-v2-footer {
+        margin-top: 44px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(53,45,42,.08);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+    .age-v2-footer p {
+        margin: 0;
+        font-size: 14.5px;
+        color: var(--muted);
+    }
+    .age-v2-footer p b { color: var(--text); font-weight: 600; }
+    .age-v2-footer .ask {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 22px;
+        background: var(--text);
+        color: var(--surface);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 999px;
+    }
+
+    /* Мобильный mock */
+    .age-v2-mobile-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-top: 60px;
+    }
+    .age-v2-mobile-wrap > h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .age-v2-mobile {
+        width: 380px;
+        background: var(--surface);
+        border-radius: 24px;
+        padding: 28px 22px;
+        box-shadow: 0 16px 50px rgba(53,45,42,.10);
+    }
+    .age-v2-mobile .eyebrow {
+        font-size: 12px;
+        color: var(--orange);
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .age-v2-mobile h2 {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.7px;
+        margin: 10px 0 18px;
+        line-height: 1.15;
+    }
+    .age-v2-mobile-track {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        gap: 4px;
+        padding: 24px 4px 38px;
+    }
+    .age-v2-mobile-track::before {
+        content: '';
+        position: absolute;
+        top: 48px;
+        left: 18px;
+        right: 18px;
+        height: 3px;
+        background: linear-gradient(90deg, #1d8a2e, var(--orange), var(--purple), var(--blue));
+        border-radius: 3px;
+    }
+    .m-dot {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+        text-decoration: none;
+        color: inherit;
+    }
+    .m-dot .pin {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--surface);
+        border: 3px solid currentColor;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        z-index: 1;
+    }
+    .m-dot .lbl {
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+    }
+    .m-dot.green { color: #1d8a2e; }
+    .m-dot.orange { color: var(--orange); }
+    .m-dot.purple { color: var(--purple); }
+    .m-dot.blue { color: var(--blue); }
+    .age-v2-mobile-hint {
+        margin-top: 8px;
+        padding: 18px;
+        background: var(--surface-2);
+        border-radius: 18px;
+    }
+    .age-v2-mobile-hint strong {
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+    }
+    .age-v2-mobile-hint p {
+        font-size: 13.5px;
+        color: var(--muted);
+        margin: 0 0 14px;
+        line-height: 1.4;
+    }
+    .age-v2-mobile-hint a {
+        display: block;
+        text-align: center;
+        padding: 12px;
+        background: var(--orange);
+        color: #fff;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    @media (max-width: 1200px) {
+        .age-v2-stage {
+            grid-template-columns: 1fr;
+        }
+        .age-v2 { padding: 48px 36px; }
+    }
+    @media (max-width: 700px) {
+        .age-v2 { padding: 36px 22px; }
+        .age-v2-head h2 { font-size: 28px; letter-spacing: -0.8px; }
+        .timeline-wrap { padding: 70px 8px 100px; }
+        .age-dot-pin { width: 44px; height: 44px; font-size: 14px; }
+    }
+</style>
+
+<div class="design-frame">
+    <div class="design-frame-head">
+        <div>
+            <h1>V2 — Таймлайн взросления</h1>
+            <p>Возраст — как путь. Шкала от 1 до 14 лет, на которой стоят 4 точки-программы. Активная точка показывает подсказку справа с одной строкой-обещанием и кнопкой.</p>
+        </div>
+        <a href="{{ url_for('design_age.age_index') }}">← все варианты</a>
+    </div>
+
+    <section class="age-v2">
+        <div class="age-v2-head">
+            <span class="eyebrow">Выберите возраст</span>
+            <h2>Путь ребёнка от&nbsp;1&nbsp;года до&nbsp;14. Где вы&nbsp;сейчас?</h2>
+            <p>Кликните по точке на шкале — покажем, что мы делаем в этом возрасте, и сколько занятий в неделю.</p>
+        </div>
+
+        <div class="age-v2-stage">
+            <div class="timeline-wrap">
+                <div class="timeline" aria-hidden="true">
+                    <span class="timeline-segment-label seg-toddler">С мамой</span>
+                    <span class="timeline-segment-label seg-mid">Сам в группе</span>
+                    <span class="timeline-segment-label seg-school">Подготовка к школе</span>
+                    <span class="timeline-segment-label seg-teen">Школа · подростки</span>
+
+                    <span class="timeline-tick" style="left:0%"><span class="tick-label">1 год</span></span>
+                    <span class="timeline-tick" style="left:22%"><span class="tick-label">3 года</span></span>
+                    <span class="timeline-tick" style="left:46%"><span class="tick-label">5 лет</span></span>
+                    <span class="timeline-tick" style="left:70%"><span class="tick-label">7 лет</span></span>
+                    <span class="timeline-tick" style="left:100%"><span class="tick-label">14 лет</span></span>
+                </div>
+
+                <button class="age-dot dot-1-3" type="button" data-target="hint-1-3" aria-label="1–3 года">
+                    <span class="age-dot-pin"><span>1–3</span></span>
+                    <span class="age-dot-label">Малыши<small>с мамой, сб 10:30</small></span>
+                </button>
+                <button class="age-dot dot-4-5 is-active" type="button" data-target="hint-4-5" aria-label="4–5 лет">
+                    <span class="age-dot-pin"><span>4–5</span></span>
+                    <span class="age-dot-label">Росточки<small>без мамы, 2×нед</small></span>
+                </button>
+                <button class="age-dot dot-6-7" type="button" data-target="hint-6-7" aria-label="6–7 лет">
+                    <span class="age-dot-pin"><span>6–7</span></span>
+                    <span class="age-dot-label">К школе<small>5 блоков, 2,5 ч</small></span>
+                </button>
+                <button class="age-dot dot-8-14" type="button" data-target="hint-8-14" aria-label="8–14 лет">
+                    <span class="age-dot-pin"><span>8–14</span></span>
+                    <span class="age-dot-label">Школьники<small>лагерь, англ.</small></span>
+                </button>
+            </div>
+
+            <div class="age-hint tone-orange" id="hint-panel">
+                <!-- 1–3 -->
+                <div class="hint-panel" data-id="hint-1-3">
+                    <div class="age-hint-top"><span class="badge"></span> 1–3 года · С мамой</div>
+                    <h3>Первые шаги в&nbsp;центре <span class="dim">Мама рядом, ребёнок осваивается</span></h3>
+                    <p class="age-hint-promise">
+                        Сенсорика, музыка, простые игры. Помогаем ребёнку <b>привыкнуть к&nbsp;группе</b>
+                        и&nbsp;маме — спокойно отпускать.
+                    </p>
+                    <div class="age-hint-tags">
+                        <span>1 раз в неделю</span><span>Суббота 10:30</span><span>45 минут</span><span>До 6 детей</span>
+                    </div>
+                    <div class="age-hint-actions">
+                        <a class="primary" href="/programmy/#early">К программе →</a>
+                        <a class="secondary" href="#lead-form">Записаться</a>
+                    </div>
+                </div>
+                <!-- 4–5 (default active) -->
+                <div class="hint-panel is-active" data-id="hint-4-5">
+                    <div class="age-hint-top"><span class="badge"></span> 4–5 лет · Без мамы</div>
+                    <h3>Росточки и&nbsp;Цветики <span class="dim">Первая «настоящая» группа без родителей</span></h3>
+                    <p class="age-hint-promise">
+                        Развиваем речь, мышление, моторику. Ребёнок учится <b>работать в&nbsp;группе</b>,
+                        слушать педагога и&nbsp;дружить.
+                    </p>
+                    <div class="age-hint-tags">
+                        <span>2 раза в неделю</span><span>2 группы</span><span>До 8 детей</span><span>Психолог в&nbsp;штате</span>
+                    </div>
+                    <div class="age-hint-actions">
+                        <a class="primary" href="/programmy/#early-dev">К программе →</a>
+                        <a class="secondary" href="#lead-form">Записаться</a>
+                    </div>
+                </div>
+                <!-- 6–7 -->
+                <div class="hint-panel" data-id="hint-6-7">
+                    <div class="age-hint-top"><span class="badge"></span> 6–7 лет · К школе</div>
+                    <h3>Подготовка к&nbsp;школе <span class="dim">Чтобы 1 сентября ребёнок пришёл уверенным</span></h3>
+                    <p class="age-hint-promise">
+                        Чтение, математика, окружающий мир, ИЗО, психолог. <b>5&nbsp;блоков за&nbsp;одно занятие</b>,
+                        2,5&nbsp;часа.
+                    </p>
+                    <div class="age-hint-tags">
+                        <span>2 раза в неделю</span><span>2,5 часа</span><span>Психолог</span><span>Логопед</span>
+                    </div>
+                    <div class="age-hint-actions">
+                        <a class="primary" href="/programmy/#school">К программе →</a>
+                        <a class="secondary" href="#lead-form">Записаться</a>
+                    </div>
+                </div>
+                <!-- 8–14 -->
+                <div class="hint-panel" data-id="hint-8-14">
+                    <div class="age-hint-top"><span class="badge"></span> 8–14 лет · Школьники и&nbsp;подростки</div>
+                    <h3>Английский и&nbsp;летний лагерь <span class="dim">Поддержка школьной программы и&nbsp;лето с&nbsp;пользой</span></h3>
+                    <p class="age-hint-promise">
+                        Английский для младших и&nbsp;средних классов, наука, психолог.
+                        Летом — <b>4 смены лагеря</b> с&nbsp;занятиями, прогулками и&nbsp;экскурсиями.
+                    </p>
+                    <div class="age-hint-tags">
+                        <span>4 смены</span><span>Английский</span><span>Логопед</span><span>Психолог</span>
+                    </div>
+                    <div class="age-hint-actions">
+                        <a class="primary" href="/programmy/#speech">К программе →</a>
+                        <a class="secondary" href="#lead-form">Записаться</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="age-v2-footer">
+            <p>Не знаете, куда отнести ребёнка? <b>Расскажите, что вас беспокоит — подберём программу под него.</b></p>
+            <a class="ask" href="#lead-form">
+                Помогите выбрать
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <div class="age-v2-mobile-wrap">
+        <h3>Мобильная адаптация (380px)</h3>
+        <div class="age-v2-mobile">
+            <span class="eyebrow">Выберите возраст</span>
+            <h2>Путь ребёнка от 1 до 14</h2>
+            <div class="age-v2-mobile-track">
+                <a class="m-dot green" href="#"><span class="pin">1–3</span><span class="lbl">С мамой</span></a>
+                <a class="m-dot orange" href="#"><span class="pin">4–5</span><span class="lbl">Без мамы</span></a>
+                <a class="m-dot purple" href="#"><span class="pin">6–7</span><span class="lbl">К школе</span></a>
+                <a class="m-dot blue" href="#"><span class="pin">8–14</span><span class="lbl">Школьн.</span></a>
+            </div>
+            <div class="age-v2-mobile-hint">
+                <strong>4–5 лет · Росточки</strong>
+                <p>Первая группа без мамы. Речь, мышление, общение. 2 раза в неделю.</p>
+                <a href="#">К программе →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const dots = document.querySelectorAll('.age-dot');
+        const panel = document.getElementById('hint-panel');
+        if (!panel) return;
+        const tones = {
+            'hint-1-3': 'tone-green',
+            'hint-4-5': 'tone-orange',
+            'hint-6-7': 'tone-purple',
+            'hint-8-14': 'tone-blue'
+        };
+        const sub = panel.querySelectorAll('.hint-panel');
+        dots.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.target;
+                dots.forEach(d => d.classList.toggle('is-active', d === btn));
+                sub.forEach(p => p.classList.toggle('is-active', p.dataset.id === target));
+                panel.classList.remove('tone-green', 'tone-orange', 'tone-purple', 'tone-blue');
+                panel.classList.add(tones[target] || 'tone-orange');
+            });
+        });
+    })();
+</script>
+{% endblock %}

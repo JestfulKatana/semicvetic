@@ -204,13 +204,21 @@ class Event(TimestampMixin, db.Model):
     slug = db.Column(db.String(150), unique=True, nullable=False, index=True)
     excerpt = db.Column(db.Text, nullable=True)
     content = db.Column(db.Text, nullable=True)
+    # Rich HTML от WYSIWYG-редактора (Quill). Если заполнено — рендерится приоритетно,
+    # иначе fallback на markdown(content). Введено для редактора новостей 2026-05-16.
+    body_html = db.Column(db.Text, nullable=True)
     image_url = db.Column(db.String(255), nullable=True)
     event_date = db.Column(db.Date, nullable=True)
     event_time = db.Column(db.String(50), nullable=True)
     category = db.Column(db.String(80), nullable=True)
     is_published = db.Column(db.Boolean, default=True, nullable=False)
+    is_pinned = db.Column(db.Boolean, default=False, nullable=False)
 
     @property
     def display_date(self) -> str:
         target = self.event_date or self.created_at.date()
         return target.strftime("%d.%m.%Y")
+
+    @property
+    def has_rich_body(self) -> bool:
+        return bool(self.body_html and self.body_html.strip())

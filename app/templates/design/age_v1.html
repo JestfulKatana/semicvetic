@@ -1,0 +1,494 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V1 — Возрастной свитчер ================================ */
+    .design-frame {
+        max-width: 1580px;
+        margin: 22px auto;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .design-frame-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 0 8px;
+    }
+    .design-frame-head h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.6px;
+    }
+    .design-frame-head p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+        max-width: 720px;
+    }
+    .design-frame-head a {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--orange);
+        text-decoration: none;
+    }
+
+    .age-v1 {
+        background: var(--surface);
+        border-radius: 28px;
+        padding: 68px 70px;
+        box-shadow: 0 24px 70px rgba(53,45,42,0.06);
+    }
+    .age-v1-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 40px;
+        margin-bottom: 36px;
+    }
+    .age-v1-head-text { max-width: 700px; }
+    .age-v1-head .eyebrow {
+        display: inline-block;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--orange);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 14px;
+    }
+    .age-v1-head h2 {
+        margin: 0;
+        font-size: 46px;
+        font-weight: 740;
+        letter-spacing: -1.5px;
+        color: var(--text);
+        line-height: 1.04;
+    }
+    .age-v1-head h2 .accent {
+        color: var(--orange);
+        font-style: italic;
+        font-weight: 600;
+    }
+    .age-v1-head-aside {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 18px;
+        background: var(--surface-2);
+        border-radius: 999px;
+        font-size: 14px;
+        color: var(--muted);
+        white-space: nowrap;
+    }
+    .age-v1-head-aside b { color: var(--text); }
+
+    /* Сетка плиток */
+    .age-v1-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+    }
+    .age-v1-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 320px;
+        padding: 28px 28px 24px;
+        border-radius: 24px;
+        text-decoration: none;
+        color: inherit;
+        overflow: hidden;
+        transition: transform .25s ease, box-shadow .25s ease;
+        border: 1px solid transparent;
+    }
+    .age-v1-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 24px 60px rgba(53,45,42,.14);
+    }
+
+    .age-v1-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        opacity: 0.78;
+    }
+    .age-v1-card-top .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .age-v1-card-main {
+        margin: 18px 0 14px;
+    }
+    .age-v1-card-age {
+        font-size: 96px;
+        font-weight: 700;
+        letter-spacing: -5px;
+        line-height: 0.92;
+        margin: 0;
+        font-feature-settings: "tnum" on;
+    }
+    .age-v1-card-age .yr {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.4px;
+        margin-left: 6px;
+        opacity: 0.7;
+        vertical-align: 18px;
+    }
+    .age-v1-card-promise {
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--text);
+        margin: 14px 0 0;
+        letter-spacing: -0.2px;
+        max-width: 240px;
+    }
+    .age-v1-card-promise b { font-weight: 700; }
+
+    .age-v1-card-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 18px;
+        border-top: 1px dashed rgba(53,45,42,.18);
+    }
+    .age-v1-card-bottom .meta {
+        font-size: 13px;
+        color: rgba(53,45,42,.7);
+        line-height: 1.2;
+    }
+    .age-v1-card-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+    }
+    .age-v1-card-cta svg {
+        transition: transform .2s ease;
+    }
+    .age-v1-card:hover .age-v1-card-cta svg {
+        transform: translateX(4px);
+    }
+
+    /* Цветовые вариации — берём из системы: green/orange/purple/blue */
+    .age-v1-card--green {
+        background: linear-gradient(160deg, rgba(0,180,60,.16) 0%, rgba(179,244,87,.18) 100%);
+        border-color: rgba(0,180,60,.28);
+        color: #1d8a2e;
+    }
+    .age-v1-card--green .age-v1-card-age,
+    .age-v1-card--green .age-v1-card-cta { color: #1d8a2e; }
+
+    .age-v1-card--orange {
+        background: linear-gradient(160deg, rgba(237,119,53,.14) 0%, rgba(255,238,81,.20) 100%);
+        border-color: rgba(237,119,53,.28);
+        color: var(--orange);
+    }
+    .age-v1-card--orange .age-v1-card-age,
+    .age-v1-card--orange .age-v1-card-cta { color: var(--orange); }
+
+    .age-v1-card--purple {
+        background: linear-gradient(160deg, rgba(99,89,194,.14) 0%, rgba(219,94,180,.16) 100%);
+        border-color: rgba(99,89,194,.28);
+        color: var(--purple);
+    }
+    .age-v1-card--purple .age-v1-card-age,
+    .age-v1-card--purple .age-v1-card-cta { color: var(--purple); }
+
+    .age-v1-card--blue {
+        background: linear-gradient(160deg, rgba(76,131,241,.14) 0%, rgba(99,89,194,.14) 100%);
+        border-color: rgba(76,131,241,.28);
+        color: var(--blue);
+    }
+    .age-v1-card--blue .age-v1-card-age,
+    .age-v1-card--blue .age-v1-card-cta { color: var(--blue); }
+
+    /* фоновая большая цифра-водяной знак */
+    .age-v1-card .watermark {
+        position: absolute;
+        right: -16px;
+        bottom: -36px;
+        font-size: 220px;
+        font-weight: 700;
+        letter-spacing: -8px;
+        line-height: 1;
+        opacity: 0.06;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    /* нижняя строка-помощник */
+    .age-v1-helper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-top: 24px;
+        padding: 18px 24px;
+        background: var(--surface-2);
+        border-radius: 18px;
+    }
+    .age-v1-helper p {
+        margin: 0;
+        font-size: 14.5px;
+        color: var(--muted);
+    }
+    .age-v1-helper p b { color: var(--text); font-weight: 600; }
+    .age-v1-helper a.btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 11px 20px;
+        background: var(--text);
+        color: var(--surface);
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 999px;
+        text-decoration: none;
+        transition: background .15s ease;
+    }
+    .age-v1-helper a.btn:hover { background: var(--orange); }
+
+    /* мобильный mock */
+    .age-v1-mobile-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-top: 60px;
+    }
+    .age-v1-mobile-wrap > h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .age-v1-mobile {
+        width: 380px;
+        background: var(--surface);
+        border-radius: 24px;
+        padding: 32px 22px;
+        box-shadow: 0 16px 50px rgba(53,45,42,.10);
+    }
+    .age-v1-mobile .eyebrow {
+        font-size: 12px;
+        color: var(--orange);
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .age-v1-mobile h2 {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+        margin: 10px 0 18px;
+        line-height: 1.1;
+    }
+    .age-v1-mobile-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .age-v1-mobile-card {
+        padding: 18px 16px;
+        border-radius: 18px;
+        text-decoration: none;
+        color: inherit;
+        min-height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .age-v1-mobile-card .age {
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: -2.5px;
+        line-height: 0.95;
+    }
+    .age-v1-mobile-card .age .yr {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+        opacity: 0.7;
+        margin-left: 4px;
+        vertical-align: 10px;
+    }
+    .age-v1-mobile-card .promise {
+        margin: 6px 0 0;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--text);
+    }
+
+    @media (max-width: 1100px) {
+        .age-v1-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .age-v1 { padding: 48px 36px; }
+        .age-v1-head { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 600px) {
+        .age-v1-grid {
+            grid-template-columns: 1fr;
+        }
+        .age-v1 { padding: 36px 22px; }
+        .age-v1-head h2 { font-size: 30px; letter-spacing: -0.8px; }
+        .age-v1-card-age { font-size: 72px; letter-spacing: -3px; }
+    }
+</style>
+
+<div class="design-frame">
+    <div class="design-frame-head">
+        <div>
+            <h1>V1 — Возрастной свитчер</h1>
+            <p>Возраст — главный герой. Огромная цифра, одна строка-обещание, одна ссылка. Никаких буллетов: они мешали выбору.</p>
+        </div>
+        <a href="{{ url_for('design_age.age_index') }}">← все варианты</a>
+    </div>
+
+    <section class="age-v1">
+        <div class="age-v1-head">
+            <div class="age-v1-head-text">
+                <span class="eyebrow">Выберите возраст</span>
+                <h2>Сколько лет ребёнку? <span class="accent">Подберём подходящее.</span></h2>
+            </div>
+            <div class="age-v1-head-aside">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M12 7v5l3 2"/>
+                </svg>
+                <span>Не уверены? <b>Поможем выбрать за 5 минут</b></span>
+            </div>
+        </div>
+
+        <div class="age-v1-grid">
+            <a class="age-v1-card age-v1-card--green" href="/programmy/#early">
+                <div class="age-v1-card-top">
+                    <span><span class="dot"></span> С мамой</span>
+                    <span>Сб 10:30</span>
+                </div>
+                <div class="age-v1-card-main">
+                    <p class="age-v1-card-age">1–3<span class="yr">года</span></p>
+                    <p class="age-v1-card-promise">Первые занятия — <b>вместе с мамой</b>. Привыкаем к&nbsp;центру.</p>
+                </div>
+                <div class="age-v1-card-bottom">
+                    <span class="meta">3 группы</span>
+                    <span class="age-v1-card-cta">
+                        К программе
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
+                <span class="watermark">1</span>
+            </a>
+
+            <a class="age-v1-card age-v1-card--orange" href="/programmy/#early-dev">
+                <div class="age-v1-card-top">
+                    <span><span class="dot"></span> Без мамы</span>
+                    <span>2 раза в нед.</span>
+                </div>
+                <div class="age-v1-card-main">
+                    <p class="age-v1-card-age">4–5<span class="yr">лет</span></p>
+                    <p class="age-v1-card-promise">Учимся <b>самостоятельности</b>: речь, мышление, общение в&nbsp;группе.</p>
+                </div>
+                <div class="age-v1-card-bottom">
+                    <span class="meta">Росточки · Цветики</span>
+                    <span class="age-v1-card-cta">
+                        К программе
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
+                <span class="watermark">4</span>
+            </a>
+
+            <a class="age-v1-card age-v1-card--purple" href="/programmy/#school">
+                <div class="age-v1-card-top">
+                    <span><span class="dot"></span> К школе</span>
+                    <span>2,5 часа</span>
+                </div>
+                <div class="age-v1-card-main">
+                    <p class="age-v1-card-age">6–7<span class="yr">лет</span></p>
+                    <p class="age-v1-card-promise">Готовимся к&nbsp;1&nbsp;классу: <b>чтение, математика, психолог</b>.</p>
+                </div>
+                <div class="age-v1-card-bottom">
+                    <span class="meta">5 блоков</span>
+                    <span class="age-v1-card-cta">
+                        К программе
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
+                <span class="watermark">6</span>
+            </a>
+
+            <a class="age-v1-card age-v1-card--blue" href="/programmy/#speech">
+                <div class="age-v1-card-top">
+                    <span><span class="dot"></span> Школьники</span>
+                    <span>Лагерь · Англ.</span>
+                </div>
+                <div class="age-v1-card-main">
+                    <p class="age-v1-card-age">8–14<span class="yr">лет</span></p>
+                    <p class="age-v1-card-promise">Английский, наука, психолог — <b>под школьную программу</b>.</p>
+                </div>
+                <div class="age-v1-card-bottom">
+                    <span class="meta">4 смены</span>
+                    <span class="age-v1-card-cta">
+                        К программе
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
+                <span class="watermark">8</span>
+            </a>
+        </div>
+
+        <div class="age-v1-helper">
+            <p>Не нашли свой возраст или сомневаетесь? <b>Расскажите о ребёнке — подберём программу под него</b>, а не наоборот.</p>
+            <a class="btn" href="#lead-form">
+                Подобрать индивидуально
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10m0 0L8 3m4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+        </div>
+    </section>
+
+    <div class="age-v1-mobile-wrap">
+        <h3>Мобильная адаптация (380px)</h3>
+        <div class="age-v1-mobile">
+            <span class="eyebrow">Выберите возраст</span>
+            <h2>Сколько лет ребёнку?</h2>
+            <div class="age-v1-mobile-grid">
+                <a class="age-v1-mobile-card age-v1-card--green" href="#">
+                    <span class="age">1–3<span class="yr">г</span></span>
+                    <span class="promise">С мамой,<br>сб 10:30</span>
+                </a>
+                <a class="age-v1-mobile-card age-v1-card--orange" href="#">
+                    <span class="age">4–5<span class="yr">л</span></span>
+                    <span class="promise">Без мамы,<br>2 раза в нед.</span>
+                </a>
+                <a class="age-v1-mobile-card age-v1-card--purple" href="#">
+                    <span class="age">6–7<span class="yr">л</span></span>
+                    <span class="promise">К школе:<br>чтение, мат.</span>
+                </a>
+                <a class="age-v1-mobile-card age-v1-card--blue" href="#">
+                    <span class="age">8–14<span class="yr">л</span></span>
+                    <span class="promise">Англ., наука,<br>лагерь</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V1 — Тёплый разговор ===================================== */
+    .design-frame {
+        max-width: 1400px;
+        margin: 32px auto;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .design-frame-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 0 8px;
+    }
+    .design-frame-head h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.6px;
+    }
+    .design-frame-head p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+    }
+    .design-frame-head a {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--orange);
+        text-decoration: none;
+    }
+
+    .cta-warm {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
+        gap: 32px;
+        padding: 64px 64px 56px;
+        background:
+            radial-gradient(900px 500px at 88% -10%, rgba(179, 244, 87, 0.18), transparent 70%),
+            linear-gradient(135deg, #7769d9 0%, #5f54c0 50%, #463db0 100%);
+        border-radius: 28px;
+        overflow: hidden;
+        color: #fcf8f4;
+    }
+
+    /* левая колонка */
+    .cta-warm-copy {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        max-width: 600px;
+    }
+    .cta-warm-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        align-self: flex-start;
+        padding: 10px 18px;
+        background: rgba(179, 244, 87, 0.18);
+        border: 1.5px solid rgba(179, 244, 87, 0.55);
+        border-radius: 999px;
+        color: #d8ff7a;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+    .cta-warm-pill svg { color: #b3f457; }
+    .cta-warm-pill em {
+        margin-left: 4px;
+        padding-left: 12px;
+        border-left: 1px solid rgba(179, 244, 87, 0.4);
+        font-style: normal;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        color: rgba(252, 248, 244, 0.82);
+        text-transform: none;
+    }
+
+    .cta-warm-copy h2 {
+        margin: 0;
+        font-size: 52px;
+        font-weight: 600;
+        line-height: 1.0;
+        letter-spacing: -2.1px;
+        color: #fcf8f4;
+    }
+    .cta-warm-copy h2 .acid { color: #b3f457; }
+
+    .cta-warm-checks {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 18px;
+    }
+    .cta-warm-checks li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15.5px;
+        font-weight: 500;
+        color: rgba(252, 248, 244, 0.94);
+        line-height: 1.2;
+    }
+    .cta-warm-checks svg { flex: 0 0 18px; color: #b3f457; }
+
+    /* форма */
+    .cta-warm-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 560px;
+    }
+    .cta-warm-form-row {
+        display: flex;
+        gap: 6px;
+    }
+    .cta-warm-form-row input {
+        flex: 1 1 auto;
+        height: 52px;
+        padding: 12px 18px;
+        border: 0;
+        border-radius: 14px;
+        background: rgba(252, 248, 244, 0.96);
+        color: #332f2e;
+        font-size: 16px;
+        font-family: inherit;
+    }
+    .cta-warm-form-row input::placeholder { color: rgba(51, 47, 46, 0.55); }
+    .cta-warm-form-row button {
+        flex: 0 0 auto;
+        height: 52px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: 14px;
+        background: #b3f457;
+        color: #133b10;
+        font-size: 15.5px;
+        font-weight: 600;
+        font-family: inherit;
+        letter-spacing: -0.2px;
+        cursor: pointer;
+        transition: filter 0.15s ease;
+    }
+    .cta-warm-form-row button:hover { filter: brightness(1.06); }
+
+    .cta-warm-disclaimer {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.35;
+        color: rgba(252, 248, 244, 0.65);
+        max-width: 460px;
+    }
+    .cta-warm-disclaimer u { text-decoration: underline; }
+
+    /* карточка менеджера */
+    .cta-warm-manager {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 8px;
+        padding: 14px 18px 14px 14px;
+        background: rgba(252, 248, 244, 0.1);
+        border: 1px solid rgba(252, 248, 244, 0.18);
+        border-radius: 16px;
+        max-width: 460px;
+        backdrop-filter: blur(8px);
+    }
+    .cta-warm-manager-photo {
+        flex: 0 0 56px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background:
+            linear-gradient(135deg, #ffd9b8, #ffb381) center/cover;
+        background-image: url('{{ url_for("static", filename="img/figma/teachers/burova.png") }}');
+        background-size: cover;
+        background-position: center top;
+        border: 2px solid rgba(252, 248, 244, 0.4);
+    }
+    .cta-warm-manager-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+    }
+    .cta-warm-manager-text strong {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fcf8f4;
+        letter-spacing: -0.2px;
+    }
+    .cta-warm-manager-text span {
+        font-size: 12.5px;
+        color: rgba(252, 248, 244, 0.7);
+        line-height: 1.35;
+    }
+    .cta-warm-manager-text span b {
+        color: #b3f457;
+        font-weight: 600;
+    }
+    .cta-warm-manager-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background: #b3f457;
+        box-shadow: 0 0 0 4px rgba(179, 244, 87, 0.22);
+        vertical-align: middle;
+    }
+
+    /* правая колонка — фото */
+    .cta-warm-visual {
+        position: relative;
+        z-index: 1;
+        min-height: 460px;
+    }
+    .cta-warm-photo {
+        position: absolute;
+        top: -100px;
+        right: -50px;
+        width: 640px;
+        max-width: none;
+        height: auto;
+        border-radius: 22px;
+        transform: rotate(-8deg);
+        box-shadow: 0 30px 70px rgba(20, 12, 60, 0.35);
+    }
+    .cta-warm-floating {
+        position: absolute;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: rgba(252, 248, 244, 0.95);
+        border-radius: 14px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #332f2e;
+        box-shadow: 0 16px 40px rgba(20, 12, 60, 0.22);
+        z-index: 3;
+    }
+    .cta-warm-floating-1 { top: 40px; right: 24px; transform: rotate(4deg); }
+    .cta-warm-floating-2 { top: 320px; right: 80px; transform: rotate(-3deg); }
+    .cta-warm-floating .num {
+        font-size: 22px;
+        font-weight: 700;
+        color: #463db0;
+        letter-spacing: -0.8px;
+    }
+    .cta-warm-floating .lbl {
+        display: block;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--muted);
+        line-height: 1.1;
+    }
+
+    /* --- мобильная адаптация --- */
+    @media (max-width: 900px) {
+        .cta-warm {
+            grid-template-columns: 1fr;
+            padding: 36px 22px 32px;
+            gap: 24px;
+        }
+        .cta-warm-copy h2 { font-size: 32px; letter-spacing: -1.2px; }
+        .cta-warm-checks { grid-template-columns: 1fr; gap: 8px; }
+        .cta-warm-form-row { flex-direction: column; gap: 8px; }
+        .cta-warm-form-row input,
+        .cta-warm-form-row button { width: 100%; }
+        .cta-warm-visual { display: none; }
+        .cta-warm-manager { padding: 12px; }
+    }
+</style>
+
+<div class="design-frame">
+    <div class="design-frame-head">
+        <div>
+            <h1>V1 — Тёплый разговор</h1>
+            <p>Доверие через человека: убираем пресный подзаголовок, добавляем плашку «бесплатно 15 мин» и карточку менеджера с фото</p>
+        </div>
+        <a href="{{ url_for('design.cta_index') }}">← все варианты</a>
+    </div>
+
+    <section class="cta-warm">
+        <div class="cta-warm-copy">
+            <span class="cta-warm-pill">
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                    <path fill="currentColor" d="M3.6 6.8a8 8 0 0 0 4.4 4.4l1.6-1.6c.2-.2.5-.3.8-.2.8.3 1.7.4 2.5.4.5 0 .8.3.8.8v2.5c0 .5-.3.8-.8.8A11.9 11.9 0 0 1 1 2.8c0-.5.3-.8.8-.8h2.5c.5 0 .8.3.8.8 0 .9.1 1.7.4 2.5.1.3 0 .6-.2.8L3.6 6.8z"/>
+                </svg>
+                Бесплатный звонок
+                <em>15 минут</em>
+            </span>
+
+            <h2>Поговорим про&nbsp;вашего ребёнка — <span class="acid">без обязательств</span></h2>
+
+            <ul class="cta-warm-checks">
+                <li>
+                    <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Никаких скриптов и&nbsp;давления
+                </li>
+                <li>
+                    <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Только то, что&nbsp;подходит ребёнку
+                </li>
+                <li>
+                    <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Ответим за&nbsp;30&nbsp;минут в&nbsp;рабочее время
+                </li>
+                <li>
+                    <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Не&nbsp;передаём номер третьим лицам
+                </li>
+            </ul>
+
+            <form class="cta-warm-form" data-lead-form>
+                <input type="hidden" name="source_page" value="{{ request.path }}">
+                <input type="hidden" name="source_block" value="design_cta_v1_warm">
+                <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+                <div class="cta-warm-form-row">
+                    <label class="sr-only" for="cta-v1-phone">Телефон</label>
+                    <input id="cta-v1-phone" type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+                    <button type="submit">Получить звонок</button>
+                </div>
+                <p class="cta-warm-disclaimer">
+                    Нажимая «Получить звонок», вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u>
+                    и&nbsp;условия <u>политики конфиденциальности</u>.
+                </p>
+                <p class="form-status" data-form-status></p>
+            </form>
+
+            <div class="cta-warm-manager">
+                <div class="cta-warm-manager-photo" aria-hidden="true"></div>
+                <div class="cta-warm-manager-text">
+                    <strong>Татьяна, администратор центра</strong>
+                    <span>
+                        <span class="cta-warm-manager-dot" aria-hidden="true"></span>
+                        Сейчас на&nbsp;связи · обычно отвечает за&nbsp;<b>5&ndash;10 минут</b>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-warm-visual" aria-hidden="true">
+            <img class="cta-warm-photo" src="{{ url_for('static', filename='img/figma/gallery/girl-paints.png') }}" alt="">
+            <span class="cta-warm-floating cta-warm-floating-1">
+                <span class="num">15</span>
+                <span class="lbl">лет<br>работаем</span>
+            </span>
+            <span class="cta-warm-floating cta-warm-floating-2">
+                <span class="num">3000+</span>
+                <span class="lbl">выпускников<br>центра</span>
+            </span>
+        </div>
+    </section>
+</div>
+{% endblock %}

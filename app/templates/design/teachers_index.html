@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .design-index {
+        max-width: 1100px;
+        margin: 40px auto 80px;
+        padding: 0 24px;
+        font-family: 'Onest', system-ui, sans-serif;
+        color: var(--text);
+    }
+    .design-index-eyebrow {
+        display: inline-block;
+        margin-bottom: 12px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(99, 89, 194, 0.12);
+        color: #4d44a6;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+    }
+    .design-index h1 {
+        margin: 0 0 12px;
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: -2px;
+        line-height: 1.05;
+    }
+    .design-index-lead {
+        max-width: 760px;
+        margin: 0 0 36px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.45;
+    }
+    .design-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+    .design-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 28px;
+        background: var(--surface);
+        border-radius: 24px;
+        box-shadow: 0 24px 70px rgba(53, 45, 42, 0.08);
+        text-decoration: none;
+        color: var(--text);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        min-height: 300px;
+    }
+    .design-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 32px 80px rgba(53, 45, 42, 0.12);
+    }
+    .design-card-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        align-self: flex-start;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+    }
+    .design-card-tag.safe { background: #e8eafd; color: #3a35a3; }
+    .design-card-tag.evolve { background: #e8f6db; color: #2a6608; }
+    .design-card-tag.bold { background: #fde2d4; color: #a13a0c; }
+    .design-card h2 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+        line-height: 1.1;
+    }
+    .design-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+        flex: 1;
+    }
+    .design-card ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 13.5px;
+        line-height: 1.5;
+    }
+    .design-card ul li { margin-bottom: 2px; }
+    .design-card-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(51, 47, 46, 0.08);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--orange);
+    }
+    .design-card-foot span:last-child {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+    }
+    .design-note {
+        margin-top: 32px;
+        padding: 20px 24px;
+        background: rgba(99, 89, 194, 0.06);
+        border-left: 3px solid var(--purple, #6359c2);
+        border-radius: 12px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+    }
+    .design-note strong { color: var(--text); }
+    .design-rec {
+        margin-top: 18px;
+        padding: 18px 22px;
+        background: rgba(237, 119, 53, 0.08);
+        border-left: 3px solid var(--orange);
+        border-radius: 12px;
+        color: var(--text);
+        font-size: 14.5px;
+        line-height: 1.55;
+    }
+    .design-rec strong { color: var(--orange); }
+    @media (max-width: 900px) {
+        .design-cards { grid-template-columns: 1fr; }
+        .design-index h1 { font-size: 36px; letter-spacing: -1.2px; }
+    }
+</style>
+
+<div class="design-index">
+    <span class="design-index-eyebrow">Design preview · Block: teachers</span>
+    <h1>Педагоги «которые знают школьные требования» — 3 концепции</h1>
+    <p class="design-index-lead">
+        Текущий блок выглядит как товарные карточки: оранжевая бирка-стаж как ценник,
+        пять цифр статистики рассыпаются, цитата педагога оторвана от лица. Плюс пользователь хочет
+        подчеркнуть, что среди наших — директор и действующие школьные учителя. Три варианта решают одну задачу по-разному.
+    </p>
+
+    <div class="design-cards">
+        <a class="design-card" href="{{ url_for('design_teachers.teachers_v1') }}">
+            <span class="design-card-tag safe">V1 · Safe</span>
+            <h2>Команда у входа</h2>
+            <p>
+                Иерархия: крупная карточка директора с цитатой внутри + 3 равные карточки учителей.
+                Бирка стажа становится тонким мини-чипом. Статистика — узкая лента под карточками, не главный герой.
+            </p>
+            <ul>
+                <li>директор + 3 действующих учителя</li>
+                <li>цитата встроена в карточку директора</li>
+                <li>5 цифр → 4 ключевые, как лента</li>
+            </ul>
+            <div class="design-card-foot">
+                <span>Смотреть →</span>
+                <span>~2 часа фронта</span>
+            </div>
+        </a>
+
+        <a class="design-card" href="{{ url_for('design_teachers.teachers_v2') }}">
+            <span class="design-card-tag evolve">V2 · Evolve</span>
+            <h2>Анатомия команды</h2>
+            <p>
+                Не «два педагога», а разрез команды по ролям. Слева — фото-коллаж 5 человек с подписями
+                «директор», «учитель начальной школы», «логопед», «психолог», «художник». Справа — три тезиса.
+            </p>
+            <ul>
+                <li>специализации проступают как смысл</li>
+                <li>видно, что команда полная, не «два кружка»</li>
+                <li>цитата плывёт как стикер сверху</li>
+            </ul>
+            <div class="design-card-foot">
+                <span>Смотреть →</span>
+                <span>~3 часа фронта</span>
+            </div>
+        </a>
+
+        <a class="design-card" href="{{ url_for('design_teachers.teachers_v3') }}">
+            <span class="design-card-tag bold">V3 · Bold</span>
+            <h2>Лента действующих учителей</h2>
+            <p>
+                Горизонтальная карусель из 6 портретов. Первый — директор с маркером «руководитель центра,
+                действующий учитель». Карточки минималистичные: вертикальное фото + капсула с именем и предметом.
+            </p>
+            <ul>
+                <li>больше лиц → больше доверия</li>
+                <li>статистика — большие цифры заголовка</li>
+                <li>цитата — отдельная карточка в ленте</li>
+            </ul>
+            <div class="design-card-foot">
+                <span>Смотреть →</span>
+                <span>~3 часа фронта</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="design-rec">
+        <strong>Рекомендация дизайнера.</strong>
+        Под срочный запуск я бы взял <strong>V1</strong>: даёт директору правильную иерархию,
+        встроенная цитата перестаёт «висеть в воздухе», бирка стажа больше не ценник, и при этом
+        ничего не ломаем в существующей сетке. V2 — если хотим подчеркнуть «у нас не два кружка, а полноценная команда».
+        V3 — самый смелый, лучше всего работает, если получится найти 6+ хороших фото лиц педагогов.
+    </div>
+
+    <div class="design-note">
+        <strong>Как читать.</strong> Все три варианта рендерятся в реальной обвязке сайта
+        (header, footer, шрифты, палитра). CSS блока — inline в шаблоне, чтобы ничего не утекло в прод.
+        Фотографии педагогов — заглушки из <code>/static/img/mockup/</code>, в проде подтянутся из БД.
+        Прод-главная (<code>/</code>) не тронута.
+    </div>
+</div>
+{% endblock %}

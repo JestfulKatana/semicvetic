@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .design-index {
+        max-width: 1100px;
+        margin: 40px auto 80px;
+        padding: 0 24px;
+        font-family: 'Onest', system-ui, sans-serif;
+        color: var(--text);
+    }
+    .design-index-eyebrow {
+        display: inline-block;
+        margin-bottom: 12px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(237, 119, 53, 0.14);
+        color: #b14d12;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+    }
+    .design-index h1 {
+        margin: 0 0 12px;
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: -2px;
+        line-height: 1.05;
+    }
+    .design-index-lead {
+        max-width: 720px;
+        margin: 0 0 36px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.45;
+    }
+    .design-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+    .design-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 28px;
+        background: var(--surface);
+        border-radius: 24px;
+        box-shadow: 0 24px 70px rgba(53, 45, 42, 0.08);
+        text-decoration: none;
+        color: var(--text);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        min-height: 300px;
+    }
+    .design-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 32px 80px rgba(53, 45, 42, 0.12);
+    }
+    .design-card-tag {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+    }
+    .design-card-tag.safe { background: #e8eafd; color: #3a35a3; }
+    .design-card-tag.evolve { background: #e8f6db; color: #2a6608; }
+    .design-card-tag.bold { background: #fde2d4; color: #a13a0c; }
+    .design-card h2 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+        line-height: 1.1;
+    }
+    .design-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+        flex: 1;
+    }
+    .design-card-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(51, 47, 46, 0.08);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--orange);
+    }
+    .design-card-foot span:last-child {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+    }
+    .design-note {
+        margin-top: 32px;
+        padding: 20px 24px;
+        background: rgba(99, 89, 194, 0.06);
+        border-left: 3px solid var(--purple);
+        border-radius: 12px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+    }
+    .design-note strong { color: var(--text); }
+    @media (max-width: 900px) {
+        .design-cards { grid-template-columns: 1fr; }
+        .design-index h1 { font-size: 36px; letter-spacing: -1.2px; }
+    }
+</style>
+
+<div class="design-index">
+    <span class="design-index-eyebrow">Design preview</span>
+    <h1>Программы центра — 3 концепции</h1>
+    <p class="design-index-lead">
+        Текущий блок неплохой, но цветная полоска не считывается, иерархия кнопок «Записаться / Подробнее» сбита,
+        а возрастной чип — главный фильтр родителя — спрятан мелким. Три разных угла, как это починить.
+    </p>
+
+    <div class="design-cards">
+        <a class="design-card" href="{{ url_for('design_programs.programs_v1') }}">
+            <span class="design-card-tag safe">V1 · Safe</span>
+            <h2>Возраст во главе</h2>
+            <p>
+                Возрастной чип становится крупным заголовком карточки — родитель видит «5–7 лет» с первого взгляда.
+                Цветная плашка вместо полоски, единственная CTA «Записаться», «Подробнее» — мелкая ссылка-стрелка.
+                Чистая иерархия, всё в дизайн-системе.
+            </p>
+            <div class="design-card-foot">
+                <span>Смотреть →</span>
+                <span>~1 ч фронта</span>
+            </div>
+        </a>
+
+        <a class="design-card" href="{{ url_for('design_programs.programs_v2') }}">
+            <span class="design-card-tag evolve">V2 · Evolve</span>
+            <h2>Список-сравнение + фильтр</h2>
+            <p>
+                Компактная таблица-список: направление, возраст, формат, цена, CTA. Слева — панель с фильтром по возрасту.
+                Удобно сравнивать программы. Для главной — спорно, для каталога /programmy/ — почти готовое решение.
+            </p>
+            <div class="design-card-foot">
+                <span>Смотреть →</span>
+                <span>~3 ч фронта</span>
+            </div>
+        </a>
+
+        <a class="design-card" href="{{ url_for('design_programs.programs_v3') }}">
+            <span class="design-card-tag bold">V3 · Bold</span>
+            <h2>Цветные плитки-знакомства</h2>
+            <p>
+                Каждая программа — крупная цветная плитка из палитры цветка. Сверху иконка-объект, в центре возраст
+                огромными цифрами, под ним одна выгода («заговорит без страха»), цена мелким, единая CTA.
+                Эмоциональный ход в духе Lingokids — детям и родителям сразу тепло.
+            </p>
+            <div class="design-card-foot">
+                <span>Смотреть →</span>
+                <span>~4 ч фронта</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="design-note">
+        <strong>Как читать.</strong> Все три варианта рендерятся в реальной обвязке сайта (header, footer, шрифты, палитра).
+        CSS блока — inline в шаблоне, чтобы ничего не утекло в прод. Прод-главная (<code>/</code>) не тронута.
+        Данные программ — мок внутри view, БД не дёргаем.
+    </div>
+</div>
+{% endblock %}

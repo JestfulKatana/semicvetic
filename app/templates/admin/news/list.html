@@ -1,0 +1,38 @@
+{% extends "admin/news/_layout.html" %}
+
+{% block content %}
+<div class="na-page-head">
+    <div>
+        <h1 class="na-page-title">Новости центра</h1>
+        <p class="na-page-subtitle">{{ (pinned|length) + (posts|length) }} материалов · последние сверху</p>
+    </div>
+    <a class="na-btn na-btn--primary" href="{{ url_for('news_admin.new') }}">
+        <span>+ Новая запись</span>
+    </a>
+</div>
+
+{% if not pinned and not posts %}
+<div class="na-empty">
+    <div style="font-size: 40px;">📰</div>
+    <h2>Пока ни одной новости</h2>
+    <p>Опубликуйте первую — расскажите родителям о ближайшем событии, наборе или конкурсе.</p>
+    <a class="na-btn na-btn--primary" href="{{ url_for('news_admin.new') }}">Создать первую новость</a>
+</div>
+{% else %}
+
+{% if pinned %}
+<h3 class="na-section-title">Закреплённые</h3>
+<div class="na-card-grid">
+    {% for post in pinned %}{% include "admin/news/_card.html" %}{% endfor %}
+</div>
+{% endif %}
+
+{% if posts %}
+<h3 class="na-section-title">Все записи</h3>
+<div class="na-card-grid">
+    {% for post in posts %}{% include "admin/news/_card.html" %}{% endfor %}
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Новости — Семицветик{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news_admin.css') }}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <header class="na-topbar">
+        <div class="na-topbar-inner">
+            <a class="na-brand" href="{{ url_for('news_admin.index') }}">
+                <span class="na-brand-mark">🌸</span>
+                <span class="na-brand-text">Семицветик · Новости</span>
+            </a>
+            <nav class="na-topnav">
+                <a href="/admin/" class="na-link">Полная админка</a>
+                <a href="/" class="na-link" target="_blank" rel="noopener">Открыть сайт</a>
+                <a href="{{ url_for('auth.logout') }}" class="na-link na-link--muted">Выйти</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="na-main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="na-flash">
+                    {% for category, msg in messages %}
+                        <div class="na-flash-item na-flash-item--{{ category }}">{{ msg }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

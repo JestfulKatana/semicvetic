@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V2 — Анатомия команды =====================================
+       Evolve: показываем не «двух педагогов», а РОЛИ.
+       Левая колонка — коллаж из 5 фото с подписями ролей.
+       Правая колонка — три ключевых тезиса о команде + цитата директора.
+       Статистика — горизонтальная панель снизу.                        */
+
+    .design-frame {
+        max-width: 1580px;
+        margin: 28px auto 16px;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .design-frame-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 0 8px;
+    }
+    .design-frame-head h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.6px;
+    }
+    .design-frame-head p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+    }
+    .design-frame-head a {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--orange);
+        text-decoration: none;
+    }
+
+    /* ---------- секция ---------- */
+    .teachers-v2 {
+        position: relative;
+        padding: 68px 70px;
+        background: var(--surface);
+        border-radius: 28px;
+        box-shadow: 0 24px 70px rgba(53, 45, 42, 0.08);
+        overflow: hidden;
+    }
+
+    .v2-head {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 56px;
+        align-items: end;
+        margin-bottom: 40px;
+    }
+    .v2-eyebrow {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(99, 89, 194, 0.12);
+        color: var(--purple);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+    }
+    .v2-head h2 {
+        margin: 0;
+        color: #332f2e;
+        font-size: 52px;
+        font-weight: 600;
+        line-height: 0.98;
+        letter-spacing: -2.1px;
+    }
+    .v2-head h2 em {
+        font-style: normal;
+        color: var(--purple);
+    }
+    .v2-head p {
+        margin: 0;
+        color: #332f2e;
+        font-size: 16.5px;
+        font-weight: 500;
+        line-height: 1.4;
+        letter-spacing: -0.4px;
+    }
+
+    /* ---------- основной грид ---------- */
+    .v2-main {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 18px;
+        margin-bottom: 18px;
+    }
+
+    /* левая колонка — коллаж ролей */
+    .v2-collage {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: repeat(6, 80px);
+        gap: 10px;
+    }
+    .v2-tile {
+        position: relative;
+        background: #dce4e7;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 26px rgba(53, 45, 42, 0.08);
+        background-size: cover;
+        background-position: center 25%;
+        background-repeat: no-repeat;
+    }
+    .v2-tile-1 { /* директор */
+        grid-column: 1 / span 4;
+        grid-row: 1 / span 3;
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/burova.png') }}");
+        background-position: center 22%;
+    }
+    .v2-tile-2 { /* учитель школы */
+        grid-column: 5 / span 2;
+        grid-row: 1 / span 2;
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/demina.png') }}");
+    }
+    .v2-tile-3 { /* логопед */
+        grid-column: 5 / span 2;
+        grid-row: 3 / span 2;
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/girl-laptop.png') }}");
+    }
+    .v2-tile-4 { /* психолог */
+        grid-column: 1 / span 2;
+        grid-row: 4 / span 3;
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/woman-forest.png') }}");
+        background-position: center 30%;
+    }
+    .v2-tile-5 { /* творческий */
+        grid-column: 3 / span 4;
+        grid-row: 5 / span 2;
+        background:
+            linear-gradient(135deg, #6359c2 0%, #4c83f1 60%, #db5eb4 110%);
+        color: #fcf8f4;
+        padding: 22px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    .v2-tile-5 strong {
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: -1.1px;
+        line-height: 1.0;
+    }
+    .v2-tile-5 small {
+        font-size: 13px;
+        letter-spacing: 0.3px;
+        color: rgba(252, 248, 244, 0.78);
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    .v2-tile-5 .v2-tile-5-roles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .v2-tile-5 .v2-tile-5-roles span {
+        padding: 4px 10px;
+        background: rgba(252, 248, 244, 0.18);
+        border-radius: 999px;
+        font-size: 12.5px;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+    }
+
+    /* подпись роли на каждом фото */
+    .v2-role {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 11px;
+        background: rgba(252, 248, 244, 0.95);
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #332f2e;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        backdrop-filter: blur(6px);
+    }
+    .v2-role i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+    .v2-role.is-director { color: var(--orange); }
+    .v2-role.is-director i { background: var(--orange); }
+    .v2-role.is-school { color: #2a6608; }
+    .v2-role.is-school i { background: #4fb800; }
+    .v2-role.is-speech { color: #4d44a6; }
+    .v2-role.is-speech i { background: var(--purple); }
+    .v2-role.is-psych { color: #a13a0c; }
+    .v2-role.is-psych i { background: var(--orange); }
+
+    .v2-tile-name {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        padding: 6px 11px;
+        background: rgba(42, 38, 36, 0.78);
+        backdrop-filter: blur(6px);
+        border-radius: 999px;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #fcf8f4;
+        letter-spacing: 0.2px;
+    }
+
+    /* правая колонка — тезисы */
+    .v2-thesis {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .v2-thesis-card {
+        position: relative;
+        padding: 24px 26px;
+        background: #f5ebe9;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .v2-thesis-card.is-quote {
+        background: #2a2624;
+        color: #fcf8f4;
+    }
+    .v2-thesis-num {
+        position: absolute;
+        top: 18px;
+        right: 22px;
+        font-size: 64px;
+        font-weight: 700;
+        line-height: 1;
+        color: rgba(237, 119, 53, 0.18);
+        letter-spacing: -2.5px;
+    }
+    .v2-thesis-card h3 {
+        margin: 0;
+        color: #332f2e;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.9px;
+        line-height: 1.15;
+    }
+    .v2-thesis-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14.5px;
+        line-height: 1.5;
+        max-width: 520px;
+    }
+    .v2-thesis-card.is-quote h3 { color: #fcf8f4; }
+    .v2-thesis-card.is-quote p { color: rgba(252, 248, 244, 0.75); }
+
+    .v2-quote-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 8px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(252, 248, 244, 0.14);
+    }
+    .v2-quote-row .ava {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background:
+            url("{{ url_for('static', filename='img/figma/teachers/burova.png') }}") center 20% / cover no-repeat,
+            #4a3530;
+        border: 2px solid rgba(252, 248, 244, 0.25);
+    }
+    .v2-quote-row strong {
+        display: block;
+        color: #fcf8f4;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+    }
+    .v2-quote-row small {
+        color: rgba(252, 248, 244, 0.6);
+        font-size: 12.5px;
+    }
+
+    /* ---------- статистика снизу ---------- */
+    .v2-stats {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0;
+        margin-top: 8px;
+        padding: 20px 0;
+        background: transparent;
+        border-top: 1px solid rgba(51, 47, 46, 0.10);
+        border-bottom: 1px solid rgba(51, 47, 46, 0.10);
+    }
+    .v2-stat {
+        padding: 4px 22px;
+        border-right: 1px solid rgba(51, 47, 46, 0.10);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .v2-stat:last-child { border-right: 0; }
+    .v2-stat b {
+        color: #332f2e;
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: -1.2px;
+        line-height: 1;
+    }
+    .v2-stat b em {
+        color: var(--orange);
+        font-style: normal;
+    }
+    .v2-stat span {
+        color: var(--muted);
+        font-size: 13px;
+        letter-spacing: -0.2px;
+        line-height: 1.3;
+    }
+
+    /* ---------- mobile ---------- */
+    @media (max-width: 1100px) {
+        .v2-main { grid-template-columns: 1fr; }
+        .v2-collage {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, 160px);
+        }
+        .v2-tile-1 { grid-column: 1 / span 2; grid-row: 1; }
+        .v2-tile-2 { grid-column: 1; grid-row: 2; }
+        .v2-tile-3 { grid-column: 2; grid-row: 2; }
+        .v2-tile-4 { grid-column: 1; grid-row: 3; }
+        .v2-tile-5 { grid-column: 2; grid-row: 3; padding: 16px; }
+        .v2-tile-5 strong { font-size: 22px; }
+    }
+    @media (max-width: 720px) {
+        .teachers-v2 { padding: 36px 20px; }
+        .v2-head { grid-template-columns: 1fr; gap: 16px; }
+        .v2-head h2 { font-size: 32px; letter-spacing: -1.2px; }
+        .v2-stats { grid-template-columns: 1fr 1fr; gap: 18px 0; }
+        .v2-stat { padding: 10px 12px; border-right: 0; border-bottom: 1px solid rgba(51, 47, 46, 0.08); }
+    }
+</style>
+
+<div class="design-frame">
+    <div class="design-frame-head">
+        <div>
+            <h1>V2 · Evolve — «Анатомия команды»</h1>
+            <p>Команда — это роли, а не «два педагога». Коллаж лиц с подписями специализаций + тезисы.</p>
+        </div>
+        <a href="{{ url_for('design_teachers.teachers_index') }}">← Все варианты</a>
+    </div>
+
+    <section class="teachers-v2">
+        <div class="v2-head">
+            <div>
+                <span class="v2-eyebrow">Кто работает с вашим ребёнком</span>
+                <h2>Не&nbsp;«два кружка», а&nbsp;<em>полноценная команда</em>: директор, учителя школ, логопед, психолог</h2>
+            </div>
+            <p>
+                Каждой задаче — свой специалист. Подготовку к школе ведут действующие учителя начальной школы Сергиева Посада.
+                Речью занимается логопед, эмоциями — психолог. Это и есть «развивающая среда» — а не один универсальный педагог.
+            </p>
+        </div>
+
+        <div class="v2-main">
+            <!-- коллаж -->
+            <div class="v2-collage">
+                <div class="v2-tile v2-tile-1">
+                    <span class="v2-role is-director"><i></i>Директор</span>
+                    <span class="v2-tile-name">Ирина Бурова</span>
+                </div>
+                <div class="v2-tile v2-tile-2">
+                    <span class="v2-role is-school"><i></i>Учитель школы</span>
+                    <span class="v2-tile-name">С. Дёмина</span>
+                </div>
+                <div class="v2-tile v2-tile-3">
+                    <span class="v2-role is-speech"><i></i>Логопед</span>
+                    <span class="v2-tile-name">А. Петрова</span>
+                </div>
+                <div class="v2-tile v2-tile-4">
+                    <span class="v2-role is-psych"><i></i>Психолог</span>
+                    <span class="v2-tile-name">О. Маркова</span>
+                </div>
+                <div class="v2-tile v2-tile-5">
+                    <small>+ Творческое крыло</small>
+                    <strong>Художник,<br>хореограф,<br>преподаватель английского</strong>
+                    <div class="v2-tile-5-roles">
+                        <span>Изостудия</span>
+                        <span>Английский</span>
+                        <span>Лепка</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- тезисы -->
+            <div class="v2-thesis">
+                <article class="v2-thesis-card">
+                    <span class="v2-thesis-num">01</span>
+                    <h3>Действующие учителя школ</h3>
+                    <p>Преподают по утрам в школах Сергиева Посада, а после обеда работают у нас. Знают, что реально требуют на входе — потому что сами это требуют.</p>
+                </article>
+                <article class="v2-thesis-card">
+                    <span class="v2-thesis-num">02</span>
+                    <h3>Стабильная команда</h3>
+                    <p>Средний срок педагога в&nbsp;«Семицветике» — 7&nbsp;лет. Ребёнок не&nbsp;остаётся «без своего» преподавателя посреди года.</p>
+                </article>
+                <article class="v2-thesis-card is-quote">
+                    <h3>«Команду я собирала 15 лет»</h3>
+                    <p>В Сергиевом Посаде педагогов, которым я готова доверить ребёнка, — поимённо. Мы не нанимаем со студенческой скамьи.</p>
+                    <div class="v2-quote-row">
+                        <span class="ava" aria-hidden="true"></span>
+                        <div>
+                            <strong>Ирина Бурова</strong>
+                            <small>Директор центра «Семицветик»</small>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="v2-stats">
+            <div class="v2-stat"><b><em>100%</em></b><span>с педагогическим<br>образованием</span></div>
+            <div class="v2-stat"><b>10&nbsp;лет</b><span>средний стаж<br>педагога</span></div>
+            <div class="v2-stat"><b>7&nbsp;лет</b><span>средний срок<br>в&nbsp;«Семицветике»</span></div>
+            <div class="v2-stat"><b>14</b><span>педагогов<br>в&nbsp;штате</span></div>
+            <div class="v2-stat"><b>5</b><span>высшей<br>категории</span></div>
+        </div>
+    </section>
+</div>
+{% endblock %}

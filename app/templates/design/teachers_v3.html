@@ -1,0 +1,574 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V3 — Лента действующих учителей =================================
+       Bold: горизонтальная карусель 6 портретов. Больше лиц = больше доверия.
+       Директор первым с маркером «руководитель центра, действующий учитель».
+       Минималистичные карточки: вертикальное фото + капсула с именем.
+       Статистика — три большие цифры-заголовка над лентой.
+       Цитата — отдельная тёмная карточка внутри ленты.                       */
+
+    .design-frame {
+        max-width: 1580px;
+        margin: 28px auto 16px;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .design-frame-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 0 8px;
+    }
+    .design-frame-head h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.6px;
+    }
+    .design-frame-head p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+    }
+    .design-frame-head a {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--orange);
+        text-decoration: none;
+    }
+
+    /* ---------- секция ---------- */
+    .teachers-v3 {
+        position: relative;
+        padding: 68px 0 60px;
+        background: var(--surface);
+        border-radius: 28px;
+        box-shadow: 0 24px 70px rgba(53, 45, 42, 0.08);
+        overflow: hidden;
+    }
+    .teachers-v3::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(800px 400px at 90% 0%, rgba(179, 244, 87, 0.12), transparent 70%),
+            radial-gradient(700px 350px at -5% 100%, rgba(99, 89, 194, 0.06), transparent 70%);
+        pointer-events: none;
+    }
+
+    .v3-head {
+        position: relative;
+        z-index: 1;
+        padding: 0 70px;
+        margin-bottom: 32px;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 48px;
+        align-items: end;
+    }
+    .v3-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #2a2624;
+        color: #b3f457;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+    }
+    .v3-eyebrow i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #b3f457;
+        box-shadow: 0 0 8px #b3f457;
+    }
+    .v3-head h2 {
+        margin: 0;
+        color: #332f2e;
+        font-size: 60px;
+        font-weight: 600;
+        line-height: 0.96;
+        letter-spacing: -2.6px;
+    }
+    .v3-head h2 em {
+        font-style: normal;
+        background: linear-gradient(120deg, var(--orange) 0%, #db5eb4 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .v3-head-side {
+        padding-bottom: 8px;
+    }
+    .v3-head-side p {
+        margin: 0 0 18px;
+        color: #332f2e;
+        font-size: 16.5px;
+        font-weight: 500;
+        line-height: 1.4;
+        letter-spacing: -0.4px;
+    }
+
+    /* три большие цифры в шапке */
+    .v3-bignums {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+    .v3-bignum {
+        position: relative;
+    }
+    .v3-bignum b {
+        display: block;
+        color: var(--orange);
+        font-size: 42px;
+        font-weight: 700;
+        letter-spacing: -1.8px;
+        line-height: 1;
+    }
+    .v3-bignum span {
+        display: block;
+        margin-top: 4px;
+        color: #332f2e;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: -0.2px;
+        line-height: 1.3;
+    }
+
+    /* ---------- лента ---------- */
+    .v3-rail-wrap {
+        position: relative;
+        z-index: 1;
+    }
+    .v3-rail {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        padding: 8px 70px 24px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(51, 47, 46, 0.2) transparent;
+    }
+    .v3-rail::-webkit-scrollbar { height: 8px; }
+    .v3-rail::-webkit-scrollbar-thumb {
+        background: rgba(51, 47, 46, 0.2);
+        border-radius: 999px;
+    }
+
+    .v3-card {
+        flex: 0 0 280px;
+        scroll-snap-align: start;
+        position: relative;
+        height: 440px;
+        border-radius: 24px;
+        overflow: hidden;
+        background: #dce4e7;
+        background-size: cover;
+        background-position: center 22%;
+        background-repeat: no-repeat;
+        box-shadow: 0 16px 40px rgba(53, 45, 42, 0.10);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .v3-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 24px 56px rgba(53, 45, 42, 0.16);
+    }
+    .v3-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 35%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.75) 100%);
+    }
+    .v3-card-burova {
+        flex: 0 0 360px;
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/burova.png') }}");
+        background-position: center 18%;
+    }
+    .v3-card-demina { background-image: url("{{ url_for('static', filename='img/figma/teachers/demina.png') }}"); }
+    .v3-card-girl { background-image: url("{{ url_for('static', filename='img/figma/teachers/girl-laptop.png') }}"); }
+    .v3-card-woman {
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/woman-forest.png') }}");
+        background-position: center 30%;
+    }
+    /* запасные фото — те же, чтобы не было пустоты */
+    .v3-card-extra1 {
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/demina.png') }}");
+        background-position: center 35%;
+        filter: hue-rotate(-5deg);
+    }
+    .v3-card-extra2 {
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/woman-forest.png') }}");
+        background-position: center 18%;
+        filter: hue-rotate(8deg);
+    }
+
+    .v3-card-flag {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 11px;
+        background: rgba(252, 248, 244, 0.94);
+        backdrop-filter: blur(6px);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #332f2e;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+    .v3-card-flag i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #4fb800;
+    }
+    .v3-card-flag.is-leader {
+        background: #2a2624;
+        color: #b3f457;
+    }
+    .v3-card-flag.is-leader i { background: #b3f457; box-shadow: 0 0 6px #b3f457; }
+
+    .v3-card-body {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        z-index: 2;
+        padding: 16px 18px;
+        background: rgba(252, 248, 244, 0.96);
+        backdrop-filter: blur(8px);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .v3-card-body h3 {
+        margin: 0;
+        color: #332f2e;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.8px;
+    }
+    .v3-card-body small {
+        color: var(--muted);
+        font-size: 13px;
+        letter-spacing: -0.2px;
+        line-height: 1.3;
+    }
+    .v3-card-body .v3-meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 4px;
+    }
+    .v3-card-body .v3-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        border-radius: 8px;
+        background: #f5ebe9;
+        color: #332f2e;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+    }
+    .v3-card-body .v3-meta span b { color: var(--orange); font-weight: 700; }
+
+    /* директор — расширенный блок */
+    .v3-card-burova .v3-card-body {
+        padding: 18px 20px;
+    }
+    .v3-card-burova .v3-card-body h3 { font-size: 24px; }
+
+    /* цитата-карточка в ленте */
+    .v3-card-quote {
+        flex: 0 0 360px;
+        scroll-snap-align: start;
+        height: 440px;
+        padding: 28px 28px 24px;
+        border-radius: 24px;
+        background:
+            radial-gradient(420px 240px at 80% 0%, rgba(179, 244, 87, 0.18), transparent 70%),
+            linear-gradient(150deg, #2a2624 0%, #3a322f 100%);
+        color: #fcf8f4;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 16px 40px rgba(53, 45, 42, 0.18);
+    }
+    .v3-card-quote-glyph {
+        font-size: 96px;
+        line-height: 0.7;
+        color: var(--orange);
+        font-family: Georgia, serif;
+        font-weight: 700;
+    }
+    .v3-card-quote blockquote {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 500;
+        line-height: 1.35;
+        letter-spacing: -0.6px;
+        color: #fcf8f4;
+    }
+    .v3-card-quote-author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(252, 248, 244, 0.14);
+    }
+    .v3-card-quote-author .ava {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background:
+            url("{{ url_for('static', filename='img/figma/teachers/burova.png') }}") center 20% / cover no-repeat,
+            #4a3530;
+        border: 2px solid rgba(252, 248, 244, 0.3);
+    }
+    .v3-card-quote-author strong {
+        display: block;
+        font-size: 14.5px;
+        font-weight: 600;
+        color: #fcf8f4;
+        letter-spacing: -0.3px;
+    }
+    .v3-card-quote-author small {
+        color: rgba(252, 248, 244, 0.6);
+        font-size: 12.5px;
+    }
+
+    /* финальная карточка — CTA */
+    .v3-card-all {
+        flex: 0 0 280px;
+        scroll-snap-align: start;
+        height: 440px;
+        border-radius: 24px;
+        background: #f5ebe9;
+        border: 2px dashed rgba(51, 47, 46, 0.15);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        padding: 32px;
+        text-align: center;
+        text-decoration: none;
+        color: #332f2e;
+        transition: background 0.18s ease, transform 0.18s ease;
+    }
+    .v3-card-all:hover {
+        background: rgba(237, 119, 53, 0.10);
+        transform: translateY(-3px);
+    }
+    .v3-card-all .v3-card-all-num {
+        font-size: 64px;
+        font-weight: 700;
+        line-height: 0.9;
+        letter-spacing: -3px;
+        color: var(--orange);
+    }
+    .v3-card-all p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: -0.4px;
+        line-height: 1.25;
+    }
+    .v3-card-all small {
+        font-size: 13px;
+        color: var(--muted);
+        letter-spacing: -0.2px;
+    }
+    .v3-card-all .v3-card-all-arrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        background: #332f2e;
+        color: #fcf8f4;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+    }
+
+    /* подсказка о скролле */
+    .v3-rail-hint {
+        position: relative;
+        z-index: 1;
+        margin: 0 70px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 18px;
+        border-top: 1px solid rgba(51, 47, 46, 0.08);
+        color: var(--muted);
+        font-size: 13px;
+    }
+    .v3-rail-hint strong {
+        color: #332f2e;
+        font-weight: 600;
+    }
+
+    /* ---------- mobile ---------- */
+    @media (max-width: 960px) {
+        .teachers-v3 { padding: 40px 0 36px; }
+        .v3-head { grid-template-columns: 1fr; gap: 18px; padding: 0 20px; }
+        .v3-head h2 { font-size: 36px; letter-spacing: -1.4px; }
+        .v3-bignum b { font-size: 32px; }
+        .v3-rail { padding: 8px 20px 20px; }
+        .v3-card { flex: 0 0 240px; height: 380px; }
+        .v3-card-burova { flex: 0 0 280px; }
+        .v3-card-quote { flex: 0 0 280px; height: 380px; }
+        .v3-card-all { flex: 0 0 240px; height: 380px; }
+        .v3-rail-hint { margin: 0 20px; flex-direction: column; gap: 6px; align-items: flex-start; }
+    }
+</style>
+
+<div class="design-frame">
+    <div class="design-frame-head">
+        <div>
+            <h1>V3 · Bold — «Лента действующих учителей»</h1>
+            <p>Карусель из 6 портретов + цитата как карточка в ленте. Директор первым с маркером.</p>
+        </div>
+        <a href="{{ url_for('design_teachers.teachers_index') }}">← Все варианты</a>
+    </div>
+
+    <section class="teachers-v3">
+        <div class="v3-head">
+            <div>
+                <span class="v3-eyebrow"><i></i>Действующие учителя</span>
+                <h2>Лица, которым вы&nbsp;<em>доверяете ребёнка</em></h2>
+            </div>
+            <div class="v3-head-side">
+                <p>Директор и&nbsp;13&nbsp;педагогов. Большинство — действующие учителя школ Сергиева Посада. Стабильный состав, который не&nbsp;меняется посреди года.</p>
+                <div class="v3-bignums">
+                    <div class="v3-bignum"><b>14</b><span>педагогов в&nbsp;штате</span></div>
+                    <div class="v3-bignum"><b>10&nbsp;лет</b><span>средний стаж</span></div>
+                    <div class="v3-bignum"><b>7&nbsp;лет</b><span>средний срок<br>в&nbsp;центре</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="v3-rail-wrap">
+            <div class="v3-rail">
+                <!-- директор первым -->
+                <article class="v3-card v3-card-burova">
+                    <span class="v3-card-flag is-leader"><i></i>Руководитель центра</span>
+                    <div class="v3-card-body">
+                        <h3>Ирина Бурова</h3>
+                        <small>Основатель «Семицветика» · действующий учитель</small>
+                        <div class="v3-meta">
+                            <span><b>22&nbsp;года</b>&nbsp;в&nbsp;педагогике</span>
+                            <span>с&nbsp;центром <b>15&nbsp;лет</b></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="v3-card v3-card-demina">
+                    <span class="v3-card-flag"><i></i>Учитель школы</span>
+                    <div class="v3-card-body">
+                        <h3>Светлана Дёмина</h3>
+                        <small>Подготовка к&nbsp;школе · математика</small>
+                        <div class="v3-meta">
+                            <span>стаж&nbsp;<b>18&nbsp;лет</b></span>
+                            <span>высшая категория</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="v3-card v3-card-girl">
+                    <span class="v3-card-flag"><i></i>Логопед</span>
+                    <div class="v3-card-body">
+                        <h3>Анна Петрова</h3>
+                        <small>Логопедия · постановка речи</small>
+                        <div class="v3-meta">
+                            <span>стаж&nbsp;<b>9&nbsp;лет</b></span>
+                            <span>в&nbsp;центре с&nbsp;<b>2020</b></span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- цитата как карточка ленты -->
+                <article class="v3-card-quote">
+                    <span class="v3-card-quote-glyph">“</span>
+                    <blockquote>Команду я собирала 15 лет. Тех, кому доверила бы своего ребёнка, — знаю поимённо.</blockquote>
+                    <div class="v3-card-quote-author">
+                        <span class="ava" aria-hidden="true"></span>
+                        <div>
+                            <strong>Ирина Бурова</strong>
+                            <small>Директор · 22 года в&nbsp;педагогике</small>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="v3-card v3-card-woman">
+                    <span class="v3-card-flag"><i></i>Учитель английского</span>
+                    <div class="v3-card-body">
+                        <h3>Ольга Маркова</h3>
+                        <small>Английский · 4–10&nbsp;лет</small>
+                        <div class="v3-meta">
+                            <span>стаж&nbsp;<b>12&nbsp;лет</b></span>
+                            <span>в&nbsp;центре с&nbsp;<b>2017</b></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="v3-card v3-card-extra1">
+                    <span class="v3-card-flag"><i></i>Психолог</span>
+                    <div class="v3-card-body">
+                        <h3>Мария Кравцова</h3>
+                        <small>Эмоциональная подготовка к&nbsp;школе</small>
+                        <div class="v3-meta">
+                            <span>стаж&nbsp;<b>8&nbsp;лет</b></span>
+                            <span>в&nbsp;центре с&nbsp;<b>2021</b></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="v3-card v3-card-extra2">
+                    <span class="v3-card-flag"><i></i>Изостудия</span>
+                    <div class="v3-card-body">
+                        <h3>Елена Сорокина</h3>
+                        <small>ИЗО · керамика · лепка</small>
+                        <div class="v3-meta">
+                            <span>стаж&nbsp;<b>14&nbsp;лет</b></span>
+                            <span>высшая категория</span>
+                        </div>
+                    </div>
+                </article>
+
+                <a class="v3-card-all" href="/pedagogi/">
+                    <span class="v3-card-all-num">+14</span>
+                    <p>Вся команда центра</p>
+                    <small>Директор, действующие учителя, логопед, психолог, мастера творчества</small>
+                    <span class="v3-card-all-arrow">Все педагоги&nbsp;→</span>
+                </a>
+            </div>
+
+            <div class="v3-rail-hint">
+                <span><strong>100%</strong> с педагогическим образованием · <strong>5</strong> высшей категории</span>
+                <span>← листайте, чтобы посмотреть всех →</span>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

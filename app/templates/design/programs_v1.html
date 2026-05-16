@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V1 — Возраст во главе ===================================== */
+    .pgv1-section {
+        padding: 68px 70px;
+    }
+    .pgv1-head {
+        max-width: none;
+        margin-bottom: 38px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 32px;
+    }
+    .pgv1-head .eyebrow {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--orange);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 0.4px;
+    }
+    .pgv1-head h2 {
+        margin: 0;
+        font-size: 46px;
+        font-weight: 740;
+        letter-spacing: -1.4px;
+        line-height: 1.04;
+    }
+    .pgv1-head p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 17px;
+        max-width: 560px;
+    }
+    .pgv1-head-link {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 18px;
+        height: 44px;
+        background: #f1e9e6;
+        color: var(--text);
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        transition: background 0.16s ease;
+    }
+    .pgv1-head-link:hover { background: #e7dcd6; }
+
+    .pgv1-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+    /* первая карточка широкая (2 колонки) для разнообразия ритма */
+    .pgv1-card-wide { grid-column: span 2; }
+
+    .pgv1-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 22px;
+        padding: 28px 30px 26px;
+        min-height: 320px;
+        box-shadow: 0 6px 20px rgba(53, 45, 42, 0.05);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        overflow: hidden;
+    }
+    .pgv1-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 50px rgba(53, 45, 42, 0.10);
+    }
+
+    /* верхняя цветная плашка-«ярлык» вместо боковой полоски */
+    .pgv1-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 22px;
+    }
+    .pgv1-age {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 8px;
+        padding: 10px 18px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.5px;
+        line-height: 1;
+    }
+    .pgv1-age small {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent);
+        opacity: 0.75;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+    }
+    .pgv1-photo {
+        flex: 0 0 auto;
+        width: 72px;
+        height: 72px;
+        border-radius: 18px;
+        background: var(--accent-soft);
+        display: grid;
+        place-items: center;
+        font-size: 28px;
+        color: var(--accent);
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+    .pgv1-card-wide .pgv1-photo {
+        width: 88px;
+        height: 88px;
+        font-size: 32px;
+        border-radius: 22px;
+    }
+
+    .pgv1-card h3 {
+        margin: 0 0 10px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+        line-height: 1.1;
+        color: var(--text);
+    }
+    .pgv1-card-wide h3 {
+        font-size: 32px;
+        letter-spacing: -1px;
+    }
+    .pgv1-tagline {
+        margin: 0 0 22px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.45;
+        flex: 1;
+    }
+    .pgv1-card-wide .pgv1-tagline { font-size: 17px; }
+
+    .pgv1-meta {
+        list-style: none;
+        margin: 0 0 22px;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .pgv1-meta li {
+        padding: 5px 10px;
+        background: var(--surface-2);
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--muted);
+    }
+
+    .pgv1-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(51, 47, 46, 0.08);
+    }
+    .pgv1-price strong {
+        display: block;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.4px;
+    }
+    .pgv1-price small {
+        font-size: 12px;
+        color: var(--muted);
+    }
+    .pgv1-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 18px;
+        height: 44px;
+        background: var(--accent);
+        color: #fff;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 15px;
+        text-decoration: none;
+        transition: filter 0.16s ease;
+    }
+    .pgv1-cta:hover { filter: brightness(1.05); }
+    .pgv1-cta svg { transition: transform 0.16s ease; }
+    .pgv1-cta:hover svg { transform: translateX(3px); }
+
+    /* «Подробнее» — мелко, в углу карточки */
+    .pgv1-details {
+        position: absolute;
+        top: 22px;
+        right: 24px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        text-decoration: none;
+        opacity: 0.7;
+        transition: opacity 0.16s ease, color 0.16s ease;
+    }
+    .pgv1-details:hover { color: var(--accent); opacity: 1; }
+
+    @media (max-width: 1100px) {
+        .pgv1-grid { grid-template-columns: repeat(2, 1fr); }
+        .pgv1-card-wide { grid-column: span 2; }
+    }
+    @media (max-width: 720px) {
+        .pgv1-section { padding: 36px 20px; }
+        .pgv1-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+        .pgv1-head h2 { font-size: 32px; letter-spacing: -1px; }
+        .pgv1-grid { grid-template-columns: 1fr; }
+        .pgv1-card, .pgv1-card-wide { grid-column: auto; min-height: auto; padding: 22px 22px 22px; }
+        .pgv1-card-wide h3 { font-size: 26px; }
+        .pgv1-foot { flex-wrap: wrap; gap: 12px; }
+        .pgv1-cta { width: 100%; justify-content: center; }
+        .pgv1-details { position: static; margin-top: 6px; opacity: 0.85; }
+    }
+
+    /* Header «design preview» бар */
+    .design-preview-bar {
+        width: min(1580px, calc(100% - 12px));
+        margin: 10px auto 0;
+        padding: 14px 24px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 6px 18px rgba(53, 45, 42, 0.06);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--muted);
+    }
+    .design-preview-bar strong { color: var(--text); }
+    .design-preview-bar a { color: var(--orange); font-weight: 600; }
+</style>
+
+<div class="design-preview-bar">
+    <span><strong>V1 · Safe</strong> — Возраст во главе. Чип возраста как заголовок, одна CTA «Записаться», цветная подсветка из палитры цветка.</span>
+    <a href="{{ url_for('design_programs.programs_index') }}">← Все варианты</a>
+</div>
+
+<section class="section pgv1-section">
+    <div class="pgv1-head">
+        <div>
+            <span class="eyebrow">Популярные направления</span>
+            <h2>Программы центра</h2>
+            <p>Выберите направление по&nbsp;возрасту, задаче и&nbsp;удобному расписанию.</p>
+        </div>
+        <a class="pgv1-head-link" href="/programmy/">Все программы →</a>
+    </div>
+
+    <div class="pgv1-grid">
+        {% for program in programs %}
+        <article class="pgv1-card{% if loop.first %} pgv1-card-wide{% endif %}"
+                 style="--accent: {{ program.color }}; --accent-soft: {{ program.color_soft }};">
+
+            <a class="pgv1-details" href="/{{ program.slug }}/">Подробнее →</a>
+
+            <div class="pgv1-card-top">
+                <span class="pgv1-age">
+                    {{ program.age_label }}
+                    <small>возраст</small>
+                </span>
+                <span class="pgv1-photo" aria-hidden="true">{{ program.icon }}</span>
+            </div>
+
+            <h3>{{ program.name }}</h3>
+            <p class="pgv1-tagline">{{ program.tagline }}</p>
+
+            <ul class="pgv1-meta" aria-label="Параметры">
+                <li>{{ program.duration_min }} мин</li>
+                <li>{{ program.frequency }}</li>
+                <li>{{ program.format }}</li>
+            </ul>
+
+            <div class="pgv1-foot">
+                <div class="pgv1-price">
+                    <strong>{{ program.price_label }}</strong>
+                    <small>в {{ program.price_unit }} · абонемент или разово</small>
+                </div>
+                <a class="pgv1-cta" href="#lead-form">
+                    Записаться
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

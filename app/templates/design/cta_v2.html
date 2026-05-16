@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V2 — Пробное за 1 клик ===================================== */
+    .design-frame {
+        max-width: 1400px;
+        margin: 32px auto;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .design-frame-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 0 8px;
+    }
+    .design-frame-head h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.6px;
+    }
+    .design-frame-head p { margin: 0; font-size: 13px; color: var(--muted); }
+    .design-frame-head a { font-size: 13px; font-weight: 600; color: var(--orange); text-decoration: none; }
+
+    .cta-slot {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(440px, 0.85fr);
+        gap: 36px;
+        padding: 56px 64px;
+        background:
+            radial-gradient(700px 360px at -10% 110%, rgba(255, 238, 81, 0.16), transparent 70%),
+            linear-gradient(135deg, #7769d9 0%, #5f54c0 50%, #463db0 100%);
+        border-radius: 28px;
+        overflow: hidden;
+        color: #fcf8f4;
+    }
+
+    /* левая часть */
+    .cta-slot-copy {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        max-width: 540px;
+    }
+    .cta-slot-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        align-self: flex-start;
+        padding: 7px 14px 7px 8px;
+        background: #b3f457;
+        color: #133b10;
+        border-radius: 999px;
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+    .cta-slot-eyebrow .dot {
+        width: 8px; height: 8px;
+        background: #133b10;
+        border-radius: 50%;
+        margin-left: 4px;
+    }
+    .cta-slot-eyebrow b {
+        background: rgba(19, 59, 16, 0.18);
+        padding: 2px 8px;
+        border-radius: 999px;
+    }
+    .cta-slot-copy h2 {
+        margin: 0;
+        font-size: 50px;
+        font-weight: 600;
+        line-height: 1.02;
+        letter-spacing: -2px;
+        color: #fcf8f4;
+    }
+    .cta-slot-copy h2 u {
+        text-decoration: none;
+        background-image: linear-gradient(transparent 70%, rgba(179, 244, 87, 0.4) 70%);
+        padding: 0 4px;
+    }
+    .cta-slot-sub {
+        margin: 0;
+        font-size: 17px;
+        line-height: 1.45;
+        color: rgba(252, 248, 244, 0.82);
+        max-width: 480px;
+    }
+    .cta-slot-bullets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 4px 0 0;
+        padding: 0;
+        list-style: none;
+    }
+    .cta-slot-bullets li {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: rgba(252, 248, 244, 0.12);
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 500;
+        color: rgba(252, 248, 244, 0.92);
+    }
+    .cta-slot-bullets svg { color: #b3f457; }
+
+    /* правая часть — карточка-форма */
+    .cta-slot-card {
+        position: relative;
+        z-index: 2;
+        align-self: center;
+        background: #fcf8f4;
+        color: var(--text);
+        border-radius: 22px;
+        padding: 28px 28px 26px;
+        box-shadow: 0 30px 70px rgba(20, 12, 60, 0.32);
+    }
+    .cta-slot-card-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 4px;
+    }
+    .cta-slot-card-head strong {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.4px;
+    }
+    .cta-slot-card-head span {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--orange);
+    }
+    .cta-slot-card-step {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--muted);
+        margin: 14px 0 8px;
+        letter-spacing: 0.1px;
+    }
+    .cta-slot-card-step b {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        margin-right: 6px;
+        background: rgba(99, 89, 194, 0.12);
+        color: #463db0;
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: 700;
+    }
+    .cta-slot-days {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+    }
+    .cta-slot-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 10px 4px;
+        background: #f5ebe9;
+        border: 1.5px solid transparent;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.12s ease;
+        user-select: none;
+    }
+    .cta-slot-day:hover { background: #efe3df; }
+    .cta-slot-day input { position: absolute; opacity: 0; pointer-events: none; }
+    .cta-slot-day .dow { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+    .cta-slot-day .dnum { font-size: 17px; font-weight: 700; letter-spacing: -0.4px; }
+    .cta-slot-day.is-active {
+        background: rgba(99, 89, 194, 0.1);
+        border-color: #6359c2;
+    }
+    .cta-slot-day.is-active .dnum { color: #463db0; }
+
+    .cta-slot-times {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+    }
+    .cta-slot-time {
+        padding: 9px 6px;
+        background: #f5ebe9;
+        border: 1.5px solid transparent;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.12s ease;
+    }
+    .cta-slot-time:hover { background: #efe3df; }
+    .cta-slot-time.is-active {
+        background: #6359c2;
+        color: #fff;
+        border-color: #6359c2;
+    }
+    .cta-slot-time.is-busy {
+        background: #f8f3f0;
+        color: rgba(51, 47, 46, 0.35);
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+
+    .cta-slot-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 4px;
+    }
+    .cta-slot-form input[type="tel"] {
+        height: 50px;
+        padding: 12px 16px;
+        border: 1.5px solid #e2d7d3;
+        border-radius: 12px;
+        background: #fff;
+        font-size: 15.5px;
+        font-family: inherit;
+        color: var(--text);
+    }
+    .cta-slot-form input[type="tel"]::placeholder { color: rgba(51, 47, 46, 0.45); }
+    .cta-slot-form button {
+        height: 52px;
+        border: 0;
+        border-radius: 12px;
+        background: #ffee51;
+        color: #234e10;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: inherit;
+        letter-spacing: -0.2px;
+        cursor: pointer;
+        transition: filter 0.15s ease;
+    }
+    .cta-slot-form button:hover { filter: brightness(1.04); }
+    .cta-slot-card-foot {
+        margin-top: 12px;
+        font-size: 11.5px;
+        color: var(--muted);
+        line-height: 1.4;
+    }
+    .cta-slot-card-foot u { text-decoration: underline; }
+
+    .cta-slot-badge {
+        position: absolute;
+        top: -14px;
+        right: 20px;
+        padding: 8px 14px;
+        background: var(--orange);
+        color: #fff;
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        box-shadow: 0 10px 24px rgba(237, 119, 53, 0.36);
+    }
+
+    /* мобильный вью */
+    @media (max-width: 900px) {
+        .cta-slot {
+            grid-template-columns: 1fr;
+            padding: 32px 18px;
+            gap: 22px;
+        }
+        .cta-slot-copy h2 { font-size: 30px; letter-spacing: -1.1px; }
+        .cta-slot-card { padding: 22px 18px; }
+        .cta-slot-days { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+        .cta-slot-day { padding: 8px 2px; }
+        .cta-slot-day .dnum { font-size: 15px; }
+        .cta-slot-times { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+</style>
+
+<div class="design-frame">
+    <div class="design-frame-head">
+        <div>
+            <h1>V2 — Пробное за 1 клик</h1>
+            <p>JTBD «попробовать без риска». Слот-чипы превращают форму в&nbsp;живую бронь — родитель уже мысленно в&nbsp;четверге в&nbsp;17:00</p>
+        </div>
+        <a href="{{ url_for('design.cta_index') }}">← все варианты</a>
+    </div>
+
+    <section class="cta-slot">
+        <div class="cta-slot-copy">
+            <span class="cta-slot-eyebrow">
+                Пробное занятие
+                <b>бесплатно</b>
+            </span>
+            <h2>Запишитесь на&nbsp;<u>пробное занятие</u> — выберите удобный день</h2>
+            <p class="cta-slot-sub">
+                Покажем центр, познакомим с&nbsp;педагогом, проведём 30&nbsp;минут с&nbsp;ребёнком —
+                и&nbsp;вы&nbsp;спокойно решаете, продолжать или&nbsp;нет.
+            </p>
+            <ul class="cta-slot-bullets">
+                <li>
+                    <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Без оплаты вперёд
+                </li>
+                <li>
+                    <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Родитель присутствует
+                </li>
+                <li>
+                    <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    30&nbsp;минут
+                </li>
+                <li>
+                    <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Подберём педагога под&nbsp;ребёнка
+                </li>
+            </ul>
+        </div>
+
+        <div class="cta-slot-card">
+            <span class="cta-slot-badge">3 места на&nbsp;этой неделе</span>
+            <div class="cta-slot-card-head">
+                <strong>Свободное время</strong>
+                <span>Воробьёвская, 16А</span>
+            </div>
+            <p style="margin: 6px 0 0; font-size: 13px; color: var(--muted);">Выберите день и&nbsp;час — мы&nbsp;перезвоним и&nbsp;подтвердим</p>
+
+            <div class="cta-slot-card-step"><b>1</b>Какой день?</div>
+            <div class="cta-slot-days" role="radiogroup" aria-label="День пробного занятия">
+                <label class="cta-slot-day">
+                    <input type="radio" name="slot_day" value="mon">
+                    <span class="dow">пн</span><span class="dnum">19</span>
+                </label>
+                <label class="cta-slot-day">
+                    <input type="radio" name="slot_day" value="tue">
+                    <span class="dow">вт</span><span class="dnum">20</span>
+                </label>
+                <label class="cta-slot-day">
+                    <input type="radio" name="slot_day" value="wed">
+                    <span class="dow">ср</span><span class="dnum">21</span>
+                </label>
+                <label class="cta-slot-day is-active">
+                    <input type="radio" name="slot_day" value="thu" checked>
+                    <span class="dow">чт</span><span class="dnum">22</span>
+                </label>
+                <label class="cta-slot-day">
+                    <input type="radio" name="slot_day" value="fri">
+                    <span class="dow">пт</span><span class="dnum">23</span>
+                </label>
+            </div>
+
+            <div class="cta-slot-card-step"><b>2</b>В&nbsp;какое время?</div>
+            <div class="cta-slot-times" role="radiogroup" aria-label="Время пробного занятия">
+                <button type="button" class="cta-slot-time">10:00</button>
+                <button type="button" class="cta-slot-time is-busy" disabled>11:30</button>
+                <button type="button" class="cta-slot-time">15:00</button>
+                <button type="button" class="cta-slot-time is-active">17:00</button>
+                <button type="button" class="cta-slot-time">18:00</button>
+                <button type="button" class="cta-slot-time is-busy" disabled>19:00</button>
+                <button type="button" class="cta-slot-time">20:00</button>
+                <button type="button" class="cta-slot-time">19:30</button>
+            </div>
+
+            <form class="cta-slot-form" data-lead-form>
+                <input type="hidden" name="source_page" value="{{ request.path }}">
+                <input type="hidden" name="source_block" value="design_cta_v2_slot">
+                <input type="hidden" name="slot_selected" value="чт 22, 17:00" data-slot-selected>
+                <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+                <div class="cta-slot-card-step" style="margin-bottom: 0;"><b>3</b>Ваш телефон</div>
+                <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+                <button type="submit">Записаться на&nbsp;чт 22, 17:00</button>
+                <p class="form-status" data-form-status></p>
+            </form>
+
+            <p class="cta-slot-card-foot">
+                Слоты обновляются в&nbsp;реальном времени. Нажимая «Записаться», вы&nbsp;соглашаетесь с&nbsp;<u>политикой обработки персональных данных</u>.
+            </p>
+        </div>
+    </section>
+</div>
+
+<script>
+    // лёгкая интерактивность для демо: подсветка выбранного дня/часа + текст кнопки
+    (function () {
+        const root = document.querySelector('.cta-slot');
+        if (!root) return;
+        const days = root.querySelectorAll('.cta-slot-day');
+        const times = root.querySelectorAll('.cta-slot-time:not(.is-busy)');
+        const slotInput = root.querySelector('[data-slot-selected]');
+        const submitBtn = root.querySelector('button[type="submit"]');
+
+        const labels = { mon: 'пн 19', tue: 'вт 20', wed: 'ср 21', thu: 'чт 22', fri: 'пт 23' };
+        let curDay = 'чт 22';
+        let curTime = '17:00';
+
+        function refresh() {
+            const text = `Записаться на ${curDay}, ${curTime}`;
+            submitBtn.textContent = text;
+            if (slotInput) slotInput.value = `${curDay}, ${curTime}`;
+        }
+
+        days.forEach(d => {
+            d.addEventListener('click', () => {
+                days.forEach(x => x.classList.remove('is-active'));
+                d.classList.add('is-active');
+                const input = d.querySelector('input');
+                curDay = labels[input.value] || curDay;
+                refresh();
+            });
+        });
+
+        times.forEach(t => {
+            t.addEventListener('click', e => {
+                e.preventDefault();
+                times.forEach(x => x.classList.remove('is-active'));
+                t.classList.add('is-active');
+                curTime = t.textContent.trim().split(' ')[0];
+                refresh();
+            });
+        });
+    })();
+</script>
+{% endblock %}

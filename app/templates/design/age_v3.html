@@ -1,0 +1,577 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V3 — JTBD-фрейм: «что нужно сейчас» ===================== */
+    .design-frame {
+        max-width: 1580px;
+        margin: 22px auto;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .design-frame-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 0 8px;
+    }
+    .design-frame-head h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.6px;
+    }
+    .design-frame-head p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+        max-width: 720px;
+    }
+    .design-frame-head a {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--orange);
+        text-decoration: none;
+    }
+
+    .age-v3 {
+        background: var(--surface);
+        border-radius: 28px;
+        padding: 68px 70px;
+        box-shadow: 0 24px 70px rgba(53,45,42,0.06);
+    }
+    .age-v3-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+        gap: 40px;
+        align-items: end;
+        margin-bottom: 40px;
+    }
+    .age-v3-head .eyebrow {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--orange);
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+        display: block;
+    }
+    .age-v3-head h2 {
+        margin: 0;
+        font-size: 50px;
+        font-weight: 740;
+        letter-spacing: -1.8px;
+        line-height: 1.0;
+        color: var(--text);
+    }
+    .age-v3-head h2 .quote-mark {
+        color: var(--orange);
+        font-weight: 700;
+        font-style: italic;
+    }
+    .age-v3-head-side {
+        align-self: end;
+        padding: 18px 22px;
+        background: var(--surface-2);
+        border-radius: 18px;
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.45;
+    }
+    .age-v3-head-side b { color: var(--text); font-weight: 600; }
+
+    /* Сетка карточек-задач */
+    .jtbd-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+    .jtbd-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 30px 28px 28px;
+        border-radius: 24px;
+        background: var(--surface-2);
+        text-decoration: none;
+        color: inherit;
+        overflow: hidden;
+        transition: transform .25s ease, box-shadow .25s ease;
+        min-height: 420px;
+        border: 1px solid transparent;
+    }
+    .jtbd-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 28px 70px rgba(53,45,42,.16);
+    }
+
+    /* Цветные шапки-стикеры */
+    .jtbd-sticker {
+        align-self: flex-start;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px 8px 10px;
+        border-radius: 999px;
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        background: rgba(255,255,255,.85);
+        color: var(--text);
+    }
+    .jtbd-sticker .emoji {
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: currentColor;
+    }
+    .jtbd-sticker .emoji svg { color: var(--surface); }
+
+    .jtbd-card h3 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+        line-height: 1.1;
+        color: var(--text);
+    }
+    .jtbd-card .for {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        margin: -8px 0 -4px;
+    }
+    .jtbd-card-body {
+        font-size: 14.5px;
+        line-height: 1.5;
+        color: var(--muted);
+        margin: 0;
+    }
+    .jtbd-card-body b { color: var(--text); font-weight: 600; }
+
+    .jtbd-card-foot {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(53,45,42,.08);
+    }
+    .jtbd-card-foot .program-name {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.2;
+    }
+    .jtbd-card-foot .program-name small {
+        display: block;
+        font-weight: 500;
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+    .jtbd-card-arrow {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--text);
+        color: var(--surface);
+        display: grid;
+        place-items: center;
+        flex: 0 0 40px;
+        transition: transform .2s ease, background .2s ease;
+    }
+    .jtbd-card:hover .jtbd-card-arrow {
+        transform: rotate(-30deg);
+    }
+
+    /* Декор: огромный полу-прозрачный «возраст» в фоне карточки */
+    .jtbd-card .age-watermark {
+        position: absolute;
+        right: -20px;
+        bottom: -22px;
+        font-size: 130px;
+        font-weight: 700;
+        letter-spacing: -6px;
+        line-height: 1;
+        opacity: 0.07;
+        pointer-events: none;
+        user-select: none;
+        color: currentColor;
+    }
+
+    /* Тоны (под палитру системы) */
+    .jtbd-card.tone-1 {
+        background: linear-gradient(165deg, #d8f5d9 0%, #b3f457 100%);
+    }
+    .jtbd-card.tone-1 .jtbd-sticker { color: #1d8a2e; }
+    .jtbd-card.tone-1 .jtbd-card-arrow { background: #1d8a2e; }
+
+    .jtbd-card.tone-2 {
+        background: linear-gradient(165deg, #ffe9d3 0%, #ffc488 100%);
+    }
+    .jtbd-card.tone-2 .jtbd-sticker { color: var(--orange); }
+    .jtbd-card.tone-2 .jtbd-card-arrow { background: var(--orange); }
+
+    .jtbd-card.tone-3 {
+        background: linear-gradient(165deg, #e1dcff 0%, #b9aef3 100%);
+    }
+    .jtbd-card.tone-3 .jtbd-sticker { color: var(--purple); }
+    .jtbd-card.tone-3 .jtbd-card-arrow { background: var(--purple); }
+
+    .jtbd-card.tone-4 {
+        background: linear-gradient(165deg, #d6e3fd 0%, #95b7fa 100%);
+    }
+    .jtbd-card.tone-4 .jtbd-sticker { color: var(--blue); }
+    .jtbd-card.tone-4 .jtbd-card-arrow { background: var(--blue); }
+
+    /* Свитч режима: «или просто выберите возраст» */
+    .age-v3-switch {
+        margin-top: 32px;
+        padding: 22px 28px;
+        background: var(--text);
+        color: var(--surface);
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px;
+    }
+    .age-v3-switch p {
+        margin: 0;
+        font-size: 15px;
+        color: rgba(252,248,244,.78);
+        line-height: 1.4;
+        max-width: 540px;
+    }
+    .age-v3-switch p b { color: var(--surface); font-weight: 600; }
+    .age-v3-switch-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .age-v3-switch-chips a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 16px;
+        background: rgba(252,248,244,.10);
+        border: 1px solid rgba(252,248,244,.22);
+        border-radius: 999px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--surface);
+        text-decoration: none;
+        transition: background .15s ease;
+    }
+    .age-v3-switch-chips a:hover {
+        background: rgba(252,248,244,.22);
+    }
+    .age-v3-switch-chips a .dot-c {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    .age-v3-switch-chips a .dot-c.g { background: #b3f457; }
+    .age-v3-switch-chips a .dot-c.o { background: var(--orange); }
+    .age-v3-switch-chips a .dot-c.p { background: #b9aef3; }
+    .age-v3-switch-chips a .dot-c.b { background: #95b7fa; }
+
+    /* Мобильный mock */
+    .age-v3-mobile-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-top: 60px;
+    }
+    .age-v3-mobile-wrap > h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--muted);
+    }
+    .age-v3-mobile {
+        width: 380px;
+        background: var(--surface);
+        border-radius: 24px;
+        padding: 28px 22px;
+        box-shadow: 0 16px 50px rgba(53,45,42,.10);
+    }
+    .age-v3-mobile .eyebrow {
+        font-size: 12px;
+        color: var(--orange);
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .age-v3-mobile h2 {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+        margin: 10px 0 18px;
+        line-height: 1.1;
+    }
+    .age-v3-mobile-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .age-v3-mobile-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        text-decoration: none;
+        color: inherit;
+    }
+    .age-v3-mobile-card .num {
+        flex: 0 0 56px;
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: rgba(255,255,255,.7);
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        text-align: center;
+        line-height: 1.05;
+    }
+    .age-v3-mobile-card .num small {
+        display: block;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--muted);
+        margin-top: 1px;
+    }
+    .age-v3-mobile-card .body {
+        flex: 1;
+    }
+    .age-v3-mobile-card .body strong {
+        display: block;
+        font-size: 15.5px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.3px;
+    }
+    .age-v3-mobile-card .body span {
+        display: block;
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+    .age-v3-mobile-card .arr {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--text);
+        color: var(--surface);
+        display: grid;
+        place-items: center;
+        flex: 0 0 32px;
+    }
+
+    @media (max-width: 1300px) {
+        .jtbd-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .age-v3-head {
+            grid-template-columns: 1fr;
+            gap: 22px;
+        }
+    }
+    @media (max-width: 700px) {
+        .age-v3 { padding: 36px 22px; }
+        .age-v3-head h2 { font-size: 30px; letter-spacing: -1px; }
+        .jtbd-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="design-frame">
+    <div class="design-frame-head">
+        <div>
+            <h1>V3 — Что нужно ребёнку сейчас</h1>
+            <p>Вход не через возраст, а через задачу родителя. Под каждой задачей — возрастная вилка и название программы. Внизу — быстрый свитч «просто выберите возраст».</p>
+        </div>
+        <a href="{{ url_for('design_age.age_index') }}">← все варианты</a>
+    </div>
+
+    <section class="age-v3">
+        <div class="age-v3-head">
+            <div>
+                <span class="eyebrow">С чего начать</span>
+                <h2><span class="quote-mark">«</span>А что вам сейчас важнее?<span class="quote-mark">»</span></h2>
+            </div>
+            <div class="age-v3-head-side">
+                Возраст — это <b>не задача</b>, это констатация. Подбирайте по тому, что вам нужно от центра прямо сейчас.
+            </div>
+        </div>
+
+        <div class="jtbd-grid">
+            <a class="jtbd-card tone-1" href="/programmy/#early">
+                <span class="jtbd-sticker">
+                    <span class="emoji">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 2v6"/><path d="M5 12a7 7 0 0 1 14 0c0 5-3 8-7 10-4-2-7-5-7-10z"/>
+                        </svg>
+                    </span>
+                    Только начинаем
+                </span>
+                <h3>Хочу мягкий старт &mdash; <br>пока вместе со&nbsp;мной</h3>
+                <p class="for">Для родителей детей 1–3 лет</p>
+                <p class="jtbd-card-body">
+                    Ребёнок ещё маленький, но&nbsp;вы&nbsp;ищете <b>среду, людей и&nbsp;первые занятия</b>.
+                    Сенсорика, музыка, песенки. Мама на&nbsp;занятии — это нормально.
+                </p>
+                <div class="jtbd-card-foot">
+                    <div class="program-name">Малыши с&nbsp;мамой<small>1 раз в нед · сб 10:30</small></div>
+                    <span class="jtbd-card-arrow">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L8.5 3.5M13 8l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
+                <span class="age-watermark">1–3</span>
+            </a>
+
+            <a class="jtbd-card tone-2" href="/programmy/#early-dev">
+                <span class="jtbd-sticker">
+                    <span class="emoji">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/>
+                        </svg>
+                    </span>
+                    Учим самостоятельности
+                </span>
+                <h3>Хочу, чтобы ребёнок <br>учился быть в&nbsp;группе</h3>
+                <p class="for">Для родителей детей 4–5 лет</p>
+                <p class="jtbd-card-body">
+                    Ребёнок «перерос дом» — пора в&nbsp;коллектив. Речь, мышление, моторика, общение.
+                    <b>Без родителей в&nbsp;комнате</b>, но&nbsp;с&nbsp;любовью.
+                </p>
+                <div class="jtbd-card-foot">
+                    <div class="program-name">Росточки и&nbsp;Цветики<small>2 раза в нед · 2 группы</small></div>
+                    <span class="jtbd-card-arrow">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L8.5 3.5M13 8l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
+                <span class="age-watermark">4–5</span>
+            </a>
+
+            <a class="jtbd-card tone-3" href="/programmy/#school">
+                <span class="jtbd-sticker">
+                    <span class="emoji">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v6c0 3 4 5 9 5s9-2 9-5V7"/>
+                        </svg>
+                    </span>
+                    Готовимся к школе
+                </span>
+                <h3>1&nbsp;сентября не&nbsp;за&nbsp;горами — <br>нужна подготовка</h3>
+                <p class="for">Для родителей детей 6–7 лет</p>
+                <p class="jtbd-card-body">
+                    Ребёнок идёт в&nbsp;1&nbsp;класс. Чтение, математика, окружающий мир, ИЗО, психолог —
+                    <b>5&nbsp;блоков в&nbsp;одном занятии</b>. Чтобы пришёл уверенным.
+                </p>
+                <div class="jtbd-card-foot">
+                    <div class="program-name">Подготовка к школе<small>2 раза в нед · 2,5 часа</small></div>
+                    <span class="jtbd-card-arrow">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L8.5 3.5M13 8l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
+                <span class="age-watermark">6–7</span>
+            </a>
+
+            <a class="jtbd-card tone-4" href="/programmy/#speech">
+                <span class="jtbd-sticker">
+                    <span class="emoji">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 12h2M19 12h2M12 3v2M12 19v2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/><circle cx="12" cy="12" r="4"/>
+                        </svg>
+                    </span>
+                    Школьник, нужно подтянуть
+                </span>
+                <h3>Английский, наука, <br>летний лагерь</h3>
+                <p class="for">Для родителей детей 8–14 лет</p>
+                <p class="jtbd-card-body">
+                    Школьная программа гоняет, а&nbsp;вам нужна <b>поддержка по&nbsp;английскому</b>,
+                    помощь логопеда, психолога. Летом — 4&nbsp;смены лагеря.
+                </p>
+                <div class="jtbd-card-foot">
+                    <div class="program-name">Англ., наука, лагерь<small>4 смены летом</small></div>
+                    <span class="jtbd-card-arrow">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m0 0L8.5 3.5M13 8l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                </div>
+                <span class="age-watermark">8–14</span>
+            </a>
+        </div>
+
+        <div class="age-v3-switch">
+            <p>Знаете возраст и&nbsp;не&nbsp;хотите читать карточки? <b>Сразу к&nbsp;программе:</b></p>
+            <div class="age-v3-switch-chips">
+                <a href="/programmy/#early"><span class="dot-c g"></span> 1–3 года</a>
+                <a href="/programmy/#early-dev"><span class="dot-c o"></span> 4–5 лет</a>
+                <a href="/programmy/#school"><span class="dot-c p"></span> 6–7 лет</a>
+                <a href="/programmy/#speech"><span class="dot-c b"></span> 8–14 лет</a>
+                <a href="#lead-form" style="background: var(--acid); color: #133b10; border-color: var(--acid);">Помогите выбрать →</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="age-v3-mobile-wrap">
+        <h3>Мобильная адаптация (380px)</h3>
+        <div class="age-v3-mobile">
+            <span class="eyebrow">С чего начать</span>
+            <h2>А что вам сейчас важнее?</h2>
+            <div class="age-v3-mobile-list">
+                <a class="age-v3-mobile-card tone-1" href="#">
+                    <span class="num">1–3<small>лет</small></span>
+                    <span class="body">
+                        <strong>Только начинаем</strong>
+                        <span>Мягкий старт, мама рядом</span>
+                    </span>
+                    <span class="arr"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L8.5 3.5M13 8l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </a>
+                <a class="age-v3-mobile-card tone-2" href="#">
+                    <span class="num">4–5<small>лет</small></span>
+                    <span class="body">
+                        <strong>Учим самостоятельности</strong>
+                        <span>Ребёнок в группе без мамы</span>
+                    </span>
+                    <span class="arr"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L8.5 3.5M13 8l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </a>
+                <a class="age-v3-mobile-card tone-3" href="#">
+                    <span class="num">6–7<small>лет</small></span>
+                    <span class="body">
+                        <strong>Готовимся к школе</strong>
+                        <span>5 блоков, 2,5 часа</span>
+                    </span>
+                    <span class="arr"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L8.5 3.5M13 8l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </a>
+                <a class="age-v3-mobile-card tone-4" href="#">
+                    <span class="num">8–14<small>лет</small></span>
+                    <span class="body">
+                        <strong>Школьник, подтянуть</strong>
+                        <span>Англ., наука, летний лагерь</span>
+                    </span>
+                    <span class="arr"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L8.5 3.5M13 8l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

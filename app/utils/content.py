@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from copy import deepcopy
 
+import bleach
+from bleach.css_sanitizer import CSSSanitizer
 from markdown import markdown
 
 
@@ -9,6 +11,45 @@ def render_markdown(value: str | None) -> str:
     if not value:
         return ""
     return markdown(value, extensions=["extra", "sane_lists"])
+
+
+# Allowlist под текст новостей: заголовки, абзацы, форматирование, ссылки, картинки,
+# цитаты, списки, разделители. Скрипты/iframe/style — отрезаем.
+_ALLOWED_TAGS = {
+    "p", "br", "hr",
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "strong", "b", "em", "i", "u", "s", "sub", "sup",
+    "ul", "ol", "li",
+    "a", "img", "figure", "figcaption",
+    "blockquote", "pre", "code",
+    "span", "div",
+}
+_ALLOWED_ATTRIBUTES = {
+    "*": ["class", "style"],
+    "a": ["href", "title", "target", "rel"],
+    "img": ["src", "alt", "title", "width", "height"],
+}
+_ALLOWED_PROTOCOLS = ["http", "https", "mailto", "tel"]
+_ALLOWED_CSS_PROPERTIES = [
+    "text-align", "font-size", "color", "background-color",
+    "font-weight", "font-style", "text-decoration",
+    "margin-left", "padding-left",
+]
+_CSS_SANITIZER = CSSSanitizer(allowed_css_properties=_ALLOWED_CSS_PROPERTIES)
+
+
+def sanitize_html(value: str | None) -> str:
+    if not value:
+        return ""
+    cleaned = bleach.clean(
+        value,
+        tags=_ALLOWED_TAGS,
+        attributes=_ALLOWED_ATTRIBUTES,
+        protocols=_ALLOWED_PROTOCOLS,
+        css_sanitizer=_CSS_SANITIZER,
+        strip=True,
+    )
+    return bleach.linkify(cleaned, parse_email=False, skip_tags={"pre", "code"})
 
 
 def phone_href(phone: str | None) -> str:

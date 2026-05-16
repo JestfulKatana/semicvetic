@@ -195,3 +195,38 @@ document.querySelectorAll("[data-lead-form]").forEach((form) => {
     }
   });
 });
+
+(function initReviewsCarousel() {
+  const tracks = document.querySelectorAll("[data-reviews-track]");
+  tracks.forEach((track) => {
+    const section = track.closest(".reviews-section");
+    if (!section) return;
+    const prevBtn = section.querySelector("[data-reviews-prev]");
+    const nextBtn = section.querySelector("[data-reviews-next]");
+    if (!prevBtn || !nextBtn) return;
+
+    const stepSize = () => {
+      const card = track.querySelector(".review-card");
+      if (!card) return track.clientWidth;
+      const style = window.getComputedStyle(track);
+      const gap = parseFloat(style.columnGap || style.gap || "0") || 0;
+      return card.getBoundingClientRect().width + gap;
+    };
+
+    const updateState = () => {
+      const maxScroll = track.scrollWidth - track.clientWidth - 1;
+      prevBtn.disabled = track.scrollLeft <= 0;
+      nextBtn.disabled = track.scrollLeft >= maxScroll;
+    };
+
+    prevBtn.addEventListener("click", () => {
+      track.scrollBy({ left: -stepSize(), behavior: "smooth" });
+    });
+    nextBtn.addEventListener("click", () => {
+      track.scrollBy({ left: stepSize(), behavior: "smooth" });
+    });
+    track.addEventListener("scroll", updateState, { passive: true });
+    window.addEventListener("resize", updateState);
+    updateState();
+  });
+})();

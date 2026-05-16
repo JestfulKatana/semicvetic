@@ -1,0 +1,481 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V3 — Голос родителя ===================================== */
+    .design-frame {
+        max-width: 1400px;
+        margin: 32px auto;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .design-frame-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 0 8px;
+    }
+    .design-frame-head h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.6px;
+    }
+    .design-frame-head p { margin: 0; font-size: 13px; color: var(--muted); }
+    .design-frame-head a { font-size: 13px; font-weight: 600; color: var(--orange); text-decoration: none; }
+
+    .cta-voice {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 0.88fr);
+        gap: 40px;
+        padding: 60px 64px 56px;
+        background:
+            radial-gradient(720px 420px at 110% 0%, rgba(255, 238, 81, 0.10), transparent 60%),
+            radial-gradient(560px 420px at -10% 110%, rgba(219, 94, 180, 0.18), transparent 65%),
+            linear-gradient(135deg, #7769d9 0%, #5f54c0 50%, #463db0 100%);
+        border-radius: 28px;
+        overflow: hidden;
+        color: #fcf8f4;
+    }
+
+    /* левая часть — вопрос-боль и цитата */
+    .cta-voice-copy {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        max-width: 580px;
+    }
+    .cta-voice-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        align-self: flex-start;
+        padding: 7px 14px;
+        background: rgba(252, 248, 244, 0.14);
+        border: 1px solid rgba(252, 248, 244, 0.22);
+        border-radius: 999px;
+        font-size: 12.5px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: rgba(252, 248, 244, 0.88);
+        text-transform: uppercase;
+    }
+    .cta-voice-tag .pulse {
+        position: relative;
+        width: 8px; height: 8px;
+        background: #b3f457;
+        border-radius: 50%;
+    }
+    .cta-voice-tag .pulse::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 2px solid rgba(179, 244, 87, 0.5);
+        animation: voice-pulse 1.6s ease-out infinite;
+    }
+    @keyframes voice-pulse {
+        0% { transform: scale(0.7); opacity: 1; }
+        100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .cta-voice-copy h2 {
+        margin: 0;
+        font-size: 52px;
+        font-weight: 600;
+        line-height: 1.02;
+        letter-spacing: -2.1px;
+        color: #fcf8f4;
+    }
+    .cta-voice-copy h2 .mark {
+        background-image: linear-gradient(transparent 65%, rgba(255, 238, 81, 0.42) 65%);
+        padding: 0 6px;
+    }
+    .cta-voice-copy h2 .nope { color: rgba(252, 248, 244, 0.55); text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: rgba(255, 238, 81, 0.7); }
+
+    .cta-voice-sub {
+        margin: 0;
+        font-size: 17px;
+        line-height: 1.5;
+        color: rgba(252, 248, 244, 0.82);
+        max-width: 480px;
+    }
+
+    /* блок цитаты */
+    .cta-voice-quote {
+        position: relative;
+        display: grid;
+        grid-template-columns: 68px 1fr;
+        gap: 18px;
+        align-items: start;
+        padding: 22px 22px 22px 22px;
+        background: rgba(252, 248, 244, 0.08);
+        border: 1px solid rgba(252, 248, 244, 0.16);
+        border-radius: 20px;
+        backdrop-filter: blur(8px);
+    }
+    .cta-voice-quote::before {
+        content: '\201C';
+        position: absolute;
+        top: -28px;
+        left: 18px;
+        font-family: 'Onest', sans-serif;
+        font-size: 96px;
+        font-weight: 700;
+        line-height: 1;
+        color: rgba(179, 244, 87, 0.85);
+    }
+    .cta-voice-quote-photo {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        background:
+            linear-gradient(135deg, #ffd9b8, #ffb381);
+        background-image: url('{{ url_for("static", filename="img/figma/teachers/woman-forest.png") }}');
+        background-size: cover;
+        background-position: center top;
+        border: 2px solid rgba(252, 248, 244, 0.4);
+        flex-shrink: 0;
+    }
+    .cta-voice-quote-text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.55;
+        color: rgba(252, 248, 244, 0.95);
+    }
+    .cta-voice-quote-text b {
+        color: #b3f457;
+        font-weight: 600;
+    }
+    .cta-voice-quote-author {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        font-size: 13px;
+        color: rgba(252, 248, 244, 0.65);
+        font-weight: 500;
+    }
+    .cta-voice-quote-author strong {
+        color: #fcf8f4;
+        font-weight: 600;
+    }
+    .cta-voice-quote-author .sep {
+        width: 4px; height: 4px;
+        background: rgba(252, 248, 244, 0.4);
+        border-radius: 50%;
+    }
+    .cta-voice-stars {
+        display: inline-flex;
+        gap: 1px;
+        color: #ffee51;
+        font-size: 13px;
+        letter-spacing: 1px;
+    }
+
+    .cta-voice-mini-stats {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        margin-top: 4px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(252, 248, 244, 0.14);
+        font-size: 13px;
+        color: rgba(252, 248, 244, 0.7);
+    }
+    .cta-voice-mini-stats .num {
+        display: block;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fcf8f4;
+        letter-spacing: -0.6px;
+    }
+    .cta-voice-mini-stats .lbl {
+        font-size: 12px;
+        color: rgba(252, 248, 244, 0.62);
+        line-height: 1.25;
+    }
+
+    /* правая часть — форма как ответ */
+    .cta-voice-form-wrap {
+        position: relative;
+        z-index: 2;
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .cta-voice-form-card {
+        position: relative;
+        background: #fcf8f4;
+        color: var(--text);
+        border-radius: 22px;
+        padding: 30px 30px 24px;
+        box-shadow: 0 30px 70px rgba(20, 12, 60, 0.32);
+    }
+    .cta-voice-form-card::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 40px;
+        width: 18px;
+        height: 18px;
+        background: #fcf8f4;
+        transform: rotate(45deg);
+        z-index: -1;
+    }
+    .cta-voice-form-eyebrow {
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+        color: var(--orange);
+        margin: 0 0 6px;
+    }
+    .cta-voice-form-card h3 {
+        margin: 0 0 16px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.9px;
+        line-height: 1.12;
+        color: var(--text);
+    }
+    .cta-voice-form-card h3 i {
+        font-style: normal;
+        background-image: linear-gradient(transparent 66%, rgba(179, 244, 87, 0.55) 66%);
+        padding: 0 4px;
+    }
+
+    .cta-voice-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .cta-voice-form-field {
+        position: relative;
+    }
+    .cta-voice-form-field label {
+        position: absolute;
+        top: -6px;
+        left: 14px;
+        padding: 0 6px;
+        background: #fcf8f4;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        color: var(--muted);
+        text-transform: uppercase;
+    }
+    .cta-voice-form-field input,
+    .cta-voice-form-field select {
+        width: 100%;
+        height: 52px;
+        padding: 14px 16px 8px;
+        border: 1.5px solid #e2d7d3;
+        border-radius: 13px;
+        background: #fff;
+        font-size: 15.5px;
+        font-family: inherit;
+        color: var(--text);
+        appearance: none;
+    }
+    .cta-voice-form-field input:focus,
+    .cta-voice-form-field select:focus {
+        outline: 0;
+        border-color: var(--purple);
+        box-shadow: 0 0 0 4px rgba(99, 89, 194, 0.14);
+    }
+    .cta-voice-form-field select {
+        background:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23726960' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 18px center;
+        padding-right: 40px;
+    }
+
+    .cta-voice-form button {
+        height: 56px;
+        margin-top: 4px;
+        border: 0;
+        border-radius: 13px;
+        background: linear-gradient(135deg, #ffee51 0%, #f5d617 100%);
+        color: #234e10;
+        font-size: 16.5px;
+        font-weight: 700;
+        font-family: inherit;
+        letter-spacing: -0.2px;
+        cursor: pointer;
+        box-shadow: 0 12px 26px rgba(245, 214, 23, 0.32);
+        transition: transform 0.12s ease, filter 0.15s ease;
+    }
+    .cta-voice-form button:hover { filter: brightness(1.04); transform: translateY(-1px); }
+
+    .cta-voice-form-foot {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.4;
+    }
+    .cta-voice-form-foot svg { flex-shrink: 0; color: #6dab32; }
+    .cta-voice-form-foot u { text-decoration: underline; }
+
+    .cta-voice-promise {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        background: rgba(252, 248, 244, 0.12);
+        border: 1px dashed rgba(252, 248, 244, 0.32);
+        border-radius: 14px;
+        font-size: 13px;
+        color: rgba(252, 248, 244, 0.92);
+        line-height: 1.35;
+    }
+    .cta-voice-promise svg { flex-shrink: 0; color: #b3f457; }
+    .cta-voice-promise b { color: #fcf8f4; font-weight: 600; }
+
+    /* мобильная адаптация */
+    @media (max-width: 900px) {
+        .cta-voice {
+            grid-template-columns: 1fr;
+            padding: 34px 20px 28px;
+            gap: 22px;
+        }
+        .cta-voice-copy h2 { font-size: 30px; letter-spacing: -1.1px; }
+        .cta-voice-quote {
+            grid-template-columns: 56px 1fr;
+            padding: 18px;
+            gap: 14px;
+        }
+        .cta-voice-quote-photo { width: 56px; height: 56px; }
+        .cta-voice-quote::before { font-size: 70px; top: -22px; }
+        .cta-voice-quote-text { font-size: 14.5px; }
+        .cta-voice-mini-stats { gap: 16px; flex-wrap: wrap; }
+        .cta-voice-form-card { padding: 22px 20px 20px; }
+        .cta-voice-form-card h3 { font-size: 22px; letter-spacing: -0.6px; }
+        .cta-voice-form-card::before { display: none; }
+    }
+</style>
+
+<div class="design-frame">
+    <div class="design-frame-head">
+        <div>
+            <h1>V3 — Голос родителя</h1>
+            <p>Заголовок-вопрос про&nbsp;боль + цитата мамы внутри CTA. Социальное доказательство встроено в&nbsp;форму, а&nbsp;не&nbsp;висит отдельной секцией.</p>
+        </div>
+        <a href="{{ url_for('design.cta_index') }}">← все варианты</a>
+    </div>
+
+    <section class="cta-voice">
+        <div class="cta-voice-copy">
+            <span class="cta-voice-tag">
+                <span class="pulse" aria-hidden="true"></span>
+                Вопрос родителю
+            </span>
+
+            <h2>
+                Хотите, чтобы ребёнку
+                <span class="mark">было куда идти</span>
+                после&nbsp;школы&nbsp;— <span class="nope">а не сидеть в&nbsp;телефоне</span>?
+            </h2>
+
+            <p class="cta-voice-sub">
+                Подберём занятия, на&nbsp;которые ребёнок будет идти сам.
+                Расскажем по&nbsp;телефону&nbsp;— без презентаций и&nbsp;давления.
+            </p>
+
+            <figure class="cta-voice-quote">
+                <div class="cta-voice-quote-photo" aria-hidden="true"></div>
+                <div>
+                    <p class="cta-voice-quote-text">
+                        Сын ходил ко&nbsp;многим — везде через&nbsp;полгода надоедало.
+                        Здесь <b>третий год просит сам</b>: «мам, мне сегодня к&nbsp;Свете на&nbsp;шахматы». Это дороже денег.
+                    </p>
+                    <div class="cta-voice-quote-author">
+                        <span class="cta-voice-stars" aria-hidden="true">★★★★★</span>
+                        <strong>Анна</strong>
+                        <span class="sep" aria-hidden="true"></span>
+                        мама Артёма, 9&nbsp;лет
+                        <span class="sep" aria-hidden="true"></span>
+                        отзыв в&nbsp;2GIS
+                    </div>
+                </div>
+            </figure>
+
+            <div class="cta-voice-mini-stats">
+                <div>
+                    <span class="num">15</span>
+                    <span class="lbl">лет<br>центру</span>
+                </div>
+                <div>
+                    <span class="num">3000+</span>
+                    <span class="lbl">детей<br>прошли через нас</span>
+                </div>
+                <div>
+                    <span class="num">~80%</span>
+                    <span class="lbl">советуют<br>друзьям</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-voice-form-wrap">
+            <div class="cta-voice-form-card">
+                <p class="cta-voice-form-eyebrow">Бесплатно · без обязательств</p>
+                <h3>Расскажите про&nbsp;ребёнка — <i>подберём</i>, что подойдёт</h3>
+
+                <form class="cta-voice-form" data-lead-form>
+                    <input type="hidden" name="source_page" value="{{ request.path }}">
+                    <input type="hidden" name="source_block" value="design_cta_v3_voice">
+                    <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+
+                    <div class="cta-voice-form-field">
+                        <label for="cta-v3-age">Возраст ребёнка</label>
+                        <select id="cta-v3-age" name="child_age">
+                            <option value="">Выберите возраст</option>
+                            <option value="3-4">3–4 года</option>
+                            <option value="5-6">5–6 лет (готовимся к&nbsp;школе)</option>
+                            <option value="7-9">7–9 лет (1–3 класс)</option>
+                            <option value="10-12">10–12 лет (4–6 класс)</option>
+                            <option value="13+">13+ лет</option>
+                        </select>
+                    </div>
+
+                    <div class="cta-voice-form-field">
+                        <label for="cta-v3-phone">Ваш телефон</label>
+                        <input id="cta-v3-phone" type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+
+                    <button type="submit">Подобрать программу</button>
+                    <p class="form-status" data-form-status></p>
+                </form>
+
+                <p class="cta-voice-form-foot">
+                    <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M3 8.5l3 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Не&nbsp;звоним в&nbsp;нерабочее время. Не&nbsp;передаём номер третьим лицам.
+                    <u>Политика</u>.
+                </p>
+            </div>
+
+            <div class="cta-voice-promise">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M8 1l2 2 3-.4-.4 3 2 2-2 2 .4 3L10 12.6 8 15l-2-2.4-3 .4.4-3L1 8l2-2-.4-3L6 3.4 8 1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                </svg>
+                <span>
+                    <b>Что будет дальше:</b> Татьяна с&nbsp;ресепшена перезвонит за&nbsp;5–10&nbsp;минут, задаст 3–4 вопроса и&nbsp;предложит 1–2 программы под ребёнка.
+                </span>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+</content>
+</invoke>

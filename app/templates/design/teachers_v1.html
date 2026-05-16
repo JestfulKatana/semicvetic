@@ -1,0 +1,532 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* === V1 — Команда у входа =====================================
+       Safe: остаёмся в дизайн-системе, но иерархизируем команду.
+       Директор — крупная героическая карточка с цитатой внутри.
+       Учителя — 3 равные компактные карточки.
+       Статистика — узкая лента, а не пять цифр-валунов.            */
+
+    .design-frame {
+        max-width: 1580px;
+        margin: 28px auto 16px;
+        padding: 0 16px;
+        font-family: 'Onest', system-ui, sans-serif;
+    }
+    .design-frame-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding: 0 8px;
+    }
+    .design-frame-head h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.6px;
+    }
+    .design-frame-head p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+    }
+    .design-frame-head a {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--orange);
+        text-decoration: none;
+    }
+
+    /* ---------- секция ---------- */
+    .teachers-v1 {
+        position: relative;
+        padding: 64px 64px 56px;
+        background: var(--surface);
+        border-radius: 28px;
+        box-shadow: 0 24px 70px rgba(53, 45, 42, 0.08);
+        overflow: hidden;
+    }
+    .teachers-v1::before {
+        content: "";
+        position: absolute;
+        top: -120px;
+        right: -120px;
+        width: 360px;
+        height: 360px;
+        background: radial-gradient(circle, rgba(237, 119, 53, 0.10) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .v1-head {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 48px;
+        align-items: end;
+        margin-bottom: 36px;
+    }
+    .v1-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(237, 119, 53, 0.12);
+        color: var(--orange);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+    }
+    .v1-eyebrow b { color: var(--orange); }
+    .v1-head h2 {
+        margin: 0;
+        color: #332f2e;
+        font-size: 50px;
+        font-weight: 600;
+        line-height: 1.0;
+        letter-spacing: -2px;
+    }
+    .v1-head h2 em {
+        font-style: normal;
+        color: var(--orange);
+    }
+    .v1-head-side {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding-bottom: 6px;
+    }
+    .v1-head-side p {
+        margin: 0;
+        color: #332f2e;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.35;
+        letter-spacing: -0.4px;
+    }
+    .v1-head-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .v1-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: #f5ebe9;
+        color: #332f2e;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+    }
+    .v1-chip b { color: var(--orange); font-weight: 700; }
+
+    /* ---------- сетка карточек ---------- */
+    .v1-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1.35fr 1fr 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+
+    /* директор — большая карточка */
+    .v1-director {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        background: #2a2624;
+        border-radius: 24px;
+        overflow: hidden;
+        color: #fcf8f4;
+        min-height: 540px;
+        position: relative;
+    }
+    .v1-director-photo {
+        position: relative;
+        height: 320px;
+        background:
+            linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.35) 100%),
+            url("{{ url_for('static', filename='img/figma/teachers/burova.png') }}") center 25% / cover no-repeat,
+            #4a3530;
+    }
+    .v1-director-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 11px;
+        background: rgba(252, 248, 244, 0.95);
+        border-radius: 999px;
+        color: #2a2624;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        backdrop-filter: blur(6px);
+    }
+    .v1-director-badge i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--orange);
+    }
+    .v1-director-body {
+        padding: 22px 24px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .v1-director-name h3 {
+        margin: 0 0 4px;
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: -0.9px;
+        color: #fcf8f4;
+    }
+    .v1-director-name span {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(252, 248, 244, 0.65);
+        letter-spacing: -0.3px;
+    }
+    .v1-director-stat {
+        display: flex;
+        gap: 18px;
+        padding: 12px 0;
+        border-top: 1px solid rgba(252, 248, 244, 0.14);
+        border-bottom: 1px solid rgba(252, 248, 244, 0.14);
+    }
+    .v1-director-stat div {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+    .v1-director-stat strong {
+        font-size: 22px;
+        font-weight: 600;
+        color: #fcf8f4;
+        letter-spacing: -0.8px;
+        line-height: 1;
+    }
+    .v1-director-stat small {
+        font-size: 12px;
+        color: rgba(252, 248, 244, 0.55);
+        letter-spacing: 0;
+    }
+    .v1-director-quote {
+        margin: 0;
+        padding: 0;
+        color: #fcf8f4;
+        font-size: 14.5px;
+        font-style: italic;
+        line-height: 1.45;
+        position: relative;
+        padding-left: 14px;
+        border-left: 2px solid var(--orange);
+    }
+
+    /* обычные учителя */
+    .v1-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: #f5ebe9;
+        border-radius: 24px;
+        overflow: hidden;
+        min-height: 540px;
+    }
+    .v1-card-photo {
+        height: 280px;
+        background-size: cover;
+        background-position: center 22%;
+        background-repeat: no-repeat;
+        background-color: #dce4e7;
+        position: relative;
+    }
+    .v1-card-photo--demina {
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/demina.png') }}");
+    }
+    .v1-card-photo--woman {
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/woman-forest.png') }}");
+        background-position: center 30%;
+    }
+    .v1-card-photo--girl {
+        background-image: url("{{ url_for('static', filename='img/figma/teachers/girl-laptop.png') }}");
+    }
+    .v1-card-tag {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 10px;
+        background: rgba(252, 248, 244, 0.92);
+        border-radius: 999px;
+        color: #332f2e;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        backdrop-filter: blur(6px);
+    }
+    .v1-card-tag i {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #4fb800;
+    }
+    .v1-card-body {
+        flex: 1;
+        padding: 20px 22px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .v1-card-body h3 {
+        margin: 0 0 2px;
+        color: #332f2e;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.9px;
+    }
+    .v1-card-role {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        letter-spacing: -0.3px;
+    }
+    .v1-card-meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 2px;
+    }
+    .v1-card-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 9px;
+        border-radius: 8px;
+        background: #fcf8f4;
+        color: #332f2e;
+        font-size: 12.5px;
+        font-weight: 500;
+        letter-spacing: -0.2px;
+    }
+    .v1-card-meta span b {
+        color: var(--orange);
+        font-weight: 700;
+    }
+    .v1-card-subjects {
+        margin-top: auto;
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+    .v1-card-subjects span {
+        display: inline-flex;
+        padding: 4px 8px;
+        border-radius: 8px;
+        background: #fcf8f4;
+        color: #332f2e;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: -0.3px;
+    }
+
+    /* ---------- статистика лентой ---------- */
+    .v1-stats {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1.4fr repeat(4, 1fr);
+        gap: 14px;
+        padding: 22px 26px;
+        background: #f5ebe9;
+        border-radius: 20px;
+    }
+    .v1-stats-title {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+    }
+    .v1-stats-title small {
+        color: var(--orange);
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 1.3px;
+        text-transform: uppercase;
+    }
+    .v1-stats-title strong {
+        color: #332f2e;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: -0.7px;
+        line-height: 1.1;
+    }
+    .v1-stat {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding-left: 18px;
+        border-left: 1px solid rgba(51, 47, 46, 0.10);
+    }
+    .v1-stat b {
+        color: #332f2e;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -1.2px;
+        line-height: 1;
+    }
+    .v1-stat span {
+        color: var(--muted);
+        font-size: 12.5px;
+        letter-spacing: -0.2px;
+        line-height: 1.25;
+    }
+
+    /* ---------- mobile ---------- */
+    @media (max-width: 960px) {
+        .teachers-v1 { padding: 36px 20px; }
+        .v1-head { grid-template-columns: 1fr; gap: 18px; }
+        .v1-head h2 { font-size: 32px; letter-spacing: -1.2px; }
+        .v1-grid { grid-template-columns: 1fr; }
+        .v1-director, .v1-card { min-height: auto; }
+        .v1-director-photo { height: 260px; }
+        .v1-card-photo { height: 240px; }
+        .v1-stats { grid-template-columns: 1fr 1fr; gap: 12px 18px; padding: 18px; }
+        .v1-stat { padding-left: 0; border-left: 0; }
+    }
+</style>
+
+<div class="design-frame">
+    <div class="design-frame-head">
+        <div>
+            <h1>V1 · Safe — «Команда у входа»</h1>
+            <p>Директор и 3 действующих учителя. Цитата внутри карточки. Статистика лентой, не главный герой.</p>
+        </div>
+        <a href="{{ url_for('design_teachers.teachers_index') }}">← Все варианты</a>
+    </div>
+
+    <section class="teachers-v1">
+        <div class="v1-head">
+            <div>
+                <span class="v1-eyebrow">Команда центра · <b>15 лет вместе</b></span>
+                <h2>У нас директор и&nbsp;<em>действующие учителя</em> школ Сергиева&nbsp;Посада</h2>
+            </div>
+            <div class="v1-head-side">
+                <p>Знают, что реально требуют на&nbsp;входе в&nbsp;школу — потому что сами стоят у&nbsp;доски каждый день.</p>
+                <div class="v1-head-chips">
+                    <span class="v1-chip"><b>14</b>&nbsp;в&nbsp;штате</span>
+                    <span class="v1-chip"><b>5</b>&nbsp;высшей категории</span>
+                    <span class="v1-chip"><b>100%</b>&nbsp;с педобразованием</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="v1-grid">
+            <!-- директор -->
+            <article class="v1-director">
+                <div class="v1-director-photo">
+                    <span class="v1-director-badge"><i></i>Директор центра</span>
+                </div>
+                <div class="v1-director-body">
+                    <div class="v1-director-name">
+                        <h3>Ирина Бурова</h3>
+                        <span>Основатель и&nbsp;руководитель «Семицветика» · действующий учитель</span>
+                    </div>
+                    <div class="v1-director-stat">
+                        <div><strong>15&nbsp;лет</strong><small>с центром</small></div>
+                        <div><strong>22&nbsp;года</strong><small>в&nbsp;педагогике</small></div>
+                        <div><strong>3000+</strong><small>выпускников</small></div>
+                    </div>
+                    <blockquote class="v1-director-quote">
+                        «Я знаю каждого ребёнка по имени и помню, с чем он пришёл год назад. Это и&nbsp;есть наша среда.»
+                    </blockquote>
+                </div>
+            </article>
+
+            <!-- учителя -->
+            <article class="v1-card">
+                <div class="v1-card-photo v1-card-photo--demina">
+                    <span class="v1-card-tag"><i></i>Действующий учитель школы</span>
+                </div>
+                <div class="v1-card-body">
+                    <h3>Светлана Дёмина</h3>
+                    <p class="v1-card-role">Подготовка к&nbsp;школе · математика</p>
+                    <div class="v1-card-meta">
+                        <span>стаж&nbsp;<b>18&nbsp;лет</b></span>
+                        <span>в&nbsp;центре с&nbsp;<b>2018</b></span>
+                    </div>
+                    <div class="v1-card-subjects">
+                        <span>Подготовка к школе</span>
+                        <span>Отличник</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="v1-card">
+                <div class="v1-card-photo v1-card-photo--woman">
+                    <span class="v1-card-tag"><i></i>Учитель начальной школы</span>
+                </div>
+                <div class="v1-card-body">
+                    <h3>Ольга Маркова</h3>
+                    <p class="v1-card-role">Английский язык · 4–10&nbsp;лет</p>
+                    <div class="v1-card-meta">
+                        <span>стаж&nbsp;<b>12&nbsp;лет</b></span>
+                        <span>высшая категория</span>
+                    </div>
+                    <div class="v1-card-subjects">
+                        <span>Английский</span>
+                        <span>Подготовка к школе</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="v1-card">
+                <div class="v1-card-photo v1-card-photo--girl">
+                    <span class="v1-card-tag"><i></i>Логопед-психолог</span>
+                </div>
+                <div class="v1-card-body">
+                    <h3>Анна Петрова</h3>
+                    <p class="v1-card-role">Логопедия · подготовка речи</p>
+                    <div class="v1-card-meta">
+                        <span>стаж&nbsp;<b>9&nbsp;лет</b></span>
+                        <span>в&nbsp;центре с&nbsp;<b>2020</b></span>
+                    </div>
+                    <div class="v1-card-subjects">
+                        <span>Логопедия</span>
+                        <span>Раннее развитие</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="v1-stats">
+            <div class="v1-stats-title">
+                <small>Команда в цифрах</small>
+                <strong>Стабильная команда — стабильный ребёнок</strong>
+            </div>
+            <div class="v1-stat"><b>100%</b><span>с педагогическим образованием</span></div>
+            <div class="v1-stat"><b>10&nbsp;лет</b><span>средний стаж педагога</span></div>
+            <div class="v1-stat"><b>7&nbsp;лет</b><span>средний срок в центре</span></div>
+            <div class="v1-stat"><b>14</b><span>педагогов в&nbsp;штате</span></div>
+        </div>
+    </section>
+</div>
+{% endblock %}

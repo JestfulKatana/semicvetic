@@ -1,0 +1,32 @@
+<article class="na-card">
+    <div class="na-card-cover {% if not post.image_url %}na-card-cover--empty{% endif %}"
+         {% if post.image_url %}style="background-image:url('{{ post.image_url }}')"{% endif %}>
+        <div class="na-card-badges">
+            {% if post.is_pinned %}<span class="na-badge na-badge--pinned">Закреплено</span>{% endif %}
+            {% if post.is_published %}
+                <span class="na-badge na-badge--published">Опубликовано</span>
+            {% else %}
+                <span class="na-badge na-badge--draft">Черновик</span>
+            {% endif %}
+        </div>
+        {% if not post.image_url %}🖼️{% endif %}
+    </div>
+    <div class="na-card-body">
+        <div class="na-card-meta">
+            <span>{{ post.display_date }}</span>
+            {% if post.category %}<span>· {{ post.category }}</span>{% endif %}
+        </div>
+        <h3 class="na-card-title">
+            <a href="{{ url_for('news_admin.edit', post_id=post.id) }}">{{ post.title }}</a>
+        </h3>
+        {% if post.excerpt %}
+        <p class="na-card-excerpt">{{ post.excerpt|truncate(140) }}</p>
+        {% endif %}
+        <div class="na-card-actions">
+            <a class="na-btn na-btn--sm na-btn--primary" href="{{ url_for('news_admin.edit', post_id=post.id) }}">Редактировать</a>
+            {% if post.is_published %}
+            <a class="na-btn na-btn--sm" href="/novosti/{{ post.slug }}/" target="_blank" rel="noopener">Открыть</a>
+            {% endif %}
+        </div>
+    </div>
+</article>

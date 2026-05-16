@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section news-hero">
+    <div class="container">
+        <p class="eyebrow">Новости центра</p>
+        <h1>Что у нас происходит</h1>
+        <p class="lead-text">События, наборы, поздравления и хорошие новости из жизни «Семицветика». Обновляется регулярно.</p>
+    </div>
+</section>
+
+<section class="section news-list-section">
+    <div class="container">
+        {% if not news %}
+            <div class="news-empty">
+                <p>Пока новостей нет — но скоро появятся! Подпишитесь на наши соцсети, чтобы ничего не пропустить.</p>
+            </div>
+        {% else %}
+            <div class="news-grid">
+                {% for post in news %}
+                <article class="news-tile {% if post.is_pinned %}news-tile--pinned{% endif %}">
+                    <a class="news-tile-cover" href="/novosti/{{ post.slug }}/">
+                        {% if post.image_url %}
+                            <img src="{{ post.image_url }}" alt="{{ post.title }}" loading="lazy">
+                        {% else %}
+                            <div class="news-tile-placeholder" aria-hidden="true">🌸</div>
+                        {% endif %}
+                        {% if post.is_pinned %}<span class="news-tile-pin">Закреплено</span>{% endif %}
+                    </a>
+                    <div class="news-tile-body">
+                        <p class="news-tile-meta">
+                            <time>{{ post.display_date }}</time>
+                            {% if post.category %}<span class="news-tile-dot">·</span><span>{{ post.category }}</span>{% endif %}
+                        </p>
+                        <h2 class="news-tile-title">
+                            <a href="/novosti/{{ post.slug }}/">{{ post.title }}</a>
+                        </h2>
+                        {% if post.excerpt %}
+                        <p class="news-tile-excerpt">{{ post.excerpt|truncate(160) }}</p>
+                        {% endif %}
+                        <a class="news-tile-link" href="/novosti/{{ post.slug }}/">Читать →</a>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
