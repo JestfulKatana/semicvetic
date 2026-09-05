@@ -30,6 +30,7 @@ class Config:
     TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
     YANDEX_METRIKA_ID = os.getenv("YANDEX_METRIKA_ID", "")
     AUTO_SEED = os.getenv("AUTO_SEED", "true").lower() == "true"
+    MAINTENANCE_MODE = os.getenv("MAINTENANCE_MODE", "false").lower() == "true"
     LEAD_RATE_LIMIT = os.getenv("LEAD_RATE_LIMIT", "5 per minute")
     RATELIMIT_STORAGE_URI = "memory://"
     SESSION_COOKIE_HTTPONLY = True

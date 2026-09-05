@@ -5,7 +5,7 @@ import os
 
 import structlog
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, jsonify, make_response, render_template, request
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from config import Config
@@ -66,6 +66,30 @@ def create_app() -> Flask:
     csrf.exempt(api.bp)
 
     login_manager.login_view = "auth.login"
+
+    @app.before_request
+    def maintenance_mode():
+        if not app.config["MAINTENANCE_MODE"]:
+            return None
+
+        path = request.path
+        if (
+            path in {"/health", "/login", "/logout", "/metrics", "/admin"}
+            or path.startswith(("/static/", "/admin/"))
+        ):
+            return None
+        if path == "/robots.txt":
+            response = make_response("User-agent: *\nDisallow: /\n")
+            response.headers["Content-Type"] = "text/plain; charset=utf-8"
+            return response
+        if path.startswith("/api/"):
+            return jsonify({"ok": False, "message": "Сайт временно обновляется"}), 503
+
+        response = make_response(render_template("maintenance.html"), 503)
+        response.headers["Retry-After"] = "3600"
+        response.headers["Cache-Control"] = "no-store, max-age=0"
+        response.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive"
+        return response
 
     @login_manager.user_loader
     def load_user(user_id: str):
