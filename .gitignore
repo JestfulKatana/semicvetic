@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 instance/
 data/*.db
+data/*.db.backup-*
 data/backups/
 .env
 *.pyc
@@ -15,3 +16,5 @@ design/
 .claude/settings.local.json
 app/static/uploads/news/*
 !app/static/uploads/news/.gitkeep
+
+app/static/uploads/teachers/

@@ -6045,6 +6045,8 @@ body.is-menu-open .wa-float { display: none; }
     line-height: 1.4;
 }
 .teacher-card-rich { min-height: 0; }
+.teacher-card[hidden] { display: none; }
+.teacher-card-rich img { height: auto; aspect-ratio: 3 / 4; }
 .teacher-card-rich .teacher-body { gap: 14px; padding: 22px; }
 .teacher-cta {
     align-self: flex-start;

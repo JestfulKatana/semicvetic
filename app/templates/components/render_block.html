@@ -634,7 +634,8 @@
     ('early', 'Комплексное развитие'),
     ('speech', 'Логопедия'),
     ('art', 'Изостудия и\u00a0Лепка'),
-    ('psychology', 'Программа «Отличник»'),
+    ('psychology', 'Психология и математика'),
+    ('french', 'Французский язык'),
     ('camp', 'Детский лагерь'),
 ] %}
 {# Фильтры/поиск показываем только на странице /pedagogi/. На главной — единый блок без фильтров. #}
@@ -660,7 +661,7 @@
     <div class="htv1-grid">
         {% if director %}
         <article class="htv1-director">
-            <div class="htv1-director-photo"{% if director.photo_url %} style="background-image: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.35) 100%), url('{{ url_for('static', filename=director.photo_url) }}');"{% endif %}>
+            <div class="htv1-director-photo"{% if director.photo_url %} style="background-image: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.35) 100%), url('{{ director.photo_url }}');"{% endif %}>
                 <span class="htv1-director-badge"><i></i>Директор центра</span>
             </div>
             <div class="htv1-director-body">
@@ -685,7 +686,7 @@
 
         {% for teacher in co_teachers %}
         <article class="htv1-card">
-            <div class="htv1-card-photo"{% if teacher.photo_url %} style="background-image: url('{{ url_for('static', filename=teacher.photo_url) }}');"{% endif %}>
+            <div class="htv1-card-photo"{% if teacher.photo_url %} style="background-image: url('{{ teacher.photo_url }}');"{% endif %}>
                 <span class="htv1-card-tag"><i></i>{{ teacher.role or 'Педагог центра' }}</span>
             </div>
             <div class="htv1-card-body">
@@ -741,7 +742,7 @@
         {% endif %}
         <div class="filter-row" data-teacher-filters>
             {% for key, label in teacher_categories %}
-            <span class="chip {{ 'is-active' if loop.first else '' }}" data-filter-category="{{ key }}">{{ label }}</span>
+            <button type="button" class="chip {{ 'is-active' if loop.first else '' }}" data-filter-category="{{ key }}">{{ label }}</button>
             {% endfor %}
         </div>
     </div>

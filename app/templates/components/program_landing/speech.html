@@ -232,42 +232,9 @@
 </section>
 
 {# Логопеды #}
-<section class="pl-section pl-section--soft">
-    <h2 class="pl-h2 pl-h2--md" style="margin-top:0;">Логопеды, которые ставят звук</h2>
-    <p class="pl-text-body" style="margin: 12px 0 32px;">Высшее дефектологическое, опыт работы в&nbsp;школах и&nbsp;поликлиниках</p>
-    <div class="pl-teachers pl-teachers--equal">
-        {# TODO: реальные фото и подтверждённые сертификаты #}
-        <article class="pl-teacher pl-teacher--featured-paper">
-            <div class="pl-teacher-photo">
-                <span class="pl-teacher-badge pl-teacher-badge--paper">Старший логопед</span>
-            </div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">12&nbsp;лет в&nbsp;Семицветике</span>
-                <h3>Мишина Е.&nbsp;В.</h3>
-                <p class="pl-teacher-role">Старший логопед</p>
-                <p class="pl-teacher-sub">Дислалия · ОНР · дисграфия</p>
-            </div>
-        </article>
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">9&nbsp;лет</span>
-                <h3>Семёнова О.&nbsp;К.</h3>
-                <p class="pl-teacher-role">Логопед-дефектолог</p>
-                <p class="pl-teacher-sub">Заикание · ЗРР · ринолалия</p>
-            </div>
-        </article>
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">7&nbsp;лет</span>
-                <h3>Кравцова А.&nbsp;Н.</h3>
-                <p class="pl-teacher-role">Логопед</p>
-                <p class="pl-teacher-sub">Школьники: чтение, письмо</p>
-            </div>
-        </article>
-    </div>
-</section>
+{% with teacher_category='speech' %}
+    {% include 'components/program_landing/teachers.html' %}
+{% endwith %}
 
 {# Отзывы #}
 <section class="pl-section">

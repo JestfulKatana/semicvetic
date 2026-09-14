@@ -208,40 +208,9 @@
 </section>
 
 {# Команда #}
-<section class="pl-section">
-    <h2 class="pl-h2 pl-h2--md" style="margin-top:0;">На&nbsp;занятии&nbsp;— 3&nbsp;взрослых</h2>
-    <p class="pl-text-body" style="margin: 12px 0 32px;">Ведущий педагог + специалист по&nbsp;ИЗО/музыке + помощник. На&nbsp;8&nbsp;детей&nbsp;— как должно быть.</p>
-    <div class="pl-teachers pl-teachers--equal">
-        {# TODO: реальные фото и подтверждённые сертификаты #}
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">12&nbsp;лет в&nbsp;Семицветике</span>
-                <h3>Дёмина И.&nbsp;С.</h3>
-                <p class="pl-teacher-role">Ведущий педагог</p>
-                <p class="pl-teacher-sub">Группы 2–4&nbsp;лет</p>
-            </div>
-        </article>
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">9&nbsp;лет</span>
-                <h3>Семёнова О.&nbsp;К.</h3>
-                <p class="pl-teacher-role">Психолог · речь</p>
-                <p class="pl-teacher-sub">Малыши, мамы рядом</p>
-            </div>
-        </article>
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">7&nbsp;лет</span>
-                <h3>Кравцова А.&nbsp;Н.</h3>
-                <p class="pl-teacher-role">ИЗО · музыка</p>
-                <p class="pl-teacher-sub">Творческие занятия</p>
-            </div>
-        </article>
-    </div>
-</section>
+{% with teacher_category='early' %}
+    {% include 'components/program_landing/teachers.html' %}
+{% endwith %}
 
 {# Отзывы #}
 <section class="pl-section">
