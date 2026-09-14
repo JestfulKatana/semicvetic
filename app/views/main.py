@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import date
+
 from flask import current_app, Blueprint, abort, make_response, render_template
 
 from ..models import Event, Page, Program, Review, SiteSetting, Teacher
@@ -55,6 +57,7 @@ def inject_global_context():
     ctx = shared_context()
     return {
         "site_settings": ctx["settings"],
+        "current_date": date.today(),
         "nav_pages": ctx["nav_pages"],
         "programs": ctx["programs"],
         "news": ctx["news"],
@@ -212,6 +215,7 @@ def slug_router(slug: str):
             "pages/content_page.html",
             page=page,
             blocks=hydrate_blocks(page.blocks, ctx),
+            about_teachers=ctx["teachers"] if slug == "o-centre" else [],
             page_title=page.meta_title or page.title,
             page_description=page.meta_description or page.hero_subtitle,
             page_schema=build_org_schema(ctx["settings"]),

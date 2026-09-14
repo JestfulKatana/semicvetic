@@ -352,9 +352,9 @@ def seed_database() -> None:
         {"component": "prices_table", "data": {"title": "Текущие цены и расписание", "source": "all_prices"}},
     ]
     pages[5].blocks = [
-        {"component": "hero", "data": {"title": "Мероприятия и статьи", "subtitle": "События дают быстрые лиды, статьи закрывают SEO-запросы родителей.", "cta_text": "Оставить заявку", "cta_target": "lead-form", "eyebrow": "Контент-маркетинг"}},
-        {"component": "events_grid", "data": {"title": "Ближайшие мероприятия", "source": "all_events"}},
-        {"component": "articles_grid", "data": {"title": "Статьи для органического трафика", "source": "all_articles"}},
+        {"component": "hero", "data": {"title": "Мероприятия и статьи", "subtitle": "Праздники, встречи и полезные материалы для родителей.", "cta_text": "Оставить заявку", "cta_target": "lead-form", "eyebrow": "Жизнь центра"}},
+        {"component": "events_grid", "data": {"title": "Мероприятия центра", "source": "all_events"}},
+        {"component": "articles_grid", "data": {"title": "Полезное для родителей", "source": "all_articles"}},
     ]
     pages[6].blocks = [
         {"component": "hero", "data": {"title": "Контакты", "subtitle": "Страница не заставляет искать телефон в футере: всё ключевое вынесено наверх.", "cta_text": "Заказать звонок", "cta_target": "lead-form", "eyebrow": "Связь"}},

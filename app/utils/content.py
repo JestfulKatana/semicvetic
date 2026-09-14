@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from datetime import date
 
 import bleach
 from bleach.css_sanitizer import CSSSanitizer
@@ -110,7 +111,8 @@ def hydrate_blocks(blocks: list[dict], shared: dict) -> list[dict]:
             data["articles"] = shared["articles"]
         elif source == "upcoming_events":
             limit = data.get("limit", 3)
-            data["events"] = shared["events"][:limit]
+            upcoming = [event for event in shared["events"] if event.event_date and event.event_date >= date.today()]
+            data["events"] = sorted(upcoming, key=lambda event: event.event_date)[:limit]
         elif source == "recent_articles":
             limit = data.get("limit", 3)
             data["articles"] = shared["articles"][:limit]

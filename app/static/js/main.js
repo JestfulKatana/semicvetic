@@ -119,48 +119,6 @@ function initProgramFilters() {
   applyFilter();
 }
 
-function initTeacherFilters() {
-  const filterBar = document.querySelector("[data-teacher-filters]");
-  const grid = document.querySelector("[data-teacher-grid]");
-  const search = document.querySelector("[data-teacher-search]");
-  const emptyNode = document.querySelector("[data-teacher-empty]");
-  if (!grid) return;
-
-  const state = { cat: "all", q: "" };
-  const apply = () => {
-    let visible = 0;
-    grid.querySelectorAll(".teacher-card").forEach((card) => {
-      const cat = (card.dataset.category || "").toLowerCase();
-      const text = (card.dataset.search || "").toLowerCase();
-      const catOk = state.cat === "all" || cat === state.cat;
-      const qOk = !state.q || text.includes(state.q);
-      const show = catOk && qOk;
-      card.hidden = !show;
-      if (show) visible += 1;
-    });
-    if (emptyNode) emptyNode.hidden = visible !== 0;
-  };
-
-  if (filterBar) {
-    filterBar.querySelectorAll(".chip").forEach((chip) => {
-      chip.addEventListener("click", () => {
-        const val = chip.dataset.filterCategory;
-        if (val === undefined) return;
-        state.cat = val;
-        filterBar.querySelectorAll(".chip").forEach((node) => { node.classList.toggle("is-active", node === chip); node.setAttribute("aria-pressed", String(node === chip)); });
-        apply();
-      });
-    });
-  }
-
-  if (search) {
-    search.addEventListener("input", () => {
-      state.q = search.value.trim().toLowerCase();
-      apply();
-    });
-  }
-}
-
 function initScrollState() {
   const threshold = 400;
   const update = () => {
@@ -184,7 +142,6 @@ function initStickyCtaAnchor() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initProgramFilters();
-  initTeacherFilters();
   initScrollState();
   initStickyCtaAnchor();
 });

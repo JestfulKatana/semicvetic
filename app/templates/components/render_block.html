@@ -628,19 +628,6 @@
 </section>
 
 {% elif block.component == "teachers_grid" %}
-{% set teacher_categories = [
-    ('all', 'Все педагоги'),
-    ('school', 'Подготовка к\u00a0школе'),
-    ('english', 'Английский язык'),
-    ('early', 'Комплексное развитие'),
-    ('speech', 'Логопедия'),
-    ('art', 'Изостудия и\u00a0Лепка'),
-    ('psychology', 'Психология и математика'),
-    ('french', 'Французский язык'),
-    ('camp', 'Детский лагерь'),
-] %}
-{# Фильтры/поиск показываем только на странице /pedagogi/. На главной — единый блок без фильтров. #}
-{% set show_teacher_filters = (page_slug == 'pedagogi') and (data.show_search or data.show_chips) %}
 {% if page_slug != 'pedagogi' %}
 {# Главная — V1 «Команда у входа»: директор крупной карточкой + равные карточки учителей + статистика лентой. #}
 {% set teachers_list = data.teachers or [] %}
@@ -736,20 +723,8 @@
         {% endif %}
     </div>
     {% endif %}
-    {% if show_teacher_filters %}
-    <div class="teacher-search">
-        {% if data.show_search %}
-        <label class="sr-only" for="teacher-search">Найти учителя или предмет</label><input id="teacher-search" type="search" placeholder="Найти учителя или предмет" data-teacher-search>
-        {% endif %}
-        <div class="filter-row" data-teacher-filters>
-            {% for key, label in teacher_categories %}
-            <button type="button" class="chip {{ 'is-active' if loop.first else '' }}" data-filter-category="{{ key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ label }}</button>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
     {% set is_pedagogi_page = page_slug == 'pedagogi' %}
-    <div class="teacher-grid{% if is_pedagogi_page %} teacher-grid-rich{% endif %}" data-teacher-grid>
+    <div class="teacher-grid{% if is_pedagogi_page %} teacher-grid-rich{% endif %}">
         {% for teacher in data.teachers %}
         {% set experience_label = '' %}
         {% if teacher.experience_years %}
@@ -758,10 +733,10 @@
                 {% set experience_label = experience_label ~ ' · В\u00a0центре с\u00a0' ~ teacher.at_center_since %}
             {% endif %}
         {% endif %}
-        <article class="teacher-card{% if is_pedagogi_page %} teacher-card-rich{% endif %}"
-                 data-category="{{ teacher.category or '' }}"
-                 data-search="{{ (teacher.name ~ ' ' ~ teacher.role ~ ' ' ~ (teacher.specialization or ''))|lower }}">
-            <img src="{{ teacher.photo_url or url_for('static', filename='img/mockup/teacher-' ~ ((loop.index0 % 3) + 1) ~ '.png') }}" alt="">
+        <article class="teacher-card{% if is_pedagogi_page %} teacher-card-rich{% endif %}">
+            <div class="teacher-portrait-frame">
+            <img class="{{ 'teacher-portrait-director' if teacher.photo_url and 'mironova.jpg' in teacher.photo_url else '' }}" src="{{ teacher.photo_url or url_for('static', filename='img/mockup/teacher-' ~ ((loop.index0 % 3) + 1) ~ '.png') }}" alt="">
+            </div>
             <div class="teacher-body">
                 <div class="teacher-top">
                     {% if experience_label %}
@@ -817,9 +792,7 @@
         </article>
         {% endfor %}
     </div>
-    {% if show_teacher_filters %}
-    <p class="filter-empty" data-teacher-empty hidden>По&nbsp;запросу ничего не&nbsp;нашлось. Попробуйте сбросить фильтры.</p>
-    {% endif %}
+
     {% set team = data.get('team_stats') %}
     {% if team %}
     <div class="teachers-team-block{% if page_slug != 'pedagogi' %} teachers-team-block--seamless{% endif %}">
@@ -855,7 +828,7 @@
 {% endif %}
 
 {% elif block.component == "reviews_grid" %}
-<section class="section reviews-section" id="reviews">
+<section class="section reviews-section{{ ' reviews-section--empty' if not data.reviews else '' }}" id="reviews">
     <div class="reviews-head split-head">
         <div>
             <p class="eyebrow">Отзывы родителей</p>
@@ -869,6 +842,7 @@
             </div>
             {% endif %}
         </div>
+        {% if data.reviews %}
         <div class="reviews-aside">
             <div class="reviews-summary" aria-label="Сводка отзывов">
                 <strong>5.0</strong>
@@ -886,6 +860,7 @@
             </div>
             {% endif %}
         </div>
+        {% endif %}
     </div>
     {% if data.reviews %}
     <div class="reviews-grid" data-reviews-track>
@@ -913,7 +888,7 @@
     </div>
     {% else %}
     <article class="review-card review-card-empty">
-        <p class="review-text">Отзывы появятся после наполнения базы.</p>
+        <p class="review-text">Пока нет опубликованных отзывов об этой программе.</p>
     </article>
     {% endif %}
 </section>
@@ -1141,7 +1116,7 @@
             {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
         </div>
     </div>
-    {% if data.age_filters or data.price_toggle %}
+    {% if data.get("groups") and (data.age_filters or data.price_toggle) %}
     <div class="schedule-controls">
         {% if data.age_filters %}
         <div class="schedule-age-filters" role="tablist">
@@ -1230,6 +1205,8 @@
                 </div>
             </div>
         </article>
+        {% else %}
+        <div class="schedule-empty"><p>Расписание этой программы уточняется. Оставьте телефон — администратор поможет выбрать группу и удобное время.</p><a class="button button-dark" href="{{ cta_anchor }}">Уточнить расписание →</a></div>
         {% endfor %}
     </div>
 </section>
@@ -1358,7 +1335,11 @@
             <p class="event-date">{{ event.display_date }}{% if event.event_time %} · {{ event.event_time }}{% endif %}</p>
             <h3>{{ event.title }}</h3>
             <p>{{ event.excerpt }}</p>
+            {% if event.event_date and event.event_date < current_date %}
+            <p class="event-card__cta">Событие прошло</p>
+            {% else %}
             <a class="button button-orange button-sm event-card__cta" href="{{ _events_cta_href }}">Записаться</a>
+            {% endif %}
         </article>
         {% endfor %}
     </div>
@@ -1451,7 +1432,7 @@
                 {% endfor %}
             </div>
             {% endif %}
-            <a class="button contact-map-btn" href="#contact-map">Открыть карту</a>
+            <a class="button contact-map-btn" href="https://yandex.ru/maps/?text={{ data.settings.get('address', 'Семицветик Сергиев Посад Воробьёвская 16А')|urlencode }}" target="_blank" rel="noopener">Открыть карту</a>
             <div class="contact-meta">
                 <div>
                     <a class="qr-code" href="{{ tg_href }}" target="_blank" rel="noopener" aria-label="Открыть Telegram Семицветика">
@@ -1937,7 +1918,7 @@
         {% endfor %}
     </div>
     {% else %}
-    <p class="events-teaser-empty">Ближайшие события появятся скоро — подпишитесь, чтобы узнать первыми.</p>
+    <div class="events-teaser-empty"><p>Ближайшие события появятся скоро.</p>{% if site_settings.get('social_tg') %}<a class="soft-button" href="{{ site_settings.get('social_tg') }}" target="_blank" rel="noopener">Следить за новостями в Telegram →</a>{% endif %}</div>
     {% endif %}
 </section>
 

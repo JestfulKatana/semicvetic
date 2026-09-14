@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% if page.slug == 'o-centre' %}
+        {% include 'components/about.html' %}
+    {% else %}
     {% for block in blocks %}
         {% include "components/render_block.html" %}
     {% endfor %}
+    {% endif %}
 {% endblock %}
