@@ -1751,3 +1751,17 @@
     .pl-week-grid { grid-template-columns: 1fr; }
     .pl-senses { grid-template-columns: 1fr; }
 }
+
+/* Shared lead behavior on all four program pages. */
+.pl-hero-cta { flex-wrap: wrap; }
+.pl-form-consent, .pl-hero-cta .form-status { flex-basis: 100%; font-size: 13px; line-height: 1.5; }
+.pl-hero-cta .pl-form-consent { max-width: 54ch; }
+.pl-form-consent a { text-decoration: underline; text-underline-offset: 3px; }
+.pl-hero .pl-form-consent, .pl-final-cta .pl-form-consent,
+.pl-hero .form-status, .pl-final-cta .form-status { color: inherit; }
+.pl-hero-cta .pl-input { min-width: 0; }
+.pl-input::placeholder { color: #655c55; opacity: 1; }
+@media (max-width: 600px) {
+    .pl-hero-cta .pl-input, .pl-hero-cta .pl-btn { max-width: none !important; width: 100%; }
+    .pl-form { min-width: 0; }
+}

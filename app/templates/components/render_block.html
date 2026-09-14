@@ -18,7 +18,7 @@
 <section class="speech-hero">
     <div class="speech-hero-actions">
         <a class="soft-button" href="{{ url_for('main.home') }}">← На главную</a>
-        <button class="soft-button" type="button">Поделиться</button>
+        <button class="soft-button" type="button" data-share>Поделиться</button><span class="sr-only" role="status" data-share-status></span>
     </div>
     <div class="speech-hero-grid">
         <div class="speech-hero-copy">
@@ -112,12 +112,12 @@
         <form class="lead-inline hero-lead" id="lead-form" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or 'hero' }}">
-            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="hero-lead-left">
                 <strong>Оставьте заявку<br>на бесплатную консультацию</strong>
                 <div class="hero-lead-fields">
                     <label class="sr-only" for="hero-phone">Телефон</label>
-                    <input id="hero-phone" type="tel" name="phone" placeholder="Введите телефон" required>
+                    <input id="hero-phone" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
                     <button class="button button-acid" type="submit">Записаться</button>
                 </div>
             </div>
@@ -125,12 +125,12 @@
                 <p class="hero-lead-promise">Узнаем ваши пожелания и подберём подходящее время для пробного занятия</p>
                 <p class="hero-lead-disclaimer">Отправляя заявку вы соглашаетесь на обработку персональных данных и принимаете условия политики конфиденциальности</p>
             </div>
-            <p class="form-status" data-form-status></p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
     </div>
     <div class="hero-photo-wrap">
         <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
-        <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
+
         <div class="hero-photo-badges">
             <span class="photo-badge photo-badge-open"><img src="{{ url_for('static', filename='img/figma/header/header-heart.png') }}" alt="">Открыто для родителей</span>
             <span class="photo-badge photo-badge-horoshee"><img src="{{ url_for('static', filename='img/figma/brand/badge-horoshee-mesto.png') }}" alt="">Яндекс: «Хорошее место»</span>
@@ -141,7 +141,7 @@
 <section class="page-hero{% if is_program_detail %} page-hero--program{% endif %}">
     <div class="page-hero-actions">
         <a class="soft-button" href="{{ url_for('main.home') }}">← На главную</a>
-        {% if not is_program_detail %}<button class="soft-button" type="button">Поделиться</button>{% endif %}
+        {% if not is_program_detail %}<button class="soft-button" type="button" data-share>Поделиться</button><span class="sr-only" role="status" data-share-status></span>{% endif %}
     </div>
     {% if is_program_detail %}<div class="page-hero-grid"><div class="page-hero-copy">{% endif %}
     {% if data.eyebrow %}<p class="eyebrow">{{ data.eyebrow }}</p>{% endif %}
@@ -207,12 +207,12 @@
     {% set _primary_btn_class = 'button button-dark' if is_program_detail else 'button button-orange' %}
     {% if page_slug == 'psiholog' %}
     <div class="action-row">
-        <a class="button button-dark" href="#lead-form">Бесплатно поговорить с психологом</a>
+        <a class="button button-dark" href="{{ cta_anchor }}">Бесплатно поговорить с психологом</a>
         <a class="button button-light" href="#schedule">Посмотреть форматы</a>
     </div>
     {% else %}
     <div class="action-row{% if not is_program_detail %} centered{% endif %}">
-        <a class="{{ _primary_btn_class }}" href="#{{ data.cta_target or 'lead-form' }}">{{ data.cta_text }}</a>
+        <a class="{{ _primary_btn_class }}" href="{{ cta_anchor if not data.cta_target or data.cta_target == 'lead-form' else '#' ~ data.cta_target }}">{{ data.cta_text }}</a>
         {% if _wants_tel_secondary and _hero_phone %}
         <a class="button button-ghost" href="tel:{{ _hero_phone|phone_href }}">{{ _hero_phone }}</a>
         {% elif _is_catalog_page %}
@@ -247,7 +247,7 @@
         {% else %}
         <img src="{{ url_for('static', filename='img/figma/hero-boy-camera.png') }}" alt="">
         {% endif %}
-        <button class="round-arrow" type="button" aria-label="Следующий слайд">→</button>
+
     </div>
     {% endif %}
     {% if is_program_detail %}</div>{% endif %}
@@ -343,7 +343,7 @@
                     <small>Абонемент или разово</small>
                 </div>
                 <div class="tp-card-cta">
-                    <a class="button button-dark" href="#lead-form">Записаться</a>
+                    <a class="button button-dark" href="{{ cta_anchor }}">Записаться</a>
                     <a class="tp-card-link" href="/{{ tab.slug }}/">Подробнее</a>
                 </div>
             </div>
@@ -407,17 +407,17 @@
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or 'home_cta_v2' }}">
             <input type="hidden" name="slot_selected" value="" data-cta-slot-selected>
-            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="home-cta-v2-card-step home-cta-v2-card-step--inline"><b>2</b>Ваш телефон</div>
             <label class="sr-only" for="home-cta-v2-phone">Телефон</label>
-            <input id="home-cta-v2-phone" type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+            <input id="home-cta-v2-phone" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="+7 (___) ___-__-__" required>
             <button type="submit" data-cta-submit>Записаться</button>
             <p class="home-cta-v2-after">Администратор перезвонит и&nbsp;согласует удобное время.</p>
-            <p class="form-status" data-form-status></p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
 
         <p class="home-cta-v2-card-foot">
-            Нажимая «Записаться», вы&nbsp;соглашаетесь с&nbsp;<u>политикой обработки персональных данных</u>.
+            Нажимая «Записаться», вы&nbsp;соглашаетесь с&nbsp;<a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политикой обработки персональных данных</a>.
         </p>
     </div>
 </section>
@@ -437,14 +437,14 @@
         <form class="lead-inline meet-lead" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
-            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="meet-lead-row">
                 <label class="sr-only" for="strip-phone">Телефон</label>
-                <input id="strip-phone" type="tel" name="phone" placeholder="Введите телефон" required>
+                <input id="strip-phone" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
                 <button class="button button-acid" type="submit">Получить консультацию</button>
             </div>
             <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
-            <p class="form-status" data-form-status></p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
     </div>
     <div class="meet-visual" aria-hidden="true">
@@ -478,18 +478,18 @@
     </div>
     {% if is_catalog %}
     <div class="filter-row" data-program-filters>
-        <span class="chip is-active" data-filter-age="all">Все возрасты</span>
-        <span class="chip" data-filter-age="1-3">1-3 года</span>
-        <span class="chip" data-filter-age="3-5">3-5 лет</span>
-        <span class="chip" data-filter-age="5-7">5-7 лет</span>
-        <span class="chip" data-filter-age="7-12">7-12 лет</span>
+        <button type="button" class="chip is-active" data-filter-age="all" aria-pressed="true">Все возрасты</button>
+        <button type="button" class="chip" data-filter-age="1-3" aria-pressed="false">1–3 года</button>
+        <button type="button" class="chip" data-filter-age="4-5" aria-pressed="false">4–5 лет</button>
+        <button type="button" class="chip" data-filter-age="6-7" aria-pressed="false">6–7 лет</button>
+        <button type="button" class="chip" data-filter-age="8-14" aria-pressed="false">8–14 лет</button>
         <span class="chip-divider" aria-hidden="true"></span>
-        <span class="chip" data-filter-price="занятие">Занятие</span>
-        <span class="chip" data-filter-price="мес">Месяц</span>
-        <span class="chip" data-filter-price="смена">Смена</span>
+        <button type="button" class="chip" data-filter-price="занятие" aria-pressed="false">Занятие</button>
+        <button type="button" class="chip" data-filter-price="мес" aria-pressed="false">Месяц</button>
+        <button type="button" class="chip" data-filter-price="смена" aria-pressed="false">Смена</button>
     </div>
     {% set petal_palette = ['red','yellow','green','blue','indigo','purple','pink'] %}
-    <div class="program-list program-list-cards" data-program-list>
+    <div class="program-list program-list-cards" data-program-list id="program-list">
         {% for program in data.programs %}
         {% set petal = petal_palette[loop.index0 % petal_palette|length] %}
         <article class="program-card program-card--petal-{{ petal }}"
@@ -522,7 +522,7 @@
                 {% if program.teacher %}
                 <div class="program-card__teacher">
                     {% if program.teacher.photo_url %}
-                    <img class="program-card__teacher-photo" src="{{ url_for('static', filename=program.teacher.photo_url) }}" alt="" loading="lazy">
+                    <img class="program-card__teacher-photo" src="{{ program.teacher.photo_url }}" alt="" loading="lazy">
                     {% else %}
                     <span class="program-card__teacher-photo program-card__teacher-photo--ph" aria-hidden="true">{{ program.teacher.name[:1] }}</span>
                     {% endif %}
@@ -538,12 +538,12 @@
                         {% if program.price_unit %}<small>в {{ program.price_unit }}</small>{% endif %}
                     </div>
                     <div class="program-card__cta">
-                        <a class="button button-dark" href="#lead-form">Записаться</a>
+                        <a class="button button-dark" href="{{ cta_anchor }}">Записаться</a>
                         <a class="program-card__text-link" href="/{{ program.slug }}/">Подробнее</a>
                     </div>
                 </div>
             </div>
-            <a class="program-card__pin" href="#lead-form" aria-label="Записаться на {{ program.name }}">Записаться →</a>
+            <a class="program-card__pin" href="{{ cta_anchor }}" aria-label="Записаться на {{ program.name }}">Записаться →</a>
         </article>
         {% endfor %}
     </div>
@@ -584,7 +584,7 @@
                     <strong>{{ program.price_label }}</strong>
                     {% if program.price_unit %}<small>в {{ program.price_unit }} · абонемент или разово</small>{% endif %}
                 </div>
-                <a class="home-programs-v1-cta" href="#lead-form">
+                <a class="home-programs-v1-cta" href="{{ cta_anchor }}">
                     Записаться
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                         <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -687,10 +687,10 @@
         {% for teacher in co_teachers %}
         <article class="htv1-card">
             <div class="htv1-card-photo"{% if teacher.photo_url %} style="background-image: url('{{ teacher.photo_url }}');"{% endif %}>
-                <span class="htv1-card-tag"><i></i>{{ teacher.role or 'Педагог центра' }}</span>
             </div>
             <div class="htv1-card-body">
                 <h3>{{ teacher.name }}</h3>
+                <p class="htv1-card-role">{{ teacher.role }}</p>
                 {% if teacher.specialization %}<p class="htv1-card-role">{{ teacher.specialization }}</p>{% endif %}
                 {% if teacher.experience_years %}
                 <div class="htv1-card-meta">
@@ -738,11 +738,11 @@
     {% if show_teacher_filters %}
     <div class="teacher-search">
         {% if data.show_search %}
-        <input type="search" placeholder="Найти учителя или предмет" data-teacher-search>
+        <label class="sr-only" for="teacher-search">Найти учителя или предмет</label><input id="teacher-search" type="search" placeholder="Найти учителя или предмет" data-teacher-search>
         {% endif %}
         <div class="filter-row" data-teacher-filters>
             {% for key, label in teacher_categories %}
-            <button type="button" class="chip {{ 'is-active' if loop.first else '' }}" data-filter-category="{{ key }}">{{ label }}</button>
+            <button type="button" class="chip {{ 'is-active' if loop.first else '' }}" data-filter-category="{{ key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ label }}</button>
             {% endfor %}
         </div>
     </div>
@@ -954,7 +954,7 @@
             </summary>
             <div class="faq-answer">
                 <p>Разбираем вместе: ребёнок делает сам, педагог рядом подсказывает и проверяет. Цель — чтобы дома он мог делать дз без вас.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         <details class="faq-item">
@@ -964,7 +964,7 @@
             </summary>
             <div class="faq-answer">
                 <p>Да. На пробном смотрим, где пробел, и составляем план на 4–6 недель. Параллельно идёт текущая домашка.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         <details class="faq-item">
@@ -974,7 +974,7 @@
             </summary>
             <div class="faq-answer">
                 <p>Да, есть формат разовых занятий. Удобно для подготовки к проверочной или к концу четверти.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         <details class="faq-item">
@@ -984,7 +984,7 @@
             </summary>
             <div class="faq-answer">
                 <p>Математика, русский, чтение, окружающий мир. Английский и логопедия — отдельно по запросу.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         <details class="faq-item">
@@ -994,7 +994,7 @@
             </summary>
             <div class="faq-answer">
                 <p>Да, пробное занятие — бесплатно. Знакомим с педагогом, смотрим уровень, обсуждаем, что нужно подтянуть.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
     </div>
@@ -1007,7 +1007,7 @@
             </summary>
             <div class="faq-answer">
                 <p>Все материалы (краски, кисти, глина, бумага) включены в стоимость абонемента.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         <details class="faq-item">
@@ -1017,7 +1017,7 @@
             </summary>
             <div class="faq-answer">
                 <p>Это нормально: на пробном занятии педагог подбирает технику под уровень ребёнка. Цель — не научить рисовать как взрослый, а раскрыть фантазию.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         <details class="faq-item">
@@ -1027,7 +1027,7 @@
             </summary>
             <div class="faq-answer">
                 <p>Да, ребёнок забирает работы домой после каждого занятия. Раз в сезон делаем мини-выставку для родителей.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         <details class="faq-item">
@@ -1037,7 +1037,7 @@
             </summary>
             <div class="faq-answer">
                 <p>Мы выдаём фартуки, но запасную футболку лучше иметь — творчество = краски на руках.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         <details class="faq-item">
@@ -1047,7 +1047,7 @@
             </summary>
             <div class="faq-answer">
                 <p>До 8 детей. Педагог успевает уделить внимание каждому.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
     </div>
@@ -1061,7 +1061,7 @@
             </summary>
             <div class="faq-answer">
                 <p>{{ item.a }}</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         {% endfor %}
@@ -1073,7 +1073,7 @@
             </summary>
             <div class="faq-answer">
                 <p>В живой группе дети говорят друг с другом, а не в экран. Peer-speaking, эмоциональный контакт, нет нагрузки на зрение от экрана — то, что онлайн-школы принципиально не дают.</p>
-                <a class="faq-answer-cta" href="#lead-form">Записаться на пробное →</a>
+                <a class="faq-answer-cta" href="{{ cta_anchor }}">Записаться на пробное →</a>
             </div>
         </details>
         {% endif %}
@@ -1177,7 +1177,7 @@
                         <span>Разово</span>
                         <span>Перерасчёт</span>
                     </div>
-                    <a class="button button-dark button-compact" href="#lead-form">Записаться</a>
+                    <a class="button button-dark button-compact" href="{{ cta_anchor }}">Записаться</a>
                 </div>
             </header>
             {% set subjects = group.subjects or data.default_subjects or [] %}
@@ -1277,10 +1277,10 @@
         <form class="lead-inline meet-lead" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
-            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="meet-lead-row">
                 <label class="sr-only" for="final-phone">Телефон</label>
-                <input id="final-phone" type="tel" name="phone" placeholder="Введите телефон" required>
+                <input id="final-phone" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
                 <button class="button button-yellow" type="submit">Получить консультацию</button>
             </div>
             <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
@@ -1289,7 +1289,7 @@
                 <span>2-й ребёнок или близнецы&nbsp;— скидка</span>
                 <span>Абонемент или разово&nbsp;— как удобно</span>
             </div>
-            <p class="form-status" data-form-status></p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
     </div>
     <div class="meet-visual" aria-hidden="true">
@@ -1319,7 +1319,7 @@
         <div class="video-cover">
             {{ pic('img/figma/place/video-cover.png', alt='', cls='video-cover-img', loading='eager') }}
             <div class="video-overlay" aria-hidden="true"></div>
-            <button class="video-play" type="button" aria-label="Смотреть видео"><span>▶</span></button>
+            {% if data.video_url %}<a class="video-play" href="{{ data.video_url }}" target="_blank" rel="noopener" aria-label="Смотреть видео"><span>▶</span></a>{% endif %}
             <p class="video-caption">Загляните в&nbsp;атмосферу нашего детского центра глазами вашего ребёнка</p>
         </div>
     </div>
@@ -1353,7 +1353,7 @@
     </div>
     <div class="card-grid">
         {% for event in data.events %}
-        <article class="event-card">
+        <article class="event-card" id="event-{{ event.slug }}">
             <p class="event-date">{{ event.display_date }}{% if event.event_time %} · {{ event.event_time }}{% endif %}</p>
             <h3>{{ event.title }}</h3>
             <p>{{ event.excerpt }}</p>
@@ -1370,7 +1370,7 @@
     </div>
     <div class="card-grid">
         {% for article in data.articles %}
-        <article class="event-card">
+        <article class="event-card" id="event-{{ event.slug }}">
             <p class="event-date">{{ article.display_date }}</p>
             <h3>{{ article.title }}</h3>
             <p>{{ article.excerpt }}</p>
@@ -1399,7 +1399,7 @@
             </div>
             <div class="schedule-preview">
                 <strong>{{ program.price_label }}</strong>
-                <a class="button button-orange" href="#lead-form">Записаться</a>
+                <a class="button button-orange" href="{{ cta_anchor }}">Записаться</a>
                 {% for slot in program.schedule_slots[:3] %}
                 <div class="schedule-row"><span>{{ slot.day_of_week }}</span><span>{{ slot.time_start }}-{{ slot.time_end }}</span></div>
                 {% else %}
@@ -1417,13 +1417,13 @@
         <form class="prices-cta__form lead-inline" data-lead-form>
             <input type="hidden" name="source_page" value="{{ request.path }}">
             <input type="hidden" name="source_block" value="prices_table_cta">
-            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
             <label class="sr-only" for="prices-cta-name">Имя</label>
             <input id="prices-cta-name" type="text" name="name" placeholder="Имя">
             <label class="sr-only" for="prices-cta-phone">Телефон</label>
-            <input id="prices-cta-phone" type="tel" name="phone" placeholder="Телефон" required>
+            <input id="prices-cta-phone" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Телефон" required>
             <button class="button button-acid" type="submit">Подобрать</button>
-            <p class="form-status" data-form-status></p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
     </div>
 </section>
@@ -1682,12 +1682,12 @@
     <form class="lead-form" data-lead-form style="max-width:400px;">
         <input type="hidden" name="source_page" value="{{ request.path }}">
         <input type="hidden" name="source_block" value="inline_strip">
-        <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+        <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="meet-strip-row">
-            <input type="tel" name="phone" placeholder="Телефон" required>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Телефон" required>
             <button class="button button-acid" type="submit">Записаться</button>
         </div>
-        <p class="form-status" data-form-status></p>
+        <p class="form-status" data-form-status role="status" aria-live="polite"></p>
     </form>
 </section>
 {% endif %}
@@ -1705,7 +1705,7 @@
         <div class="psiholog-when-card">Ревнует к младшему, агрессия дома</div>
         <div class="psiholog-when-card">Развод/переезд — ребёнок замкнулся</div>
     </div>
-    <p class="psiholog-when-note">Не нашли свою ситуацию? <a href="#lead-form">Напишите — подскажем, наш ли это случай.</a></p>
+    <p class="psiholog-when-note">Не нашли свою ситуацию? <a href="{{ cta_anchor }}">Напишите — подскажем, наш ли это случай.</a></p>
 </section>
 {% elif page_slug == 'otlichnik' %}
 <section class="section lesson-anatomy">
@@ -1931,7 +1931,7 @@
             {% endif %}
             <h3>{{ event.title }}</h3>
             {% if event.excerpt %}<p>{{ event.excerpt }}</p>{% endif %}
-            <a class="soft-button soft-button-arrow" href="/blog/{{ event.slug }}/">Подробнее <span class="soft-arrow">→</span></a>
+            <a class="soft-button soft-button-arrow" href="/meropriyatiya/#event-{{ event.slug }}">Подробнее <span class="soft-arrow">→</span></a>
         </article>
         {% endfor %}
     </div>
