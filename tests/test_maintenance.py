@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from app import create_app
 from app.extensions import db
-from app.models import AdminUser, Page
+from app.models import AdminUser, Page, Program, SiteSetting
 from config import Config
 
 
@@ -25,6 +25,51 @@ class MaintenanceModeTestCase(unittest.TestCase):
         with cls.app.app_context():
             db.session.remove()
             db.engine.dispose()
+
+    def test_custom_pages_keep_both_editor_block_formats(self):
+        self.app.config["MAINTENANCE_MODE"] = False
+        slugs = ["custom-version-page", "privacy-policy"]
+        try:
+            with self.app.app_context():
+                for slug in slugs:
+                    page = Page(slug=slug, title="Документ")
+                    page.blocks = [
+                        {"type": "rich_text", "payload": {"content": "Текст прежнего формата"}},
+                        {"component": "rich_text", "data": {"content": "Текст нового формата"}},
+                    ]
+                    db.session.add(page)
+                db.session.commit()
+            for slug in slugs:
+                response = self.client.get("/" + slug + "/")
+                self.assertEqual(response.status_code, 200)
+                body = response.get_data(as_text=True)
+                self.assertIn("Текст прежнего формата", body)
+                self.assertIn("Текст нового формата", body)
+        finally:
+            with self.app.app_context():
+                Page.query.filter(Page.slug.in_(slugs)).delete(synchronize_session=False)
+                db.session.commit()
+            self.app.config["MAINTENANCE_MODE"] = True
+
+    def test_unverified_program_terms_are_hidden_until_enabled(self):
+        self.app.config["MAINTENANCE_MODE"] = False
+        try:
+            with self.app.app_context():
+                db.session.add(Program(slug="version-terms-test", name="Проверка условий", price=98765, description="Описание из редактора"))
+                db.session.commit()
+            body = self.client.get("/version-terms-test/").get_data(as_text=True)
+            self.assertNotIn("98 765", body)
+            self.assertIn("Описание из редактора", body)
+            with self.app.app_context():
+                db.session.add(SiteSetting(key="program_terms_verified", value="true"))
+                db.session.commit()
+            self.assertIn("98 765", self.client.get("/version-terms-test/").get_data(as_text=True))
+        finally:
+            with self.app.app_context():
+                Program.query.filter_by(slug="version-terms-test").delete()
+                SiteSetting.query.filter_by(key="program_terms_verified").delete()
+                db.session.commit()
+            self.app.config["MAINTENANCE_MODE"] = True
 
     def test_public_page_returns_maintenance_screen(self):
         response = self.client.get("/")
