@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, jsonify, render_template, request
 from prometheus_client import Counter
 
 from ..extensions import db, limiter
@@ -27,12 +27,22 @@ def normalize_phone(raw_phone: str) -> str:
     raise ValueError("Укажите телефон в формате +7")
 
 
+def lead_response(ok: bool, message: str, status: int = 200):
+    wants_html = (
+        not request.is_json
+        and request.accept_mimetypes["text/html"] > request.accept_mimetypes["application/json"]
+    )
+    if wants_html:
+        return render_template("version/submission.html", submitted=ok, message=message), status
+    return jsonify({"ok": ok, "message": message}), status
+
+
 @bp.post("/lead")
 @limiter.limit(lambda: current_app.config["LEAD_RATE_LIMIT"])
 def create_lead():
     payload = request.get_json(silent=True) if request.is_json else request.form
     if not isinstance(payload, dict):
-        return jsonify({"ok": False, "message": "Не удалось прочитать заявку"}), 400
+        return lead_response(False, "Не удалось прочитать заявку", 400)
 
     def field(key, limit, fallback=""):
         value = payload.get(key, fallback)
@@ -44,7 +54,7 @@ def create_lead():
 
     try:
         if field("company", 255):
-            return jsonify({"ok": True}), 200
+            return lead_response(True, "Спасибо! Заявка получена.")
         phone = normalize_phone(payload.get("phone", ""))
         if payload.get("consent") not in (True, "on", "1", "true"):
             raise ValueError("Подтвердите согласие на обработку персональных данных")
@@ -72,7 +82,7 @@ def create_lead():
             note="\n".join(notes),
         )
     except ValueError as exc:
-        return jsonify({"ok": False, "message": str(exc)}), 400
+        return lead_response(False, str(exc), 400)
 
     db.session.add(lead)
     db.session.commit()
@@ -81,9 +91,9 @@ def create_lead():
     if send_lead_notification(lead):
         telegram_total.inc()
 
-    return jsonify({"ok": True, "message": "Спасибо! Заявка получена. Мы свяжемся с вами, чтобы обсудить занятия."})
+    return lead_response(True, "Спасибо! Заявка получена. Мы свяжемся с вами, чтобы обсудить занятия.")
 
 
 @bp.errorhandler(429)
 def lead_rate_limit_exceeded(error):
-    return jsonify({"ok": False, "message": "Слишком много попыток. Подождите минуту и попробуйте ещё раз"}), 429
+    return lead_response(False, "Слишком много попыток. Подождите минуту и попробуйте ещё раз", 429)

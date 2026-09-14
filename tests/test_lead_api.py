@@ -4,6 +4,7 @@ import unittest
 from unittest.mock import patch
 
 from flask import Flask
+from jinja2 import DictLoader
 
 from app.extensions import db, limiter
 from app.models import Lead, Program
@@ -14,6 +15,9 @@ class LeadAPITestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.app = Flask(__name__)
+        cls.app.jinja_loader = DictLoader({
+            "version/submission.html": "<main>{{ submitted }}: {{ message }}</main>"
+        })
         cls.app.config.update(TESTING=True, SQLALCHEMY_DATABASE_URI='sqlite://',
                               LEAD_RATE_LIMIT='5 per minute', RATELIMIT_STORAGE_URI='memory://')
         db.init_app(cls.app)
@@ -74,6 +78,30 @@ class LeadAPITestCase(unittest.TestCase):
         with self.app.app_context():
             self.assertEqual(Lead.query.count(), 0)
         self.notify.assert_not_called()
+
+    def test_browser_form_receives_html_success_and_validation_error(self):
+        for phone, status, marker in [('79990000000', 200, 'True'), ('bad', 400, 'False')]:
+            with self.subTest(status=status):
+                response = self.client.post('/api/lead', data={'phone': phone, 'consent': 'on'},
+                                            headers={'Accept': 'text/html,application/xhtml+xml'})
+                self.assertEqual(response.status_code, status)
+                self.assertEqual(response.mimetype, 'text/html')
+                self.assertIn('<main>' + marker, response.get_data(as_text=True))
+                self.assertNotIn(phone, response.get_data(as_text=True))
+
+    def test_browser_rate_limit_uses_html_error(self):
+        for _ in range(5):
+            self.post()
+        response = self.client.post('/api/lead', data={'phone': '79990000000', 'consent': 'on'},
+                                    headers={'Accept': 'text/html'})
+        self.assertEqual(response.status_code, 429)
+        self.assertIn('<main>False', response.get_data(as_text=True))
+
+    def test_fetch_form_with_json_accept_keeps_json_contract(self):
+        response = self.client.post('/api/lead', data={'phone': '79990000000', 'consent': 'on'},
+                                    headers={'Accept': 'application/json'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.get_json()['ok'])
 
     def test_non_object_json_is_rejected(self):
         self.assertEqual(self.client.post('/api/lead', json=['invalid']).status_code, 400)
