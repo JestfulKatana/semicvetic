@@ -22,6 +22,7 @@ def send_lead_notification(lead) -> bool:
         f"Возраст ребёнка: {lead.child_age or 'не указан'}\n"
         f"Страница: {lead.source_page or 'неизвестно'}\n"
         f"Блок: {lead.source_block or 'неизвестно'}\n"
+        f"Комментарий: {lead.note or 'не указан'}\n"
         f"Время: {lead.created_at:%d.%m.%Y %H:%M}"
     )
     url = f"https://api.telegram.org/bot{token}/sendMessage"
