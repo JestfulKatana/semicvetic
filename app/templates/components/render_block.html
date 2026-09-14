@@ -123,7 +123,7 @@
             </div>
             <div class="hero-lead-right">
                 <p class="hero-lead-promise">Узнаем ваши пожелания и подберём подходящее время для пробного занятия</p>
-                <p class="hero-lead-disclaimer">Отправляя заявку вы соглашаетесь на обработку персональных данных и принимаете условия политики конфиденциальности</p>
+                <p class="hero-lead-disclaimer">Отправляя заявку вы соглашаетесь на обработку персональных данных и принимаете условия <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политики конфиденциальности</a></p>
             </div>
             <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
@@ -443,7 +443,7 @@
                 <input id="strip-phone" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
                 <button class="button button-acid" type="submit">Получить консультацию</button>
             </div>
-            <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
+            <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку персональных данных и&nbsp;принимаете условия <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политики конфиденциальности</a></p>
             <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
     </div>
@@ -1261,7 +1261,7 @@
                 <input id="final-phone" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
                 <button class="button button-yellow" type="submit">Получить консультацию</button>
             </div>
-            <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку <u>персональных данных</u> и&nbsp;принимаете условия <u>политики конфиденциальности</u></p>
+            <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку персональных данных и&nbsp;принимаете условия <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политики конфиденциальности</a></p>
             <div class="meet-conditions" aria-label="Условия занятий">
                 <span>Пропустили&nbsp;— пересчитаем</span>
                 <span>2-й ребёнок или близнецы&nbsp;— скидка</span>
@@ -1482,7 +1482,7 @@
 </section>
 
 {% elif block.component == "rich_text" %}
-<section class="section rich-text-section{% if data.variant %} rich-text-{{ data.variant }}{% endif %}">
+<section class="section rich-text-section{% if page_slug == 'politika-konfidencialnosti' %} rich-text-policy{% endif %}{% if data.variant %} rich-text-{{ data.variant }}{% endif %}">
     <div class="article-shell">
         <article class="prose">{{ data.content|markdown|safe }}</article>
     </div>

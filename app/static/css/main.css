@@ -1582,7 +1582,7 @@ select {
     padding: 0;
     width: 100%;
 }
-.meet-strip-green .meet-lead-row { flex-wrap: wrap; gap: 10px; }
+.meet-strip-green .meet-lead-row { width: 100%; flex-wrap: wrap; gap: 10px; }
 .meet-strip-green .meet-lead-row input { flex: 1 1 180px; min-width: 0; max-width: none; }
 .meet-strip-green .meet-lead-row button { flex: 1 1 auto; }
 .meet-strip-green .meet-visual {
@@ -8927,3 +8927,25 @@ button.chip { border: 0; cursor: pointer; min-height: 44px; }
 .camp-includes-item p { margin: 8px 0 0; line-height: 1.45; }
 @media (max-width: 1100px) { .psiholog-when-grid, .camp-includes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .psiholog-when-grid, .camp-includes-grid { grid-template-columns: 1fr; } }
+
+/* Keep the vivid green panels while making all their text readable. */
+.hero-lead,
+.hero-lead-left strong,
+.hero-lead-promise,
+.hero-lead-disclaimer,
+.hero-lead .form-status,
+.meet-strip-green .meet-copy h2,
+.meet-strip-green .meet-sub,
+.meet-strip-green .meet-sub-accent-yellow,
+.meet-strip-green .meet-point,
+.meet-strip-green .meet-disclaimer,
+.meet-strip-green .meet-conditions span,
+.meet-strip-green .form-status { color: #10290a; }
+.hero-lead-disclaimer, .meet-strip-green .meet-disclaimer { opacity: 1; font-size: 13px; line-height: 1.5; letter-spacing: normal; }
+.hero-lead-promise { line-height: 1.4; border-bottom-color: rgba(16, 41, 10, .22); }
+.meet-strip-green .meet-point-ico { color: #10290a; }
+
+.meet-disclaimer a, .hero-lead-disclaimer a { text-decoration: underline; text-underline-offset: 3px; }
+
+.rich-text-policy .article-shell { max-width: 76ch; margin-inline: auto; }
+.rich-text-policy h2 { font-size: clamp(24px, 2.2vw, 32px); line-height: 1.2; }
