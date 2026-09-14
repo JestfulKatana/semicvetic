@@ -194,7 +194,6 @@
             <strong class="pl-grad-name">Маша Иванова</strong>
             <p class="pl-grad-where">2019 · МГУ ИСАА</p>
             <p class="pl-grad-what">IELTS 7.5 · переводчик-стажёр в&nbsp;Минэкономе</p>
-            <p class="pl-grad-quote">«Я&nbsp;помню, как Бурова просила нас придумать историю про кота. Я&nbsp;тогда первый раз поняла, что говорю по-английски, а&nbsp;не&nbsp;вспоминаю слова.»</p>
         </article>
         <article class="pl-grad">
             <div class="pl-grad-avatar"></div>
@@ -267,40 +266,9 @@
 </section>
 
 {# Преподаватели #}
-<section class="pl-section pl-section--soft">
-    <h2 class="pl-h2 pl-h2--md" style="margin-top:0;">Преподаватели</h2>
-    <p class="pl-text-body" style="margin: 12px 0 32px;">Все&nbsp;— с&nbsp;высшим педагогическим, многие со&nbsp;стажировками за&nbsp;границей</p>
-    <div class="pl-teachers pl-teachers--equal">
-        {# TODO: реальные фото и подтверждённые сертификаты #}
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">15&nbsp;лет в&nbsp;Семицветике</span>
-                <h3>Бурова Н.&nbsp;И.</h3>
-                <p class="pl-teacher-role">Старший преподаватель</p>
-                <p class="pl-teacher-sub">CELTA · Cambridge YL</p>
-            </div>
-        </article>
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">12&nbsp;лет в&nbsp;Семицветике</span>
-                <h3>Дёмина И.&nbsp;С.</h3>
-                <p class="pl-teacher-role">Преподаватель</p>
-                <p class="pl-teacher-sub">Дошкольники · началка</p>
-            </div>
-        </article>
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">6&nbsp;лет</span>
-                <h3>Лазарева А.&nbsp;К.</h3>
-                <p class="pl-teacher-role">Ассистент speaking</p>
-                <p class="pl-teacher-sub">Разговорный · диалоги</p>
-            </div>
-        </article>
-    </div>
-</section>
+{% with teacher_category='english' %}
+    {% include 'components/program_landing/teachers.html' %}
+{% endwith %}
 
 {# Отзывы #}
 <section class="pl-section">

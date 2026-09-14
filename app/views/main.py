@@ -191,6 +191,7 @@ def slug_router(slug: str):
                 "pages/program_landing_e.html",
                 page=program,
                 program_landing_e=landing_e,
+                teachers=ctx["teachers"],
                 page_title=program.name,
                 page_description=program.tagline,
                 page_schema=build_course_schema(program),

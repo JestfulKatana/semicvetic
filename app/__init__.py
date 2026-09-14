@@ -6,6 +6,7 @@ import os
 import structlog
 from dotenv import load_dotenv
 from flask import Flask, jsonify, make_response, render_template, request
+from flask_login import current_user
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from config import Config
@@ -85,10 +86,20 @@ def create_app() -> Flask:
         if path.startswith("/api/"):
             return jsonify({"ok": False, "message": "Сайт временно обновляется"}), 503
 
+        if current_user.is_authenticated:
+            return None
+
         response = make_response(render_template("maintenance.html"), 503)
         response.headers["Retry-After"] = "3600"
         response.headers["Cache-Control"] = "no-store, max-age=0"
         response.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive"
+        return response
+
+    @app.after_request
+    def protect_maintenance_preview(response):
+        if app.config["MAINTENANCE_MODE"]:
+            response.headers["Cache-Control"] = "no-store, max-age=0"
+            response.headers["X-Robots-Tag"] = "noindex, nofollow, noarchive"
         return response
 
     @login_manager.user_loader

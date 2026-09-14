@@ -181,43 +181,9 @@
 </section>
 
 {# Преподаватели #}
-<section class="pl-section">
-    <h2 class="pl-h2 pl-h2--md" style="margin-top:0;">Учителя началки, не&nbsp;«воспитатели»</h2>
-    <p class="pl-text-body" style="margin: 12px 0 32px;">Высшее педагогическое, 5&nbsp;человек высшей категории, средний стаж 10&nbsp;лет</p>
-    <div class="pl-teachers">
-        {# TODO: заменить на реальные фото и подтверждённые данные педагогов #}
-        <article class="pl-teacher pl-teacher--featured">
-            <div class="pl-teacher-photo">
-                <span class="pl-teacher-badge">Лицо центра</span>
-            </div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">15&nbsp;лет в&nbsp;Семицветике</span>
-                <h3>Бурова Н.&nbsp;И.</h3>
-                <p class="pl-teacher-role">Старший педагог</p>
-                <p class="pl-teacher-sub">Чтение, грамота, подготовка руки</p>
-                <p class="pl-teacher-quote">«Педагог, который знает ребёнка три года, видит то, что не&nbsp;увидит ни&nbsp;школьный учитель, ни&nbsp;родитель.»</p>
-            </div>
-        </article>
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">7&nbsp;лет</span>
-                <h3>Кравцова А.&nbsp;Н.</h3>
-                <p class="pl-teacher-role">Учитель математики</p>
-                <p class="pl-teacher-sub">Математика, логика, счёт</p>
-            </div>
-        </article>
-        <article class="pl-teacher">
-            <div class="pl-teacher-photo"></div>
-            <div class="pl-teacher-body">
-                <span class="pl-teacher-pill">9&nbsp;лет</span>
-                <h3>Семёнова О.&nbsp;К.</h3>
-                <p class="pl-teacher-role">Психолог-педагог</p>
-                <p class="pl-teacher-sub">Готовность к&nbsp;школе</p>
-            </div>
-        </article>
-    </div>
-</section>
+{% with teacher_category='school' %}
+    {% include 'components/program_landing/teachers.html' %}
+{% endwith %}
 
 {# Группы и расписание #}
 <section class="pl-section pl-section--soft">
