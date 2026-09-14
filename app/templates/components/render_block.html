@@ -468,7 +468,7 @@
     'psychology': 'Психология и здоровье',
     'camp': 'Летний лагерь',
 } %}
-<section class="section programs-section">
+<section class="section programs-section" id="programs">
     <div class="section-head split-head">
         <div>
             <h2>{{ data.title }}</h2>
@@ -552,10 +552,8 @@
     <div class="home-programs-v1">
         {% for program in data.programs %}
         {% set accent = program.color or '#ed7735' %}
-        <article class="home-programs-v1-card{% if loop.first %} home-programs-v1-card--wide{% endif %}"
+        <article class="home-programs-v1-card"
                  style="--hpv1-accent: {{ accent }};">
-            <a class="home-programs-v1-details" href="/{{ program.slug }}/">Подробнее →</a>
-
             <div class="home-programs-v1-card-top">
                 <span class="home-programs-v1-age">
                     {{ program.age_label or '—' }}
@@ -584,12 +582,15 @@
                     <strong>{{ program.price_label }}</strong>
                     {% if program.price_unit %}<small>в {{ program.price_unit }} · абонемент или разово</small>{% endif %}
                 </div>
-                <a class="home-programs-v1-cta" href="{{ cta_anchor }}">
-                    Записаться
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                        <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </a>
+                <div class="home-programs-v1-actions">
+                    <a class="home-programs-v1-details" href="/{{ program.slug }}/">Подробнее →</a>
+                    <a class="home-programs-v1-cta" href="{{ cta_anchor }}">
+                        Записаться
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
             </div>
         </article>
         {% endfor %}
