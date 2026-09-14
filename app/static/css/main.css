@@ -2014,7 +2014,7 @@ select {
    ========================================================================== */
 .program-list-cards {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 28px;
     margin: 0;
 }
@@ -2242,6 +2242,12 @@ select {
 }
 .program-card:hover .program-card__corner { height: 16px; }
 
+/* Stack image and text while two-column cards are narrow. */
+@media (max-width: 1099px) {
+    .program-card { grid-template-columns: 1fr; }
+    .program-card__photo { height: 220px; min-height: 0; }
+    .program-card__photo img { object-fit: contain; }
+}
 /* Mobile */
 @media (max-width: 980px) {
     .program-list-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
@@ -4855,6 +4861,7 @@ select {
     letter-spacing: -0.64px;
 }
 .place-photo {
+    margin-top: auto;
     position: relative;
     width: 100%;
     height: 346px;
@@ -6549,7 +6556,7 @@ body.is-menu-open .wa-float { display: none; }
 /* ========= events_teaser ========= */
 .events-teaser-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     gap: 16px;
 }
 .events-teaser-card {
@@ -7696,6 +7703,9 @@ body.is-menu-open .wa-float { display: none; }
 }
 .tp-card-cta .button-dark:hover { background: #ffffff; }
 .tp-card-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: #fcf8f4;
     font-size: 14px;
     font-weight: 500;
@@ -8655,10 +8665,12 @@ body.is-menu-open .wa-float { display: none; }
     border-radius: 999px;
     font-size: 14px;
     color: var(--muted);
-    white-space: nowrap;
+    white-space: normal;
+    max-width: 100%;
     text-decoration: none;
     transition: background .15s ease;
 }
+.home-age-v1-head-aside svg { flex-shrink: 0; }
 .home-age-v1-head-aside:hover { background: #e7dcd6; }
 .home-age-v1-head-aside b { color: var(--text); font-weight: 600; }
 
@@ -8689,6 +8701,8 @@ body.is-menu-open .wa-float { display: none; }
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.3px;
@@ -8704,9 +8718,10 @@ body.is-menu-open .wa-float { display: none; }
     margin-right: 6px;
     vertical-align: middle;
 }
-.home-age-v1-card-main { margin: 18px 0 14px; position: relative; z-index: 1; }
+.home-age-v1-card-main { flex: 1; margin: 18px 0 14px; position: relative; z-index: 1; }
 .home-age-v1-card-age {
-    font-size: 96px;
+    font-size: clamp(52px, 5.4vw, 78px);
+    white-space: nowrap;
     font-weight: 700;
     letter-spacing: -5px;
     line-height: 0.92;
@@ -8920,9 +8935,6 @@ button.chip { border: 0; cursor: pointer; min-height: 44px; }
 .login-card .button { width: 100%; }
 .button-orange, .button-primary { background: #bd4b13; color: #fff; }
 .site-nav a.is-active, .site-nav a:hover { color: #b34b16; }
-@media (min-width: 1100px) {
-    .page-programmy .program-list-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 @media (max-width: 600px) {
     .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
     .footer-column-contacts { grid-column: 1 / -1; }

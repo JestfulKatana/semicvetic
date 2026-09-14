@@ -1927,7 +1927,7 @@
             {% if event.event_date %}
             <div class="events-teaser-date">
                 <strong>{{ event.event_date.strftime('%d') if event.event_date.strftime is defined else event.event_date }}</strong>
-                <span>{{ event.event_date.strftime('%B') if event.event_date.strftime is defined else '' }}</span>
+                <span>{{ ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'][event.event_date.month - 1] if event.event_date.month is defined else '' }}</span>
             </div>
             {% endif %}
             <h3>{{ event.title }}</h3>

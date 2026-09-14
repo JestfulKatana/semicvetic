@@ -687,6 +687,14 @@
     display: flex;
     flex-direction: column;
 }
+.pl-teacher-portrait {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center 25%;
+}
 .pl-teacher--featured {
     background: var(--pl-accent);
     color: var(--pl-paper);
@@ -1634,6 +1642,10 @@
     .pl-hero h1.pl-h1-xl, .pl-hero h1.pl-h1-lg { font-size: 56px; letter-spacing: -2px; }
     .pl-h2, .pl-h2--lg, .pl-h2--md { font-size: 36px; letter-spacing: -1px; }
     .pl-usp-num-text { font-size: 180px; letter-spacing: -8px; }
+}
+
+@media (min-width: 640px) and (max-width: 860px) {
+    .pl-section .pl-teachers--equal { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 860px) {
