@@ -19,11 +19,16 @@
                 <strong>3–4 учителя</strong> на&nbsp;одном занятии. Каждый предмет ведёт свой&nbsp;специалист. <span class="pl-muted">— этого нет нигде в&nbsp;Сергиевом Посаде.</span>
             </div>
 
-            <form class="pl-hero-cta" method="post" action="#lead-form">
-                <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
+            <form class="pl-hero-cta" method="post" action="/api/lead" data-lead-form>
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="program_landing">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <input class="pl-input" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
                 <button class="pl-btn" type="submit">Прийти познакомиться</button>
                 <span class="pl-cta-meta">40&nbsp;мин · бесплатно</span>
-            </form>
+                <p class="pl-form-consent">Отправляя заявку, вы соглашаетесь с <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+        </form>
         </div>
 
         {# "Доска" — расписание дня #}
@@ -298,11 +303,16 @@
             <h2>Приходите познакомиться с&nbsp;центром</h2>
             <p>Вместе с&nbsp;ребёнком придёте, посмотрите класс, познакомитесь с&nbsp;педагогами. После&nbsp;— поговорим: что у&nbsp;ребёнка получается, что подтянуть к&nbsp;1&nbsp;сентября.</p>
         </div>
-        <form class="pl-form" method="post" action="#lead-form">
-            <input class="pl-input" type="text" name="child_name" placeholder="Имя ребёнка">
-            <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
+        <form class="pl-form" method="post" action="/api/lead" data-lead-form>
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="program_landing">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <input class="pl-input" type="text" name="name" aria-label="Ваше имя" placeholder="Имя ребёнка">
+            <input class="pl-input" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
             <button class="pl-btn pl-btn--md" type="submit">Записаться</button>
             <p class="pl-form-meta">Перезвоним в&nbsp;течение часа в&nbsp;рабочее время</p>
+            <p class="pl-form-consent">Отправляя заявку, вы соглашаетесь с <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
     </div>
 </section>

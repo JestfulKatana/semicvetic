@@ -14,10 +14,15 @@
             </div>
             <h1>Английский,<br>на&nbsp;котором ребёнок<br><span class="pl-mark-acid">говорит</span></h1>
             <p class="pl-hero-lead" style="max-width:480px;">Cambridge-учебники, группы до&nbsp;8&nbsp;детей, преподаватель и&nbsp;ассистент на&nbsp;каждом занятии. Каждый говорит на&nbsp;каждом уроке.</p>
-            <form class="pl-hero-cta" method="post" action="#lead-form">
-                <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required style="max-width:260px;">
+            <form class="pl-hero-cta" method="post" action="/api/lead" data-lead-form>
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="program_landing">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <input class="pl-input" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required style="max-width:260px;">
                 <button class="pl-btn" type="submit">Прийти на пробное</button>
-            </form>
+                <p class="pl-form-consent">Отправляя заявку, вы соглашаетесь с <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+        </form>
             <span class="pl-cta-meta" style="display:block; margin-top:14px; color: rgba(255,255,255,0.7);">Бесплатное пробное занятие · 40&nbsp;минут</span>
         </div>
 
@@ -337,11 +342,16 @@
             <h2>Free trial lesson<br>для&nbsp;вашего ребёнка</h2>
             <p>Приходите вместе с&nbsp;ребёнком. Преподаватель проведёт настоящий урок, посмотрите, как ребёнок реагирует. После&nbsp;— подберём группу под уровень.</p>
         </div>
-        <form class="pl-form" method="post" action="#lead-form">
-            <input class="pl-input" type="text" name="child_name" placeholder="Имя ребёнка и возраст">
-            <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
+        <form class="pl-form" method="post" action="/api/lead" data-lead-form>
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="program_landing">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <input class="pl-input" type="text" name="name" placeholder="Как к вам обращаться" autocomplete="name" aria-label="Ваше имя">
+            <input class="pl-input" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
             <button class="pl-btn pl-btn--md" type="submit">Записать на пробное</button>
             <p class="pl-form-meta">Перезвоним в&nbsp;течение часа</p>
+            <p class="pl-form-consent">Отправляя заявку, вы соглашаетесь с <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
     </div>
 </section>

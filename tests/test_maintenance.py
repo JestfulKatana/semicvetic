@@ -53,6 +53,16 @@ class MaintenanceModeTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 503)
         self.assertFalse(response.get_json()["ok"])
 
+    def test_missing_page_has_navigation_when_not_in_maintenance(self):
+        self.app.config["MAINTENANCE_MODE"] = False
+        try:
+            response = self.client.get("/missing-review-page/")
+            self.assertEqual(response.status_code, 404)
+            self.assertIn("Страница не найдена", response.get_data(as_text=True))
+            self.assertIn('href="/programmy/"', response.get_data(as_text=True))
+        finally:
+            self.app.config["MAINTENANCE_MODE"] = True
+
     def test_mode_can_be_disabled(self):
         self.app.config["MAINTENANCE_MODE"] = False
         try:

@@ -33,11 +33,16 @@
         </div>
     </div>
 
-    <form class="pl-hero-cta" method="post" action="#lead-form" style="margin-top:24px;">
-        <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required style="min-width:220px; max-width:280px;">
+    <form class="pl-hero-cta" method="post" action="/api/lead" data-lead-form style="margin-top:24px;">
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="program_landing">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input class="pl-input" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required style="min-width:220px; max-width:280px;">
         <button class="pl-btn pl-btn--accent" type="submit">Прийти на&nbsp;пробное</button>
         <span class="pl-cta-meta">Бесплатное знакомство, можно с&nbsp;мамой</span>
-    </form>
+        <p class="pl-form-consent">Отправляя заявку, вы соглашаетесь с <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+        </form>
 </section>
 
 {# Неделя у Росточков #}
@@ -279,11 +284,16 @@
             <h2>Приходите вместе с&nbsp;<span class="pl-mark-acid">малышом</span></h2>
             <p>Для Малышей мама в&nbsp;зале весь час, для остальных&nbsp;— рядом, в&nbsp;зоне видимости. Посмотрите, как ребёнок реагирует на&nbsp;среду.</p>
         </div>
-        <form class="pl-form" method="post" action="#lead-form">
-            <input class="pl-input" type="text" name="child_name" placeholder="Имя ребёнка и возраст">
-            <input class="pl-input" type="tel" name="phone" placeholder="Введите телефон" required>
+        <form class="pl-form" method="post" action="/api/lead" data-lead-form>
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            <input type="hidden" name="source_block" value="program_landing">
+            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <input class="pl-input" type="text" name="name" placeholder="Как к вам обращаться" autocomplete="name" aria-label="Ваше имя">
+            <input class="pl-input" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
             <button class="pl-btn pl-btn--md" type="submit">Записать на пробное</button>
             <p class="pl-form-meta">Перезвоним в&nbsp;течение часа</p>
+            <p class="pl-form-consent">Отправляя заявку, вы соглашаетесь с <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
     </div>
 </section>

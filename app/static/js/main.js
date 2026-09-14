@@ -7,7 +7,10 @@ function openMobileMenu() {
   if (!mobileMenu) return;
   document.body.classList.add("is-menu-open");
   mobileMenu.classList.add("is-open");
+  mobileMenu.inert = false;
   mobileMenu.setAttribute("aria-hidden", "false");
+  document.querySelectorAll(".site-header, main, .site-footer").forEach((node) => { node.inert = true; });
+  mobileMenuCloseBtn?.focus();
   if (navToggle) navToggle.setAttribute("aria-expanded", "true");
 }
 
@@ -15,6 +18,9 @@ function closeMobileMenu() {
   if (!mobileMenu) return;
   document.body.classList.remove("is-menu-open");
   mobileMenu.classList.remove("is-open");
+  document.querySelectorAll(".site-header, main, .site-footer").forEach((node) => { node.inert = false; });
+  navToggle?.focus({ preventScroll: true });
+  mobileMenu.inert = true;
   mobileMenu.setAttribute("aria-hidden", "true");
   if (navToggle) navToggle.setAttribute("aria-expanded", "false");
 }
@@ -38,6 +44,13 @@ mobileMenuLinks.forEach((link) => {
 });
 
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Tab" && mobileMenu?.classList.contains("is-open")) {
+    const focusable = [...mobileMenu.querySelectorAll("a[href], button:not([disabled])")].filter((node) => node.getClientRects().length);
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  }
   if (event.key === "Escape" && mobileMenu && mobileMenu.classList.contains("is-open")) {
     closeMobileMenu();
   }
@@ -49,7 +62,9 @@ function initProgramFilters() {
   const emptyNode = document.querySelector("[data-filter-empty]");
   if (!filterBar || !list) return;
 
-  const state = { age: "all", price: "all" };
+  const requestedAge = new URLSearchParams(location.search).get("age");
+  const validAges = [...filterBar.querySelectorAll("[data-filter-age]")].map((node) => node.dataset.filterAge);
+  const state = { age: validAges.includes(requestedAge) ? requestedAge : "all", price: "all" };
   const parseAge = (value) => {
     if (value === "all") return null;
     const [min, max] = value.split("-").map(Number);
@@ -59,7 +74,7 @@ function initProgramFilters() {
   const applyFilter = () => {
     const ageRange = parseAge(state.age);
     let visible = 0;
-    list.querySelectorAll(".program-line").forEach((card) => {
+    list.querySelectorAll(".program-line, .program-card").forEach((card) => {
       const ageMin = Number(card.dataset.ageMin || 0);
       const ageMax = Number(card.dataset.ageMax || 18);
       const priceUnit = (card.dataset.priceUnit || "").toLowerCase();
@@ -82,16 +97,26 @@ function initProgramFilters() {
       const priceVal = chip.dataset.filterPrice;
       if (ageVal !== undefined) {
         state.age = ageVal;
-        filterBar.querySelectorAll("[data-filter-age]").forEach((node) => node.classList.toggle("is-active", node === chip));
+        filterBar.querySelectorAll("[data-filter-age]").forEach((node) => { node.classList.toggle("is-active", node === chip); node.setAttribute("aria-pressed", String(node === chip)); });
       } else if (priceVal !== undefined) {
         state.price = state.price === priceVal ? "all" : priceVal;
         filterBar.querySelectorAll("[data-filter-price]").forEach((node) => {
           node.classList.toggle("is-active", node.dataset.filterPrice === state.price);
+          node.setAttribute("aria-pressed", String(node.dataset.filterPrice === state.price));
         });
       }
+      const url = new URL(location.href);
+      if (state.age === "all") url.searchParams.delete("age"); else url.searchParams.set("age", state.age);
+      history.replaceState(null, "", url);
       applyFilter();
     });
   });
+  filterBar.querySelectorAll("[data-filter-age]").forEach((node) => {
+    const active = node.dataset.filterAge === state.age;
+    node.classList.toggle("is-active", active);
+    node.setAttribute("aria-pressed", String(active));
+  });
+  applyFilter();
 }
 
 function initTeacherFilters() {
@@ -122,7 +147,7 @@ function initTeacherFilters() {
         const val = chip.dataset.filterCategory;
         if (val === undefined) return;
         state.cat = val;
-        filterBar.querySelectorAll(".chip").forEach((node) => node.classList.toggle("is-active", node === chip));
+        filterBar.querySelectorAll(".chip").forEach((node) => { node.classList.toggle("is-active", node === chip); node.setAttribute("aria-pressed", String(node === chip)); });
         apply();
       });
     });
@@ -167,11 +192,17 @@ document.addEventListener("DOMContentLoaded", () => {
 document.querySelectorAll("[data-lead-form]").forEach((form) => {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (form.getAttribute("aria-busy") === "true") return;
     const statusNode = form.querySelector("[data-form-status]");
+    const submit = form.querySelector('[type="submit"]');
+    const originalLabel = submit?.textContent;
+    form.setAttribute("aria-busy", "true");
+    if (submit) { submit.disabled = true; submit.textContent = "Отправляем…"; }
     const payload = Object.fromEntries(new FormData(form).entries());
 
     if (statusNode) {
-      statusNode.textContent = "Отправляем...";
+      statusNode.textContent = "Отправляем…";
+      statusNode.dataset.state = "pending";
     }
 
     try {
@@ -180,21 +211,43 @@ document.querySelectorAll("[data-lead-form]").forEach((form) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const result = await response.json();
+      const isJson = response.headers.get("content-type")?.includes("application/json");
+      const result = isJson ? await response.json() : {};
+      if (!isJson) throw new Error("Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.");
       if (!response.ok || !result.ok) {
         throw new Error(result.message || "Не удалось отправить форму");
       }
       form.reset();
       if (statusNode) {
         statusNode.textContent = result.message;
+        statusNode.dataset.state = "success";
       }
       if (typeof ym !== 'undefined') {
         ym(window._ymId || 0, 'reachGoal', 'goal_lead_submit');
       }
     } catch (error) {
       if (statusNode) {
-        statusNode.textContent = error.message || "Ошибка отправки";
+        statusNode.textContent = error instanceof TypeError
+          ? "Нет соединения. Проверьте интернет и попробуйте ещё раз — введённые данные сохранены."
+          : error.message || "Не удалось отправить заявку. Попробуйте ещё раз.";
+        statusNode.dataset.state = "error";
       }
+    } finally {
+      form.removeAttribute("aria-busy");
+      if (submit) { submit.disabled = false; submit.textContent = originalLabel; }
+    }
+  });
+});
+
+// Native sharing with a copy-link fallback on desktop.
+document.querySelectorAll("[data-share]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const status = button.parentElement.querySelector("[data-share-status]");
+    try {
+      if (navigator.share) await navigator.share({ title: document.title, url: location.href });
+      else { await navigator.clipboard.writeText(location.href); if (status) status.textContent = "Ссылка скопирована"; button.textContent = "Ссылка скопирована"; }
+    } catch (error) {
+      if (error.name !== "AbortError" && status) status.textContent = "Скопируйте адрес страницы из строки браузера.";
     }
   });
 });

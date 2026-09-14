@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section error-page">
+    <p class="error-code" aria-hidden="true">404</p>
+    <h1>Страница не найдена</h1>
+    <p>Возможно, ссылка устарела или в адресе есть опечатка. Выберите программу или вернитесь на главную.</p>
+    <div class="error-actions">
+        <a class="button button-dark" href="/">На главную</a>
+        <a class="soft-button" href="/programmy/">Все программы</a>
+    </div>
+</section>
+{% endblock %}

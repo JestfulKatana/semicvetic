@@ -218,3 +218,12 @@ def slug_router(slug: str):
         )
 
     abort(404)
+
+
+@bp.app_errorhandler(404)
+def page_not_found(error):
+    return render_template(
+        "errors/404.html",
+        page_title="Страница не найдена — Семицветик",
+        page_description="Вернитесь на главную или выберите программу детского центра «Семицветик».",
+    ), 404

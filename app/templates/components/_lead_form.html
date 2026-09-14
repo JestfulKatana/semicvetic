@@ -1,14 +1,14 @@
 <form class="lead-form" data-lead-form>
     <input type="hidden" name="source_page" value="{{ request.path }}">
     <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
-    <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off">
+    <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
     <label>
         <span>Телефон</span>
-        <input type="tel" name="phone" placeholder="Введите телефон" required>
+        <input type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
     </label>
     <label>
         <span>Имя</span>
-        <input type="text" name="name" placeholder="Как к вам обращаться">
+        <input type="text" name="name" autocomplete="name" placeholder="Как к вам обращаться">
     </label>
     <label>
         <span>Возраст ребёнка</span>
@@ -19,5 +19,5 @@
         <span>С <a href="/politika-konfidencialnosti/" target="_blank">политикой обработки персональных данных</a> ознакомлен(а) и согласен(а)</span>
     </label>
     <button class="button button-acid" type="submit">Отправить</button>
-    <p class="form-status" data-form-status></p>
+    <p class="form-status" data-form-status role="status" aria-live="polite"></p>
 </form>
