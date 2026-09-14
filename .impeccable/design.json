@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-14T20:14:15.681397+00:00",
+  "title": "Design System: Семицветик",
+  "extensions": {
+    "colorMeta": {
+      "canvas": {
+        "role": "neutral",
+        "displayName": "canvas",
+        "tonalRamp": [
+          "oklch(0.150 0.0074 80.72)",
+          "oklch(0.264 0.0074 80.72)",
+          "oklch(0.379 0.0074 80.72)",
+          "oklch(0.493 0.0074 80.72)",
+          "oklch(0.607 0.0074 80.72)",
+          "oklch(0.721 0.0074 80.72)",
+          "oklch(0.836 0.0074 80.72)",
+          "oklch(0.950 0.0074 80.72)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "paper",
+        "tonalRamp": [
+          "oklch(0.150 0.0000 89.88)",
+          "oklch(0.264 0.0000 89.88)",
+          "oklch(0.379 0.0000 89.88)",
+          "oklch(0.493 0.0000 89.88)",
+          "oklch(0.607 0.0000 89.88)",
+          "oklch(0.721 0.0000 89.88)",
+          "oklch(0.836 0.0000 89.88)",
+          "oklch(0.950 0.0000 89.88)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "ink",
+        "tonalRamp": [
+          "oklch(0.150 0.0090 53.16)",
+          "oklch(0.264 0.0090 53.16)",
+          "oklch(0.379 0.0090 53.16)",
+          "oklch(0.493 0.0090 53.16)",
+          "oklch(0.607 0.0090 53.16)",
+          "oklch(0.721 0.0090 53.16)",
+          "oklch(0.836 0.0090 53.16)",
+          "oklch(0.950 0.0090 53.16)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "muted",
+        "tonalRamp": [
+          "oklch(0.150 0.0133 71.76)",
+          "oklch(0.264 0.0133 71.76)",
+          "oklch(0.379 0.0133 71.76)",
+          "oklch(0.493 0.0133 71.76)",
+          "oklch(0.607 0.0133 71.76)",
+          "oklch(0.721 0.0133 71.76)",
+          "oklch(0.836 0.0133 71.76)",
+          "oklch(0.950 0.0133 71.76)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "line",
+        "tonalRamp": [
+          "oklch(0.150 0.0122 79.78)",
+          "oklch(0.264 0.0122 79.78)",
+          "oklch(0.379 0.0122 79.78)",
+          "oklch(0.493 0.0122 79.78)",
+          "oklch(0.607 0.0122 79.78)",
+          "oklch(0.721 0.0122 79.78)",
+          "oklch(0.836 0.0122 79.78)",
+          "oklch(0.950 0.0122 79.78)"
+        ]
+      },
+      "green": {
+        "role": "secondary",
+        "displayName": "green",
+        "tonalRamp": [
+          "oklch(0.150 0.0406 119.33)",
+          "oklch(0.264 0.0406 119.33)",
+          "oklch(0.379 0.0406 119.33)",
+          "oklch(0.493 0.0406 119.33)",
+          "oklch(0.607 0.0406 119.33)",
+          "oklch(0.721 0.0406 119.33)",
+          "oklch(0.836 0.0406 119.33)",
+          "oklch(0.950 0.0406 119.33)"
+        ]
+      },
+      "honey": {
+        "role": "secondary",
+        "displayName": "honey",
+        "tonalRamp": [
+          "oklch(0.150 0.1115 87.70)",
+          "oklch(0.264 0.1115 87.70)",
+          "oklch(0.379 0.1115 87.70)",
+          "oklch(0.493 0.1115 87.70)",
+          "oklch(0.607 0.1115 87.70)",
+          "oklch(0.721 0.1115 87.70)",
+          "oklch(0.836 0.1115 87.70)",
+          "oklch(0.950 0.1115 87.70)"
+        ]
+      },
+      "purple": {
+        "role": "secondary",
+        "displayName": "purple",
+        "tonalRamp": [
+          "oklch(0.150 0.1382 289.73)",
+          "oklch(0.264 0.1382 289.73)",
+          "oklch(0.379 0.1382 289.73)",
+          "oklch(0.493 0.1382 289.73)",
+          "oklch(0.607 0.1382 289.73)",
+          "oklch(0.721 0.1382 289.73)",
+          "oklch(0.836 0.1382 289.73)",
+          "oklch(0.950 0.1382 289.73)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "accent",
+        "tonalRamp": [
+          "oklch(0.150 0.1479 40.37)",
+          "oklch(0.264 0.1479 40.37)",
+          "oklch(0.379 0.1479 40.37)",
+          "oklch(0.493 0.1479 40.37)",
+          "oklch(0.607 0.1479 40.37)",
+          "oklch(0.721 0.1479 40.37)",
+          "oklch(0.836 0.1479 40.37)",
+          "oklch(0.950 0.1479 40.37)"
+        ]
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "accent-hover",
+        "tonalRamp": [
+          "oklch(0.150 0.1317 39.76)",
+          "oklch(0.264 0.1317 39.76)",
+          "oklch(0.379 0.1317 39.76)",
+          "oklch(0.493 0.1317 39.76)",
+          "oklch(0.607 0.1317 39.76)",
+          "oklch(0.721 0.1317 39.76)",
+          "oklch(0.836 0.1317 39.76)",
+          "oklch(0.950 0.1317 39.76)"
+        ]
+      },
+      "secondary-hover": {
+        "role": "neutral",
+        "displayName": "secondary-hover",
+        "tonalRamp": [
+          "oklch(0.150 0.0160 73.68)",
+          "oklch(0.264 0.0160 73.68)",
+          "oklch(0.379 0.0160 73.68)",
+          "oklch(0.493 0.0160 73.68)",
+          "oklch(0.607 0.0160 73.68)",
+          "oklch(0.721 0.0160 73.68)",
+          "oklch(0.836 0.0160 73.68)",
+          "oklch(0.950 0.0160 73.68)"
+        ]
+      },
+      "secondary-border": {
+        "role": "neutral",
+        "displayName": "secondary-border",
+        "tonalRamp": [
+          "oklch(0.150 0.0178 70.45)",
+          "oklch(0.264 0.0178 70.45)",
+          "oklch(0.379 0.0178 70.45)",
+          "oklch(0.493 0.0178 70.45)",
+          "oklch(0.607 0.0178 70.45)",
+          "oklch(0.721 0.0178 70.45)",
+          "oklch(0.836 0.0178 70.45)",
+          "oklch(0.950 0.0178 70.45)"
+        ]
+      },
+      "input-border": {
+        "role": "neutral",
+        "displayName": "input-border",
+        "tonalRamp": [
+          "oklch(0.150 0.0400 120.34)",
+          "oklch(0.264 0.0400 120.34)",
+          "oklch(0.379 0.0400 120.34)",
+          "oklch(0.493 0.0400 120.34)",
+          "oklch(0.607 0.0400 120.34)",
+          "oklch(0.721 0.0400 120.34)",
+          "oklch(0.836 0.0400 120.34)",
+          "oklch(0.950 0.0400 120.34)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Главный заголовок",
+        "purpose": "Главная страница; мобильное переопределение 54px."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "button-transition",
+        "value": "background .18s, transform .18s",
+        "purpose": "Короткая обратная связь; отключена при reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      },
+      {
+        "name": "tablet",
+        "value": "900px"
+      },
+      {
+        "name": "mobile",
+        "value": "620px"
+      },
+      {
+        "name": "wide",
+        "value": "1600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Основная кнопка",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Основная кнопка",
+      "html": "<button class=\"ds-primary\">Обсудить занятие</button>",
+      "css": ".ds-primary{font-family:Onest,Arial,sans-serif;display:inline-flex;align-items:center;min-height:50px;border:1px solid transparent;border-radius:8px;padding:13px 23px;font-size:15px;line-height:1.4;font-weight:600;background:var(--accent,#ac4317);color:#fff;cursor:pointer;transition:background .18s,transform .18s}.ds-primary:hover{background:#903510}.ds-primary:active{transform:translateY(1px)}.ds-primary:focus-visible{outline:3px solid var(--purple,#6553ad);outline-offset:5px}"
+    },
+    {
+      "name": "Вторичная кнопка",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Вторичная кнопка",
+      "html": "<button class=\"ds-secondary\">Обсудить занятие</button>",
+      "css": ".ds-secondary{font-family:Onest,Arial,sans-serif;display:inline-flex;align-items:center;min-height:50px;border:1px solid #a79e94;border-radius:8px;padding:13px 23px;font-size:15px;line-height:1.4;font-weight:600;background:transparent;color:var(--ink,#342f2c);cursor:pointer;transition:background .18s,transform .18s}.ds-secondary:hover{background:#eee6dc}.ds-secondary:active{transform:translateY(1px)}.ds-secondary:focus-visible{outline:3px solid var(--purple,#6553ad);outline-offset:5px}"
+    },
+    {
+      "name": "Поле телефона",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Поле телефона",
+      "html": "<label class=\"ds-field\">Телефон<input type=\"tel\" placeholder=\"+7 (___) ___-__-__\"></label>",
+      "css": ".ds-field{font-family:Onest,Arial,sans-serif;display:grid;gap:8px;color:var(--ink,#342f2c);font-size:13px;font-weight:600}.ds-field input{font-family:Onest,Arial,sans-serif;border:1px solid #a9b195;border-radius:6px;background:#fff;color:var(--ink,#342f2c);padding:12px 14px;height:49px;font-size:15px;min-width:0}.ds-field input:focus-visible{outline:3px solid var(--purple,#6553ad);outline-offset:5px}"
+    },
+    {
+      "name": "Навигация",
+      "kind": "nav",
+      "description": "Навигация",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Разделы\"><a href=\"#programs\" aria-current=\"page\">Занятия</a><a href=\"#people\">Педагоги</a></nav>",
+      "css": ".ds-nav{font-family:Onest,Arial,sans-serif;display:flex;gap:26px;font-size:14px;color:var(--ink,#342f2c)}.ds-nav a{text-decoration:none;color:inherit;padding:10px 0;border-bottom:2px solid transparent}.ds-nav a:hover,.ds-nav a[aria-current]{border-color:var(--accent,#ac4317)}.ds-nav a:focus-visible{outline:3px solid var(--purple,#6553ad);outline-offset:5px}"
+    },
+    {
+      "name": "Фильтр каталога",
+      "kind": "chip",
+      "description": "Фильтр каталога",
+      "html": "<button class=\"ds-filter\" aria-pressed=\"true\">Все занятия</button>",
+      "css": ".ds-filter{font-family:Onest,Arial,sans-serif;background:transparent;border:1px solid var(--line,#ded9d1);color:var(--ink,#342f2c);border-radius:6px;padding:11px 15px;font-size:13px;min-height:44px;cursor:pointer}.ds-filter[aria-pressed=true]{background:var(--ink,#342f2c);border-color:var(--ink,#342f2c);color:white}.ds-filter:hover{border-color:var(--ink,#342f2c)}.ds-filter:focus-visible{outline:3px solid var(--purple,#6553ad);outline-offset:5px}"
+    },
+    {
+      "name": "Блок обращения",
+      "kind": "card",
+      "description": "Блок обращения",
+      "html": "<section class=\"ds-inquiry\"><h2>С чего начнётся ваша история?</h2><p>Расскажите, какое занятие ищете.</p></section>",
+      "css": ".ds-inquiry{font-family:Onest,Arial,sans-serif;background:var(--green,#e5edcf);color:var(--ink,#342f2c);border-radius:24px;padding:54px}.ds-inquiry h2{font-size:44px;font-weight:600;line-height:1.08;letter-spacing:-.035em;margin:0}.ds-inquiry p{color:#4e5c40;font-size:16px;line-height:1.6;margin:25px 0 0}@media(max-width:620px){.ds-inquiry{padding:28px 22px;border-radius:16px}.ds-inquiry h2{font-size:34px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Мастерская маленьких открытий",
+    "overview": "Отдельная версия сохраняет исходную концепцию «Семицветика»: узнаваемый многоцветный цветок, тёплую среду детского центра и настоящих людей. Кремовая основа, янтарная бумага, оранжевые действия, фиолетовые детали и светлая зелень напоминают материалы мастерской. Это выбранная авторская интерпретация, а не результат пользовательского исследования.\n\nСистема извлечена из `app/static/css/version.css` и `app/templates/version/`. Она обновляет предварительный дизайн-документ по реализованному интерфейсу: тёмный текст теперь тёплый коричневый, а основной акцент — оранжевый. Реальные фотографии создают атмосферу; исходный цветок связывает новую композицию с прежним брендом.",
+    "keyCharacteristics": [
+      "Светлая тёплая основа и цветные бумажные поверхности.",
+      "Крупные спокойные заголовки Onest.",
+      "Реальные фотографии занятий и портреты команды.",
+      "Строчные каталоги с разделителями и ясное действие формы."
+    ],
+    "rules": [],
+    "dos": [
+      "**Do** сохранять исходный цветок и тёплую многоцветную концепцию.",
+      "**Do** использовать реальные фотографии и предоставленные портреты команды.",
+      "**Do** сохранять видимый клавиатурный фокус и нативное управление формами.",
+      "**Do** отключать плавную прокрутку и переходы при reduced motion."
+    ],
+    "donts": [
+      "**Don't** заменять документальные снимки вымышленными изображениями центра или людей.",
+      "**Don't** добавлять тени поверх плоских бумажных поверхностей без пересмотра системы."
+    ]
+  }
+}

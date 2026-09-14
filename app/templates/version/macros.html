@@ -1,0 +1,10 @@
+{% macro button(label, href, secondary=false) -%}<a class="btn{% if secondary %} btn-secondary{% endif %}" href="{{ href }}">{{ label }} <span aria-hidden="true">↗</span></a>{%- endmacro %}
+{% macro teacher(t) -%}
+<article class="person" data-person data-search="{{ t.name }} {{ t.role }}"><div class="person-photo">{% if t.photo_url %}<img src="{{ t.photo_url }}" alt="{{ t.name }}" loading="lazy" width="480" height="600">{% else %}<span class="person-initial">{{ t.name[:1] }}</span>{% endif %}</div><h3>{{ t.name }}</h3><p>{{ t.role }}</p></article>
+{%- endmacro %}
+{% macro directory(programs, copy, compact=false) -%}
+<div class="directory" data-directory>{% for p in programs %}<a class="program-row" href="/{{ p.slug }}/" data-program data-category="{{ p.category }}" data-search="{{ p.name }} {{ copy[p.slug].category }}"><span class="program-number">{{ '%02d'|format(loop.index) }}</span><div><h3>{{ p.name }}</h3><p>{{ copy[p.slug].description if not compact else copy[p.slug].category }}</p></div><span class="row-arrow" aria-hidden="true">↗</span></a>{% endfor %}</div>
+{%- endmacro %}
+{% macro steps() -%}
+<div class="steps"><article><span>01</span><h3>Расскажите о ребёнке</h3><p>Какое занятие ищете и что для вас важно. Можно обратиться, даже если пока не выбрали направление.</p></article><article><span>02</span><h3>Обсудите детали</h3><p>Уточните группу, стоимость и расписание у администратора.</p></article><article><span>03</span><h3>Договоритесь о визите</h3><p>Согласуйте день знакомства с центром. Заявка на сайте не бронирует место автоматически.</p></article></div>
+{%- endmacro %}

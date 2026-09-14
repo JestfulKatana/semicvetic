@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from flask import current_app, Blueprint, abort, make_response, render_template
+from flask import current_app, Blueprint, make_response, render_template, request
+from datetime import date
+
+from ..utils.version_content import CATEGORIES, program_copy
+from ..utils.content import hydrate_blocks
 
 from ..models import Event, Page, Program, Review, SiteSetting, Teacher
-from ..utils.content import hydrate_blocks
-from ..utils.seo import build_course_schema, build_org_schema
 
 
 bp = Blueprint("main", __name__)
@@ -50,6 +52,30 @@ def shared_context(current_program=None) -> dict:
     }
 
 
+def version_page(template, **values):
+    ctx = shared_context()
+    ctx.update({
+        "program_copy": {p.slug: program_copy(p) for p in ctx["programs"]},
+        "categories": CATEGORIES,
+        "terms_verified": ctx["settings"].get("program_terms_verified") == "true",
+        "selected_program": request.args.get("program", ""),
+        "year": date.today().year,
+        "today": date.today(),
+    })
+    ctx.update(values)
+    return render_template("version/" + template + ".html", **ctx)
+
+
+def composed_page(page):
+    # Preserve the complete editor contract for custom pages outside the new named layouts.
+    return render_template(
+        "pages/content_page.html", page=page,
+        blocks=hydrate_blocks(page.blocks, shared_context()),
+        page_title=page.meta_title or page.title,
+        page_description=page.meta_description or page.hero_subtitle,
+    )
+
+
 @bp.app_context_processor
 def inject_global_context():
     ctx = shared_context()
@@ -58,83 +84,32 @@ def inject_global_context():
         "nav_pages": ctx["nav_pages"],
         "programs": ctx["programs"],
         "news": ctx["news"],
+        "year": date.today().year,
     }
 
 
 @bp.route("/")
 def home():
-    page = Page.query.filter_by(slug="home", is_published=True).first_or_404()
-    ctx = shared_context()
-    return render_template(
-        "pages/home.html",
-        page=page,
-        blocks=hydrate_blocks(page.blocks, ctx),
-        page_title=page.meta_title or page.title,
-        page_description=page.meta_description or page.hero_subtitle,
-        page_schema=build_org_schema(ctx["settings"]),
-    )
+    Page.query.filter_by(slug="home", is_published=True).first_or_404()
+    return version_page("home", page_title="Детский центр в Сергиевом Посаде", page_description="Занятия, творчество, подготовка к школе и поддержка специалистов в центре Семицветик. Познакомьтесь с программами и педагогами.")
 
 
 @bp.route("/novosti/")
 def news_list():
-    ctx = shared_context()
-    return render_template(
-        "pages/news_list.html",
-        news=ctx["news"],
-        page_title="Новости центра «Семицветик»",
-        page_description="Что происходит в центре: события, наборы, поздравления и новости из жизни наших ребят.",
-    )
+    posts = Event.query.filter_by(type="news", is_published=True).order_by(Event.created_at.desc()).all()
+    return version_page("posts", posts=posts, page_title="Новости центра", page_description="Занятия, события и истории из жизни Семицветика.")
 
 
 @bp.route("/novosti/<slug>/")
-def news_detail(slug: str):
+def news_detail(slug):
     post = Event.query.filter_by(slug=slug, type="news", is_published=True).first_or_404()
-    ctx = shared_context()
-    related = [n for n in ctx["news"] if n.id != post.id][:3]
-    site_url = current_app.config["SITE_URL"].rstrip("/")
-    image_abs = (
-        (site_url + post.image_url)
-        if post.image_url and post.image_url.startswith("/")
-        else post.image_url
-    )
-    schema = {
-        "@context": "https://schema.org",
-        "@type": "NewsArticle",
-        "headline": post.title,
-        "description": post.excerpt,
-        "datePublished": (post.event_date or post.created_at.date()).isoformat(),
-    }
-    if image_abs:
-        schema["image"] = image_abs
-    return render_template(
-        "pages/news_detail.html",
-        post=post,
-        related=related,
-        page_title=post.title,
-        page_description=post.excerpt or (post.title + " — новости центра Семицветик"),
-        og_image=image_abs,
-        og_type="article",
-        page_schema=schema,
-    )
+    return version_page("article", post=post, page_title=post.title, page_description=post.excerpt)
 
 
 @bp.route("/blog/<slug>/")
-def article_detail(slug: str):
-    article = Event.query.filter_by(slug=slug, type="article", is_published=True).first_or_404()
-    ctx = shared_context()
-    return render_template(
-        "pages/article_detail.html",
-        article=article,
-        page_title=article.title,
-        page_description=article.excerpt,
-        page_schema={
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            "headline": article.title,
-            "description": article.excerpt,
-        },
-        **ctx,
-    )
+def article_detail(slug):
+    post = Event.query.filter_by(slug=slug, type="article", is_published=True).first_or_404()
+    return version_page("article", post=post, page_title=post.title, page_description=post.excerpt)
 
 
 @bp.route("/sitemap.xml")
@@ -170,60 +145,28 @@ def health():
     return {"ok": True}
 
 
-# Slug -> название включаемого шаблона компонента из templates/components/program_landing/
-# для специальных продакт-лендингов (E-варианты из handoff 2026-05-09).
-PROGRAM_LANDING_E = {
-    "podgotovka-k-shkole": "school",
-    "anglijskij": "english",
-    "logoped": "speech",
-    "rannee-razvitie": "early",
-}
-
-
 @bp.route("/<slug>/")
-def slug_router(slug: str):
+def slug_router(slug):
+    if slug in ("privacy-policy", "politika-konfidencialnosti"):
+        policy = Page.query.filter_by(slug=slug, is_published=True).first()
+        if policy:
+            return composed_page(policy)
+        return version_page("privacy", page_title="Данные заявки")
     program = Program.query.filter_by(slug=slug, is_published=True).first()
     if program:
-        ctx = shared_context(current_program=program)
-        landing_e = PROGRAM_LANDING_E.get(slug)
-        if landing_e:
-            return render_template(
-                "pages/program_landing_e.html",
-                page=program,
-                program_landing_e=landing_e,
-                teachers=ctx["teachers"],
-                page_title=program.name,
-                page_description=program.tagline,
-                page_schema=build_course_schema(program),
-            )
-        return render_template(
-            "pages/content_page.html",
-            page=program,
-            blocks=hydrate_blocks(program.landing_blocks, ctx),
-            page_title=program.name,
-            page_description=program.tagline,
-            page_schema=build_course_schema(program),
-        )
-
-    page = Page.query.filter_by(slug=slug, is_published=True).first()
-    if page:
-        ctx = shared_context()
-        return render_template(
-            "pages/content_page.html",
-            page=page,
-            blocks=hydrate_blocks(page.blocks, ctx),
-            page_title=page.meta_title or page.title,
-            page_description=page.meta_description or page.hero_subtitle,
-            page_schema=build_org_schema(ctx["settings"]),
-        )
-
-    abort(404)
+        programs = Program.query.filter_by(is_published=True).order_by(Program.sort_order, Program.name).all()
+        detail = program_copy(program)
+        return version_page("program", program=program, detail=detail, program_index=programs.index(program)+1, selected_program=program.slug, page_title=program.name, page_description=detail["description"])
+    page = Page.query.filter_by(slug=slug, is_published=True).first_or_404()
+    templates = {"programmy":"catalog", "pedagogi":"teachers", "o-centre":"about", "ceny":"prices", "kontakty":"contacts"}
+    if slug == "meropriyatiya":
+        posts = Event.query.filter(Event.type.in_(["event", "article"]), Event.is_published.is_(True)).order_by(Event.event_date.desc()).all()
+        return version_page("posts", posts=posts, page_title="Мероприятия", page_description="События и встречи в центре. У прошедших мероприятий стоит отметка «Архив».")
+    if slug not in templates:
+        return composed_page(page)
+    return version_page(templates[slug], page=page, page_title=page.title, page_description={"programmy":"Занятия и направления детского центра Семицветик. Выберите программу или обратитесь за помощью с выбором.", "pedagogi":"Педагоги, специалисты и администраторы Семицветика: фотографии, имена и специализации.", "o-centre":"Познакомьтесь с центром Семицветик, его занятиями и командой.", "ceny":"Уточните стоимость, расписание и условия посещения занятий в Семицветике.", "kontakty":"Адрес и контакты центра Семицветик в Сергиевом Посаде. Свяжитесь с администратором и договоритесь о посещении."}.get(slug, page.meta_description or page.hero_subtitle))
 
 
 @bp.app_errorhandler(404)
 def page_not_found(error):
-    return render_template(
-        "errors/404.html",
-        page_title="Страница не найдена — Семицветик",
-        page_description="Вернитесь на главную или выберите программу детского центра «Семицветик».",
-    ), 404
+    return version_page("error", page_title="Страница не найдена", page_description="Вернитесь к занятиям и педагогам центра Семицветик."), 404

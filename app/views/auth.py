@@ -24,7 +24,7 @@ def login():
             return redirect(next_url or url_for("admin.index"))
         flash("Неверный логин или пароль", "error")
 
-    return render_template("auth_login.html")
+    return render_template("auth_login.html", page_title="Вход для команды")
 
 
 @bp.route("/logout")
