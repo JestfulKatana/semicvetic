@@ -40,6 +40,23 @@ class TelegramTest(unittest.TestCase):
     def submit(self):
         return self.app.test_client().post('/api/lead', json={'phone': '+79990000000', 'name': 'Тест', 'source_page': '/anglijskij/'})
 
+    def test_invalid_date_does_not_create_lead(self):
+        response = self.app.test_client().post('/api/lead', json={
+            'phone': '+79990000000', 'slot_selected': 'not-a-date'})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(db.session.query(Lead).count(), 0)
+        self.assertEqual(db.session.query(TelegramDelivery).count(), 0)
+
+    @patch('app.utils.telegram.requests.post')
+    def test_requested_date_is_saved_and_sent(self, post):
+        response = self.app.test_client().post('/api/lead', json={
+            'phone': '+79990000000', 'slot_selected': '2026-09-20'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(db.session.query(Lead).one().preferred_date.isoformat(), '2026-09-20')
+        post.return_value = Mock(json=lambda: {'ok': True})
+        self.assertEqual(deliver_pending(), 2)
+        self.assertIn('20.09.2026', post.call_args.kwargs['json']['text'])
+
     @patch('app.utils.telegram.requests.post')
     def test_missing_lead_does_not_crash_worker(self, post):
         self.submit()
@@ -130,5 +147,13 @@ class DeliveryMigrationTest(unittest.TestCase):
                 migration.upgrade()
                 self.assertTrue(sa.inspect(connection).has_table('telegram_delivery'))
                 self.assertEqual(connection.exec_driver_sql('SELECT phone FROM lead').scalar(), 'test-value')
+                date_path = path.with_name('20260915_lead_preferred_date.py')
+                date_spec = importlib.util.spec_from_file_location('date_migration', date_path)
+                date_migration = importlib.util.module_from_spec(date_spec)
+                date_spec.loader.exec_module(date_migration)
+                date_migration.op = migration.op
+                date_migration.upgrade()
+                date_migration.upgrade()
+                self.assertEqual(connection.exec_driver_sql('SELECT phone, preferred_date FROM lead').one(), ('test-value', None))
         finally:
             engine.dispose()

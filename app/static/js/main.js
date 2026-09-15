@@ -308,9 +308,10 @@ document.querySelectorAll("[data-share]").forEach((button) => {
 
   function refresh() {
     if (submitBtn) submitBtn.textContent = "Записаться на " + activeLabel;
-    if (slotInput) slotInput.value = activeLabel;
+    if (slotInput) slotInput.value = root.querySelector('input[name="cta_slot_day"]:checked')?.value || "";
   }
   refresh();
+  root.querySelector("form")?.addEventListener("reset", () => queueMicrotask(refresh));
 
   days.forEach((label) => {
     label.addEventListener("click", () => {

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 
 from flask import Blueprint, current_app, jsonify, request
 from prometheus_client import Counter
@@ -37,8 +38,15 @@ def create_lead():
     except ValueError as exc:
         return jsonify({"ok": False, "message": str(exc)}), 400
 
+    try:
+        raw_date = (payload.get("slot_selected") or "").strip()
+        preferred_date = date.fromisoformat(raw_date) if raw_date else None
+    except (AttributeError, TypeError, ValueError):
+        return jsonify({"ok": False, "message": "Выберите день занятия ещё раз"}), 400
+
     lead = Lead(
         phone=phone,
+        preferred_date=preferred_date,
         name=(payload.get("name") or "").strip() or None,
         child_age=(payload.get("child_age") or "").strip() or None,
         source_page=(payload.get("source_page") or request.referrer or "").strip() or None,

@@ -187,6 +187,7 @@ class Lead(db.Model):
     phone = db.Column(db.String(32), nullable=False)
     name = db.Column(db.String(120), nullable=True)
     child_age = db.Column(db.String(50), nullable=True)
+    preferred_date = db.Column(db.Date, nullable=True)
     source_page = db.Column(db.String(255), nullable=True)
     source_block = db.Column(db.String(120), nullable=True)
     utm_source = db.Column(db.String(120), nullable=True)

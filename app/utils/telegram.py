@@ -52,6 +52,7 @@ def deliver_pending(limit=20):
             f"Телефон: {lead.phone}\n"
             f"Имя: {(lead.name or 'не указано')[:120]}\n"
             f"Возраст ребёнка: {(lead.child_age or 'не указан')[:50]}\n"
+            f"Желаемая дата: {lead.preferred_date.strftime('%d.%m.%Y') if lead.preferred_date else 'согласовать по телефону'}\n"
             f"Страница: {(lead.source_page or 'неизвестно')[:255]}\n"
             f"Время: {created:%d.%m.%Y %H:%M} МСК"
         )
