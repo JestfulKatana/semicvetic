@@ -69,3 +69,22 @@ body { font-family: var(--font-site); }
     font-size: var(--type-card) !important;
     line-height: 1.25;
 }
+
+/* Section labels share one treatment, independent of their component. */
+#main-content .section-kicker {
+    display: block;
+    margin: 0 0 12px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    color: #b34b22;
+    font-family: var(--font-site);
+    font-size: var(--type-caption);
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-transform: none;
+}
+#main-content .section-kicker b { font-weight: inherit; color: inherit; }
+#main-content .trust-head { gap: 0; }
