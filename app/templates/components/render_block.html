@@ -1238,53 +1238,7 @@
 {% endif %}
 
 {% elif block.component == "cta_final" %}
-<section class="section meet-strip meet-strip-green" id="final-cta">
-    <div class="meet-copy">
-        <h2>{{ data.title or "Записаться на\u00a0личную экскурсию" }}</h2>
-        <p class="meet-sub">{% if data.subtitle %}{{ data.subtitle }}{% else %}<span class="meet-sub-accent-yellow">Ответим на&nbsp;вопросы</span> по&nbsp;телефону, и&nbsp;пригласим в&nbsp;детский клуб на&nbsp;экскурсию{% endif %}</p>
-        {% if data.points %}
-        <ul class="meet-points meet-points-final">
-            {% for point in data.points %}
-            <li class="meet-point">
-                <svg class="meet-point-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l3.5 3.5L16 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>{{ point }}</span>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        <form class="lead-inline meet-lead" data-lead-form>
-            <input type="hidden" name="source_page" value="{{ request.path }}">
-            <input type="hidden" name="source_block" value="{{ data.source_block or block.component }}">
-            <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-            <div class="meet-lead-row">
-                <label class="sr-only" for="final-phone">Телефон</label>
-                <input id="final-phone" type="tel" name="phone" autocomplete="tel" inputmode="tel" aria-label="Телефон" placeholder="Введите телефон" required>
-                <button class="button button-yellow" type="submit">Получить консультацию</button>
-            </div>
-            <p class="meet-disclaimer">Отправляя заявку вы&nbsp;соглашаетесь на&nbsp;обработку персональных данных и&nbsp;принимаете условия <a href="/politika-konfidencialnosti/" target="_blank" rel="noopener">политики конфиденциальности</a></p>
-            <div class="meet-conditions" aria-label="Условия занятий">
-                <span>Пропустили&nbsp;— пересчитаем</span>
-                <span>2-й ребёнок или близнецы&nbsp;— скидка</span>
-                <span>Абонемент или разово&nbsp;— как удобно</span>
-            </div>
-            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
-        </form>
-    </div>
-    <div class="meet-visual" aria-hidden="true">
-        <img class="meet-photo" src="{{ url_for('static', filename='img/mockup/cta-kids.png') }}" alt="">
-        {% if page_slug == 'izostudia' %}
-        <span class="meet-badge meet-badge-1">✦ Все материалы включены</span>
-        <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Работы забирают домой</span>
-        <span class="meet-badge meet-badge-3 meet-badge-orange">✦ Без оценок и сравнений</span>
-        <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Группа до 8 детей</span>
-        {% else %}
-        <span class="meet-badge meet-badge-1">✦ Педагоги-практики</span>
-        <span class="meet-badge meet-badge-2 meet-badge-orange">✦ Всё в&nbsp;одном центре</span>
-        <span class="meet-badge meet-badge-3 meet-badge-orange">✦ Пробное без&nbsp;спешки</span>
-        <span class="meet-badge meet-badge-4 meet-badge-orange">✦ Группа по&nbsp;возрасту и&nbsp;уровню</span>
-        {% endif %}
-    </div>
-</section>
+{% include "components/trial_invite.html" %}
 
 {% elif block.component == "gallery" %}
 {% if data.variant == "video" or (is_home and data.variant != "strip") %}
