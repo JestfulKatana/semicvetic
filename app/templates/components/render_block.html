@@ -543,7 +543,6 @@
                     </div>
                 </div>
             </div>
-            <a class="program-card__pin" href="{{ cta_anchor }}" aria-label="Записаться на {{ program.name }}">Записаться →</a>
         </article>
         {% endfor %}
     </div>
@@ -1244,8 +1243,8 @@
 {% if data.variant == "video" or (is_home and data.variant != "strip") %}
 <section class="section video-section" id="video">
     <div class="video-head">
-        <h2>{{ data.title or "Жизнь нашего центра в одном видео" }}</h2>
-        {% if data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
+        <h2>{{ (data.title or "Жизнь нашего центра в одном видео") if data.video_url else "Жизнь нашего центра" }}</h2>
+        {% if data.video_url and data.subtitle %}<p>{{ data.subtitle }}</p>{% endif %}
     </div>
     <div class="video-stage">
         <div class="video-cover">
@@ -1426,9 +1425,10 @@
         {% endif %}
         {% set map_iframe = data.settings.get('yandex_map_iframe') %}
         {% if map_iframe %}
-        <div class="contact-map contact-map-iframe" id="contact-map">
-            <iframe src="{{ map_iframe }}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Семицветик на карте"></iframe>
-        </div>
+        <a class="contact-map contact-map-preview" id="contact-map" href="https://yandex.ru/maps/?text={{ data.settings.get('address', 'Семицветик Сергиев Посад Воробьёвская 16А')|urlencode }}" target="_blank" rel="noopener" aria-label="Открыть адрес центра в Яндекс Картах">
+            <img src="{{ url_for('static', filename='img/figma/map-static.png') }}" alt="Карта района центра в Сергиевом Посаде" loading="lazy">
+            <span>Открыть в Яндекс Картах →</span>
+        </a>
         {% else %}
         <img class="contact-map" id="contact-map" src="{{ url_for('static', filename='img/figma/map-static.png') }}" alt="Карта">
         {% endif %}

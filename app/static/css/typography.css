@@ -14,13 +14,13 @@ body { font-family: var(--font-site); }
    deliberately own heading metrics, including those breakpoints. */
 #main-content h1 {
     font-size: var(--type-page) !important;
-    font-weight: 700 !important;
+    font-weight: 600 !important;
     line-height: 1.08;
     letter-spacing: -.035em !important;
 }
 #main-content h2 {
     font-size: var(--type-section) !important;
-    font-weight: 700 !important;
+    font-weight: 600 !important;
     line-height: 1.15;
     letter-spacing: -.025em;
 }
@@ -70,21 +70,31 @@ body { font-family: var(--font-site); }
     line-height: 1.25;
 }
 
-/* Section labels share one treatment, independent of their component. */
-#main-content .section-kicker {
+/* One uppercase label role across all current section components. The class
+   suffix also covers database-rendered and dedicated program landing labels. */
+#main-content :is(p, span, div):is(.section-kicker, [class*="eyebrow"]) {
     display: block;
+    width: fit-content;
     margin: 0 0 12px;
     padding: 0;
     background: none;
     border: 0;
     border-radius: 0;
-    color: #b34b22;
     font-family: var(--font-site);
     font-size: var(--type-caption);
     font-weight: 600;
     line-height: 1.5;
-    letter-spacing: normal;
-    text-transform: none;
+    letter-spacing: .06em;
+    text-transform: uppercase;
 }
-#main-content .section-kicker b { font-weight: inherit; color: inherit; }
+#main-content :is(.section-kicker, .eyebrow, .seasonal-card-eyebrow) { color: #b34b22; }
+#main-content :is(.section-kicker, [class*="eyebrow"]) b {
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    font-weight: inherit;
+    color: inherit;
+}
 #main-content .trust-head { gap: 0; }
+/* Same label metrics, with a readable foreground on saturated surfaces. */
+#main-content :is(.seasonal-card-eyebrow, .home-cta-v2-eyebrow) { color: #fff; }

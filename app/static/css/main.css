@@ -8903,3 +8903,20 @@ button.chip { border: 0; cursor: pointer; min-height: 44px; }
     .trial-invite-intro { margin: 18px 0 24px; font-size: 16px; }
     .trial-invite-photo { margin-bottom: 16px; }
 }
+
+/* Visual audit: preserve space for mobile headings and complete photo rows. */
+@media (max-width: 600px) {
+    .top-programs-head { flex-direction: column; align-items: stretch; gap: 16px; }
+    .top-programs-head > .soft-button-arrow { align-self: flex-start; }
+}
+@media (min-width: 901px) {
+    .photo-strip:has(> .photo-strip-row) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+/* A usable map preview does not depend on third-party tile loading. */
+.contact-map-preview { position: relative; display: block; overflow: hidden; }
+.contact-map-preview > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.contact-map-preview > span { position: absolute; left: 16px; right: 16px; bottom: 16px; padding: 14px 18px; border-radius: 12px; background: var(--surface); color: var(--text); font-weight: 600; text-align: center; }
+
+.photo-strip--izostudia { grid-template-columns: minmax(0, 1fr); }
+.photo-strip--izostudia .photo-strip-eyebrow { text-align: left; padding: 0 22px; }
+.photo-strip--izostudia .photo-strip-grid { overflow-x: auto; scrollbar-width: thin; }
