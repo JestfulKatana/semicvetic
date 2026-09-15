@@ -53,7 +53,7 @@ class TelegramTest(unittest.TestCase):
             'phone': '+79990000000', 'slot_selected': '2026-09-20'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(db.session.query(Lead).one().preferred_date.isoformat(), '2026-09-20')
-        post.return_value = Mock(json=lambda: {'ok': True})
+        post.return_value = Mock(status_code=200, json=lambda: {'ok': True, 'result': {'message_id': 123}})
         self.assertEqual(deliver_pending(), 2)
         self.assertIn('20.09.2026', post.call_args.kwargs['json']['text'])
 
@@ -85,7 +85,7 @@ class TelegramTest(unittest.TestCase):
     @patch('app.utils.telegram.requests.post')
     def test_partial_failure_retries_only_unsent_and_redacts_errors(self, post):
         self.submit()
-        post.side_effect = [requests.ConnectionError('test-token +79990000000'), Mock(json=lambda: {'ok': True})]
+        post.side_effect = [requests.ConnectionError('test-token +79990000000'), Mock(status_code=200, json=lambda: {'ok': True, 'result': {'message_id': 123}})]
         with self.assertLogs('app.utils.telegram', level='WARNING') as logs:
             self.assertEqual(deliver_pending(), 1)
         self.assertNotIn('test-token', ''.join(logs.output))
@@ -97,7 +97,7 @@ class TelegramTest(unittest.TestCase):
         rows[0].next_attempt_at = datetime.utcnow() - timedelta(seconds=1)
         db.session.commit()
         post.reset_mock(side_effect=True)
-        post.return_value = Mock(json=lambda: {'ok': True})
+        post.return_value = Mock(status_code=200, json=lambda: {'ok': True, 'result': {'message_id': 123}})
         self.assertEqual(deliver_pending(), 1)
         self.assertEqual(post.call_count, 1)
         self.assertEqual(post.call_args.kwargs['json']['chat_id'], '111')
@@ -106,7 +106,7 @@ class TelegramTest(unittest.TestCase):
     @patch('app.utils.telegram.requests.post')
     def test_api_rejection_is_not_success_and_future_lease_is_skipped(self, post):
         self.submit()
-        post.return_value = Mock(json=lambda: {'ok': False})
+        post.return_value = Mock(status_code=200, json=lambda: {'ok': False})
         self.assertEqual(deliver_pending(), 0)
         self.assertEqual(db.session.query(TelegramDelivery).filter(TelegramDelivery.sent_at.is_not(None)).count(), 0)
         post.reset_mock()
@@ -157,3 +157,92 @@ class DeliveryMigrationTest(unittest.TestCase):
                 self.assertEqual(connection.exec_driver_sql('SELECT phone, preferred_date FROM lead').one(), ('test-value', None))
         finally:
             engine.dispose()
+
+class TelegramActionsTest(unittest.TestCase):
+    setUpClass = classmethod(TelegramTest.setUpClass.__func__)
+    tearDownClass = classmethod(TelegramTest.tearDownClass.__func__)
+    setUp = TelegramTest.setUp
+    tearDown = TelegramTest.tearDown
+    submit = TelegramTest.submit
+
+    def callback(self, action='processed', sender=111):
+        lead = db.session.query(Lead).one()
+        return {'id': 'test-callback', 'from': {'id': sender},
+                'message': {'message_id': 123, 'chat': {'id': sender, 'type': 'private'}},
+                'data': f'{action}:{lead.id}'}
+
+    @patch('app.utils.telegram.telegram_request', return_value={'message_id': 123})
+    def test_processing_is_persisted_idempotent_and_updates_both_cards(self, request):
+        from app.utils.telegram import handle_callback, sync_processed_messages
+        self.submit()
+        self.assertEqual(deliver_pending(), 2)
+        handle_callback(self.callback())
+        lead = db.session.query(Lead).one()
+        self.assertEqual(lead.status, 'processed')
+        self.assertEqual(lead.processed_by, '111')
+        timestamp = lead.processed_at
+        handle_callback(self.callback())
+        self.assertEqual(lead.processed_at, timestamp)
+        request.reset_mock()
+        sync_processed_messages()
+        self.assertEqual(request.call_count, 2)
+        self.assertTrue(all(row.rendered_status == 'processed' for row in db.session.query(TelegramDelivery)))
+        sync_processed_messages()
+        self.assertEqual(request.call_count, 2)
+
+    @patch('app.utils.telegram.telegram_request', return_value={'message_id': 123})
+    def test_unknown_sender_and_wrong_message_cannot_process(self, request):
+        from app.utils.telegram import handle_callback
+        self.submit()
+        deliver_pending()
+        handle_callback(self.callback(sender=333))
+        callback = self.callback()
+        callback['message']['message_id'] = 999
+        handle_callback(callback)
+        self.assertEqual(db.session.query(Lead).one().status, 'new')
+
+    @patch('app.utils.telegram.telegram_request', return_value={'message_id': 123})
+    def test_contact_and_phone_entity(self, request):
+        from app.utils.telegram import handle_callback, lead_message
+        self.submit()
+        deliver_pending()
+        request.reset_mock()
+        handle_callback(self.callback(action='contact'))
+        self.assertEqual(request.call_args_list[0].args[0], 'sendContact')
+        self.assertEqual(db.session.query(Lead).one().status, 'new')
+        payload = lead_message(db.session.query(Lead).one())
+        entity = payload['entities'][1]
+        encoded = payload['text'].encode('utf-16-le')
+        self.assertEqual(encoded[entity['offset']*2:(entity['offset']+entity['length'])*2].decode('utf-16-le'), '+79990000000')
+        self.assertNotIn('/anglijskij/', payload['text'])
+
+    @patch('app.utils.telegram.telegram_request')
+    def test_failed_callback_does_not_advance_persisted_cursor(self, request):
+        from app.models import SiteSetting
+        from app.utils.telegram import poll_updates
+        db.session.add(SiteSetting(key='telegram_update_offset', value='100'))
+        db.session.commit()
+        request.return_value = [{'update_id': 100, 'callback_query': {'id': 'test'}}]
+        with patch('app.utils.telegram.handle_callback', return_value=False):
+            poll_updates()
+        self.assertEqual(db.session.get(SiteSetting, 'telegram_update_offset').value, '100')
+        with patch('app.utils.telegram.handle_callback', return_value=True):
+            poll_updates()
+        self.assertEqual(db.session.get(SiteSetting, 'telegram_update_offset').value, '101')
+        db.session.delete(db.session.get(SiteSetting, 'telegram_update_offset'))
+        db.session.commit()
+
+    @patch('app.utils.telegram.telegram_request', return_value={'message_id': 123})
+    def test_contact_failure_does_not_block_following_callbacks(self, request):
+        from app.utils.telegram import handle_callback
+        self.submit()
+        deliver_pending()
+        request.return_value = None
+        self.assertTrue(handle_callback(self.callback(action='contact')))
+        self.assertIn('Нажмите ещё раз', request.call_args.args[1]['text'])
+        self.assertTrue(handle_callback(self.callback()))
+        self.assertEqual(db.session.query(Lead).one().status, 'processed')
+
+    def test_malformed_source_has_safe_title(self):
+        from app.utils.telegram import source_title
+        self.assertEqual(source_title(Lead(source_page='http://[')), 'Сайт «Семицветик»')

@@ -194,6 +194,8 @@ class Lead(db.Model):
     utm_medium = db.Column(db.String(120), nullable=True)
     utm_campaign = db.Column(db.String(120), nullable=True)
     status = db.Column(db.String(30), default="new", nullable=False)
+    processed_at = db.Column(db.DateTime, nullable=True)
+    processed_by = db.Column(db.String(64), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     note = db.Column(db.Text, nullable=True)
 
@@ -204,6 +206,8 @@ class TelegramDelivery(db.Model):
     chat_id = db.Column(db.String(64), nullable=False)
     attempts = db.Column(db.Integer, nullable=False, default=0)
     next_attempt_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    message_id = db.Column(db.BigInteger, nullable=True)
+    rendered_status = db.Column(db.String(30), nullable=True)
     sent_at = db.Column(db.DateTime, nullable=True)
     last_error = db.Column(db.String(80), nullable=True)
     lead = db.relationship("Lead")
