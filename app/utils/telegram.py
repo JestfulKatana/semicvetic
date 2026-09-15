@@ -64,7 +64,7 @@ def source_title(lead):
 
 def lead_message(lead):
     processed = lead.status == "processed"
-    heading = f"{'Обработана' if processed else 'Новая заявка'} №{lead.id}"
+    heading = f"{'✅ Обработана' if processed else 'Новая заявка'} №{lead.id}"
     lines = [heading, source_title(lead)[:160], "", f"Телефон: {lead.phone}"]
     if lead.name:
         lines.append(f"Имя: {lead.name[:120]}")
@@ -82,7 +82,7 @@ def lead_message(lead):
                      {"type": "phone_number", "offset": offset, "length": len(lead.phone)}],
         "reply_markup": {"inline_keyboard": [[
             {"text": "Открыть контакт", "callback_data": f"contact:{lead.id}"},
-            {"text": "✓ Обработана" if processed else "Обработана", "callback_data": f"processed:{lead.id}"},
+            {"text": "✅ Обработана" if processed else "⬜ Не обработана", "callback_data": f"{'reopen' if processed else 'processed'}:{lead.id}"},
         ]]},
     }
 
@@ -148,7 +148,7 @@ def handle_callback(callback):
     sender = str(callback.get("from", {}).get("id", ""))
     message = callback.get("message", {})
     chat = message.get("chat", {})
-    match = re.fullmatch(r"(processed|contact):(\d{1,12})", callback.get("data", ""))
+    match = re.fullmatch(r"(processed|reopen|contact):(\d{1,12})", callback.get("data", ""))
     delivery = None
     if sender in recipient_ids() and chat.get("type") == "private" and str(chat.get("id")) == sender and match:
         delivery = db.session.scalar(db.select(TelegramDelivery).where(
@@ -160,19 +160,28 @@ def handle_callback(callback):
         return True
     lead = delivery.lead
     if match[1] == "contact":
-        result = telegram_request("sendContact", {
-            "chat_id": sender, "phone_number": lead.phone,
-            "first_name": (lead.name or f"Заявка №{lead.id}")[:120],
-        })
-        text = "Не удалось отправить контакт. Нажмите ещё раз." if result is None else "Контакт отправлен"
+        if delivery.contact_message_id:
+            text = "Контакт уже отправлен в этот чат"
+        else:
+            result = telegram_request("sendContact", {
+                "chat_id": sender, "phone_number": lead.phone,
+                "first_name": (lead.name or f"Заявка №{lead.id}")[:120],
+            })
+            if isinstance(result, dict) and isinstance(result.get("message_id"), int):
+                delivery.contact_message_id = result["message_id"]
+                db.session.commit()
+                text = "Контакт отправлен"
+            else:
+                text = "Не удалось отправить контакт. Нажмите ещё раз."
     else:
-        if lead.status != "processed":
-            lead.status = "processed"
-            lead.processed_at = utcnow()
-            lead.processed_by = sender
+        target_status = "new" if match[1] == "reopen" else "processed"
+        if lead.status != target_status:
+            lead.status = target_status
+            lead.processed_at = utcnow() if target_status == "processed" else None
+            lead.processed_by = sender if target_status == "processed" else None
             db.session.execute(db.update(TelegramDelivery).where(TelegramDelivery.lead_id == lead.id).values(next_attempt_at=utcnow()))
             db.session.commit()
-        text = "Заявка обработана"
+        text = "Заявка обработана" if target_status == "processed" else "Заявка не обработана"
     telegram_request("answerCallbackQuery", {"callback_query_id": callback["id"], "text": text})
     return True
 

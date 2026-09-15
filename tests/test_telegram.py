@@ -246,3 +246,45 @@ class TelegramActionsTest(unittest.TestCase):
     def test_malformed_source_has_safe_title(self):
         from app.utils.telegram import source_title
         self.assertEqual(source_title(Lead(source_page='http://[')), 'Сайт «Семицветик»')
+
+    @patch('app.utils.telegram.telegram_request', return_value={'message_id': 456})
+    def test_repeated_contact_click_sends_one_contact(self, request):
+        from app.utils.telegram import handle_callback
+        self.submit()
+        deliver_pending()
+        callback = self.callback(action='contact')
+        callback['message']['message_id'] = 456
+        request.reset_mock()
+        handle_callback(callback)
+        handle_callback(callback)
+        self.assertEqual(sum(call.args[0] == 'sendContact' for call in request.call_args_list), 1)
+
+    @patch('app.utils.telegram.telegram_request', return_value={'message_id': 123})
+    def test_reopen_clears_processing_and_replay_does_not_toggle(self, request):
+        from app.utils.telegram import handle_callback, lead_message
+        self.submit()
+        deliver_pending()
+        handle_callback(self.callback())
+        lead = db.session.query(Lead).one()
+        self.assertIn('✅', lead_message(lead)['text'])
+        self.assertEqual(lead_message(lead)['reply_markup']['inline_keyboard'][0][1]['callback_data'], f'reopen:{lead.id}')
+        handle_callback(self.callback(action='reopen'))
+        handle_callback(self.callback(action='reopen'))
+        self.assertEqual(lead.status, 'new')
+        self.assertIsNone(lead.processed_at)
+        self.assertIsNone(lead.processed_by)
+
+class WorkerLockTest(unittest.TestCase):
+    def test_second_worker_is_rejected_and_lock_releases(self):
+        import tempfile
+        from pathlib import Path
+        import click
+        from app.telegram_worker import worker_lock
+        with tempfile.TemporaryDirectory() as directory:
+            database = str(Path(directory) / 'test.db')
+            with worker_lock(database):
+                with self.assertRaises(click.ClickException):
+                    with worker_lock(database):
+                        self.fail('Second worker entered')
+            with worker_lock(database):
+                pass

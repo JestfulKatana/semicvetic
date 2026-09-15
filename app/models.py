@@ -207,6 +207,7 @@ class TelegramDelivery(db.Model):
     attempts = db.Column(db.Integer, nullable=False, default=0)
     next_attempt_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     message_id = db.Column(db.BigInteger, nullable=True)
+    contact_message_id = db.Column(db.BigInteger, nullable=True)
     rendered_status = db.Column(db.String(30), nullable=True)
     sent_at = db.Column(db.DateTime, nullable=True)
     last_error = db.Column(db.String(80), nullable=True)
