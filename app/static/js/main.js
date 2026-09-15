@@ -146,9 +146,35 @@ document.addEventListener("DOMContentLoaded", () => {
   initStickyCtaAnchor();
 });
 
+function trackGoal(name) {
+  if (typeof window.ym !== "function" || !window._ymId) return;
+  try {
+    window.ym(window._ymId, "reachGoal", name);
+  } catch (_) {
+    // Analytics must never change the outcome of a saved application.
+  }
+}
+
+document.addEventListener("click", (event) => {
+  const link = event.target.closest?.("a[href]");
+  if (!link) return;
+  const url = new URL(link.href, location.href);
+  if (url.protocol === "tel:") trackGoal("goal_phone_click");
+  else if (["t.me", "telegram.me"].includes(url.hostname)) trackGoal("goal_telegram_click");
+  else if (["wa.me", "api.whatsapp.com"].includes(url.hostname)) trackGoal("goal_whatsapp_click");
+});
+
 document.querySelectorAll("[data-lead-form]").forEach((form) => {
+  form.addEventListener("focusin", () => trackGoal("goal_lead_start"), { once: true });
+  const phoneField = form.querySelector('input[name="phone"]');
+  phoneField?.addEventListener("input", () => phoneField.setCustomValidity(""));
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (phoneField && !/^[78]\d{10}$/.test(phoneField.value.replace(/\D/g, ""))) {
+      phoneField.setCustomValidity("Введите 11 цифр: например, +7 (999) 123-45-67");
+      phoneField.reportValidity();
+      return;
+    }
     if (form.getAttribute("aria-busy") === "true") return;
     const statusNode = form.querySelector("[data-form-status]");
     const submit = form.querySelector('[type="submit"]');
@@ -179,9 +205,7 @@ document.querySelectorAll("[data-lead-form]").forEach((form) => {
         statusNode.textContent = result.message;
         statusNode.dataset.state = "success";
       }
-      if (typeof ym !== 'undefined') {
-        ym(window._ymId || 0, 'reachGoal', 'goal_lead_submit');
-      }
+      trackGoal("goal_lead_submit");
     } catch (error) {
       if (statusNode) {
         statusNode.textContent = error instanceof TypeError

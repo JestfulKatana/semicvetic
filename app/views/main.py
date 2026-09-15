@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from datetime import date
+from urllib.parse import urlsplit
 
-from flask import current_app, Blueprint, abort, make_response, render_template
+from flask import current_app, Blueprint, abort, make_response, render_template, request
 
 from ..models import Event, Page, Program, Review, SiteSetting, Teacher
 from ..utils.content import hydrate_blocks
@@ -52,12 +53,23 @@ def shared_context(current_program=None) -> dict:
     }
 
 
+def metrika_counter(settings):
+    raw = str(current_app.config.get("YANDEX_METRIKA_ID") or settings.get("yandex_metrika_id") or "").strip()
+    host = urlsplit(request.host_url).hostname
+    if host in {"localhost", "127.0.0.1", "::1"} or current_app.config["MAINTENANCE_MODE"]:
+        return None
+    if request.path.startswith(("/admin", "/login", "/logout")):
+        return None
+    return int(raw) if 0 < len(raw) <= 15 and raw.isascii() and raw.isdigit() and int(raw) > 0 else None
+
+
 @bp.app_context_processor
 def inject_global_context():
     ctx = shared_context()
     return {
         "site_settings": ctx["settings"],
         "current_date": date.today(),
+        "metrika_id": metrika_counter(ctx["settings"]),
         "nav_pages": ctx["nav_pages"],
         "programs": ctx["programs"],
         "news": ctx["news"],
