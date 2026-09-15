@@ -4,7 +4,6 @@ import logging
 import os
 
 import structlog
-from dotenv import load_dotenv
 from flask import Flask, jsonify, make_response, render_template, request
 from flask_login import current_user
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -33,7 +32,6 @@ def configure_logging() -> None:
 
 
 def create_app() -> Flask:
-    load_dotenv()
     configure_logging()
 
     app = Flask(__name__)
@@ -49,6 +47,9 @@ def create_app() -> Flask:
     admin.init_app(app, index_view=SecureAdminIndexView())
     init_admin()
     csrf.init_app(app)
+
+    from .telegram_worker import telegram_worker
+    app.cli.add_command(telegram_worker)
 
     app.register_blueprint(main.bp)
     app.register_blueprint(api.bp)
@@ -119,7 +120,12 @@ def create_app() -> Flask:
         return phone_href(value)
 
     with app.app_context():
-        db.create_all()
+        from sqlalchemy import inspect
+        fresh_database = not inspect(db.engine).has_table("lead")
+        db.metadata.create_all(db.engine, tables=[
+            table for table in db.metadata.sorted_tables
+            if fresh_database or table.name != "telegram_delivery"
+        ])
         from .utils.db_migrations import ensure_runtime_schema
 
         ensure_runtime_schema(db)

@@ -187,14 +187,32 @@ class Lead(db.Model):
     phone = db.Column(db.String(32), nullable=False)
     name = db.Column(db.String(120), nullable=True)
     child_age = db.Column(db.String(50), nullable=True)
+    preferred_date = db.Column(db.Date, nullable=True)
     source_page = db.Column(db.String(255), nullable=True)
     source_block = db.Column(db.String(120), nullable=True)
     utm_source = db.Column(db.String(120), nullable=True)
     utm_medium = db.Column(db.String(120), nullable=True)
     utm_campaign = db.Column(db.String(120), nullable=True)
     status = db.Column(db.String(30), default="new", nullable=False)
+    processed_at = db.Column(db.DateTime, nullable=True)
+    processed_by = db.Column(db.String(64), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     note = db.Column(db.Text, nullable=True)
+
+
+class TelegramDelivery(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    lead_id = db.Column(db.Integer, db.ForeignKey("lead.id"), nullable=False, index=True)
+    chat_id = db.Column(db.String(64), nullable=False)
+    attempts = db.Column(db.Integer, nullable=False, default=0)
+    next_attempt_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    message_id = db.Column(db.BigInteger, nullable=True)
+    contact_message_id = db.Column(db.BigInteger, nullable=True)
+    rendered_status = db.Column(db.String(30), nullable=True)
+    sent_at = db.Column(db.DateTime, nullable=True)
+    last_error = db.Column(db.String(80), nullable=True)
+    lead = db.relationship("Lead")
+    __table_args__ = (db.UniqueConstraint("lead_id", "chat_id", name="uq_lead_recipient"),)
 
 
 class Event(TimestampMixin, db.Model):

@@ -18,3 +18,5 @@ app/static/uploads/news/*
 !app/static/uploads/news/.gitkeep
 
 app/static/uploads/teachers/
+
+*.telegram-worker.lock

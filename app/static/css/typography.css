@@ -1,0 +1,100 @@
+/* Shared public type roles. Loaded after component styles so the same role
+   stays consistent across database blocks and the dedicated program pages. */
+:root {
+    --font-site: "Onest", Arial, sans-serif;
+    --type-page: clamp(2.125rem, 4.45vw, 4rem);
+    --type-section: clamp(1.75rem, 3.2vw, 2.875rem);
+    --type-card: clamp(1.25rem, 1.7vw, 1.5rem);
+    --type-body: 1rem;
+    --type-intro: clamp(1rem, 1.4vw, 1.125rem);
+    --type-caption: .875rem;
+}
+body { font-family: var(--font-site); }
+/* Legacy mobile declarations use !important; these three role definitions
+   deliberately own heading metrics, including those breakpoints. */
+#main-content h1 {
+    font-size: var(--type-page) !important;
+    font-weight: 600 !important;
+    line-height: 1.08;
+    letter-spacing: -.035em !important;
+}
+#main-content h2 {
+    font-size: var(--type-section) !important;
+    font-weight: 600 !important;
+    line-height: 1.15;
+    letter-spacing: -.025em;
+}
+#main-content h3 {
+    font-size: var(--type-card) !important;
+    font-weight: 600 !important;
+    line-height: 1.25;
+    letter-spacing: -.015em;
+}
+#main-content :is(h1, h2, h3) { font-family: var(--font-site); text-wrap: balance; }
+#main-content p:where(:not(.home-age-v1-card-age)) {
+    font-family: var(--font-site);
+    font-size: var(--type-body);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: normal;
+}
+#main-content :is(.section-head, .section-heading, .tp-section-head, .teachers-head) p,
+#main-content :is(.hero-subtitle, .page-hero-text, .trial-invite-intro, .pl-hero-lead),
+#main-content .about-intro-copy > p {
+    font-size: var(--type-intro);
+    line-height: 1.5;
+    max-width: 65ch;
+}
+#main-content :is(figcaption, .eyebrow, .seasonal-card-eyebrow,
+    .hero-lead-disclaimer, .trial-invite-consent, .pl-form-consent,
+    .pl-form-meta, .form-status, .consent-label, .consent-label span, .home-programs-v1-meta, .home-programs-v1-meta li,
+    .home-programs-v1-price-note) {
+    font-family: var(--font-site);
+    font-size: var(--type-caption);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+}
+#main-content :is(.eyebrow, .seasonal-card-eyebrow) { font-weight: 600; }
+#main-content :is(.button, .pl-btn, input, select, textarea) {
+    font-family: var(--font-site);
+    font-size: var(--type-body);
+    line-height: 1.4;
+    letter-spacing: normal;
+}
+#main-content :is(.button, .pl-btn) { font-weight: 600; }
+#main-content :is(.lesson-anatomy-time, .pl-tl-time, .pl-lesson-time) { font-family: var(--font-site); }
+/* Compact forms and related-navigation titles are card-level headings. */
+#main-content :is(.pl-form, .pl-prog-nav-head, .rich-text-policy) h2 {
+    font-size: var(--type-card) !important;
+    line-height: 1.25;
+}
+
+/* One uppercase label role across all current section components. The class
+   suffix also covers database-rendered and dedicated program landing labels. */
+#main-content :is(p, span, div):is(.section-kicker, [class*="eyebrow"]) {
+    display: block;
+    width: fit-content;
+    margin: 0 0 12px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    font-family: var(--font-site);
+    font-size: var(--type-caption);
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+#main-content :is(.section-kicker, .eyebrow, .seasonal-card-eyebrow) { color: #b34b22; }
+#main-content :is(.section-kicker, [class*="eyebrow"]) b {
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    font-weight: inherit;
+    color: inherit;
+}
+#main-content .trust-head { gap: 0; }
+/* Same label metrics, with a readable foreground on saturated surfaces. */
+#main-content :is(.seasonal-card-eyebrow, .home-cta-v2-eyebrow) { color: #fff; }

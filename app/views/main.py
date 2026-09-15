@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from flask import current_app, Blueprint, abort, make_response, render_template
+from datetime import date
+from urllib.parse import urlsplit
+
+from flask import current_app, Blueprint, abort, make_response, render_template, request
 
 from ..models import Event, Page, Program, Review, SiteSetting, Teacher
 from ..utils.content import hydrate_blocks
@@ -50,11 +53,23 @@ def shared_context(current_program=None) -> dict:
     }
 
 
+def metrika_counter(settings):
+    raw = str(current_app.config.get("YANDEX_METRIKA_ID") or settings.get("yandex_metrika_id") or "").strip()
+    host = urlsplit(request.host_url).hostname
+    if host in {"localhost", "127.0.0.1", "::1"} or current_app.config["MAINTENANCE_MODE"]:
+        return None
+    if request.path.startswith(("/admin", "/login", "/logout")):
+        return None
+    return int(raw) if 0 < len(raw) <= 15 and raw.isascii() and raw.isdigit() and int(raw) > 0 else None
+
+
 @bp.app_context_processor
 def inject_global_context():
     ctx = shared_context()
     return {
         "site_settings": ctx["settings"],
+        "current_date": date.today(),
+        "metrika_id": metrika_counter(ctx["settings"]),
         "nav_pages": ctx["nav_pages"],
         "programs": ctx["programs"],
         "news": ctx["news"],
@@ -212,6 +227,7 @@ def slug_router(slug: str):
             "pages/content_page.html",
             page=page,
             blocks=hydrate_blocks(page.blocks, ctx),
+            about_teachers=ctx["teachers"] if slug == "o-centre" else [],
             page_title=page.meta_title or page.title,
             page_description=page.meta_description or page.hero_subtitle,
             page_schema=build_org_schema(ctx["settings"]),

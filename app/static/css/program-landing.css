@@ -687,6 +687,14 @@
     display: flex;
     flex-direction: column;
 }
+.pl-teacher-portrait {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center 25%;
+}
 .pl-teacher--featured {
     background: var(--pl-accent);
     color: var(--pl-paper);
@@ -1636,6 +1644,10 @@
     .pl-usp-num-text { font-size: 180px; letter-spacing: -8px; }
 }
 
+@media (min-width: 640px) and (max-width: 860px) {
+    .pl-section .pl-teachers--equal { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 @media (max-width: 860px) {
     .pl-frame { padding: 8px 8px 32px; gap: 8px; }
     .pl-section,
@@ -1764,4 +1776,10 @@
 @media (max-width: 600px) {
     .pl-hero-cta .pl-input, .pl-hero-cta .pl-btn { max-width: none !important; width: 100%; }
     .pl-form { min-width: 0; }
+}
+
+@media (max-width: 600px) {
+    .pl-norms-card { padding: 24px 18px; }
+    .pl-norm-row { grid-template-columns: minmax(0, 1fr); gap: 8px; margin-bottom: 24px; }
+    .pl-norm-age { overflow-wrap: normal; }
 }

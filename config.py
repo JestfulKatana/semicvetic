@@ -3,6 +3,10 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -27,6 +31,7 @@ class Config:
     ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
     ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
     TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    TELEGRAM_CHAT_IDS = os.getenv("TELEGRAM_CHAT_IDS", "")
     TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
     YANDEX_METRIKA_ID = os.getenv("YANDEX_METRIKA_ID", "")
     AUTO_SEED = os.getenv("AUTO_SEED", "true").lower() == "true"

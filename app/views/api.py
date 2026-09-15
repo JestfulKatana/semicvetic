@@ -1,19 +1,19 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 
 from flask import Blueprint, current_app, jsonify, request
 from prometheus_client import Counter
 
 from ..extensions import db, limiter
 from ..models import Lead
-from ..utils.telegram import send_lead_notification
+from ..utils.telegram import queue_lead_notifications
 
 
 bp = Blueprint("api", __name__, url_prefix="/api")
 
 leads_total = Counter("semicvetik_leads_total", "Total leads", ["source_page", "source_block"])
-telegram_total = Counter("semicvetik_leads_telegram_sent_total", "Telegram notifications sent")
 
 
 def normalize_phone(raw_phone: str) -> str:
@@ -38,8 +38,15 @@ def create_lead():
     except ValueError as exc:
         return jsonify({"ok": False, "message": str(exc)}), 400
 
+    try:
+        raw_date = (payload.get("slot_selected") or "").strip()
+        preferred_date = date.fromisoformat(raw_date) if raw_date else None
+    except (AttributeError, TypeError, ValueError):
+        return jsonify({"ok": False, "message": "Выберите день занятия ещё раз"}), 400
+
     lead = Lead(
         phone=phone,
+        preferred_date=preferred_date,
         name=(payload.get("name") or "").strip() or None,
         child_age=(payload.get("child_age") or "").strip() or None,
         source_page=(payload.get("source_page") or request.referrer or "").strip() or None,
@@ -49,10 +56,9 @@ def create_lead():
         utm_campaign=(payload.get("utm_campaign") or request.args.get("utm_campaign") or "").strip() or None,
     )
     db.session.add(lead)
+    queue_lead_notifications(lead)
     db.session.commit()
 
     leads_total.labels(lead.source_page or "unknown", lead.source_block or "unknown").inc()
-    if send_lead_notification(lead):
-        telegram_total.inc()
 
     return jsonify({"ok": True, "message": "Спасибо, перезвоним в ближайшее время"})

@@ -1,0 +1,67 @@
+{% set about = namespace(hero={}, values={}, history={}, day={}, safety={}, documents={}, contact=none) %}
+{% for block in blocks %}
+    {% if block.component == 'hero' %}{% set about.hero = block.data %}
+    {% elif block.component == 'advantages' %}{% set about.values = block.data %}
+    {% elif block.component == 'timeline' %}{% set about.history = block.data %}
+    {% elif block.component == 'lesson_anatomy' %}{% set about.day = block.data %}
+    {% elif block.component == 'safety_checklist' %}{% set about.safety = block.data %}
+    {% elif block.component == 'credentials_list' %}{% set about.documents = block.data %}
+    {% elif block.component == 'contact_panel' %}{% set about.contact = block %}{% endif %}
+{% endfor %}
+<div class="about-page">
+    <section class="about-intro">
+        <div class="about-intro-copy">
+            <a class="about-back" href="/">← На главную</a>
+            <h1>{{ about.hero.title or page.title }}</h1>
+            <p>{{ about.hero.subtitle }}</p>
+            <a class="button button-orange" href="#contact-panel">Познакомиться с центром →</a>
+        </div>
+        <figure class="about-cover">
+            <img src="{{ url_for('static', filename='img/figma/place/group-small.webp') }}" alt="Дети занимаются за общим столом в Семицветике" width="600" height="680">
+            <figcaption>Семицветик · Сергиев Посад</figcaption>
+        </figure>
+    </section>
+    <nav class="about-nav" aria-label="На странице о центре">
+        <a href="#about-space">Наш центр</a><a href="#about-approach">Подход</a><a href="#about-team">Команда</a><a href="#about-history">История</a><a href="#contact-panel">Первый визит</a>
+    </nav>
+    <section class="about-section" id="about-space">
+        <div class="about-section-heading"><h2>Место для занятий.<br>Пространство для детства.</h2><p>{{ about.hero.stats_row_note }}</p></div>
+        <div class="about-gallery">
+            <figure><img src="{{ url_for('static', filename='img/figma/place/teachers.webp') }}" alt="Педагог проводит занятие с детьми" loading="lazy"><figcaption>Учимся вместе с педагогом</figcaption></figure>
+            <figure><img src="{{ url_for('static', filename='img/figma/place/all-in-one.webp') }}" alt="Дети показывают свои рисунки в классе" loading="lazy"><figcaption>Творим и пробуем новое</figcaption></figure>
+            <figure><img src="{{ url_for('static', filename='img/figma/gallery/kids-xmas.webp') }}" alt="Детский праздник в центре" loading="lazy"><figcaption>Встречаемся на праздниках</figcaption></figure>
+        </div>
+    </section>
+    <section class="about-section about-approach" id="about-approach">
+        <div class="about-section-heading"><h2>{{ about.values.title }}</h2><p>{{ about.values.subtitle }}</p></div>
+        <div class="about-values">
+            {% for item in about.values.get('items', []) %}<article><h3>{{ item.title }}</h3><p>{{ item.text }}</p></article>{% endfor %}
+        </div>
+    </section>
+    {% if about_teachers %}
+    <section class="about-section" id="about-team">
+        <div class="about-section-heading"><h2>Люди, с которыми<br>растут ваши дети</h2><div><p>Педагоги и специалисты «Семицветика».</p><a class="soft-button" href="/pedagogi/">Вся команда →</a></div></div>
+        <div class="about-team">
+            {% for teacher in about_teachers[:4] %}<article>
+                <div class="about-team-photo"><img {% if teacher.photo_url and 'mironova.jpg' in teacher.photo_url %}class="teacher-portrait-director"{% endif %} src="{{ teacher.photo_url }}" alt="{{ teacher.name }}" loading="lazy"></div>
+                <h3>{{ teacher.name }}</h3><p>{{ teacher.role }}</p>
+            </article>{% endfor %}
+        </div>
+    </section>
+    {% endif %}
+    <section class="about-section about-history" id="about-history">
+        <div class="about-section-heading"><h2>{{ about.history.title }}</h2><p>От первых занятий — к центру, который вы знаете сегодня.</p></div>
+        <ol class="about-history-list">{% for item in about.history.get('items', []) %}<li><span>{{ item.icon }}</span><div><h3>{{ item.title }}</h3><p>{{ item.text }}</p></div></li>{% endfor %}</ol>
+    </section>
+    <section class="about-section about-practical">
+        <div><h2>{{ about.day.title }}</h2><p class="about-note">Пример дня. Расписание зависит от выбранной программы.</p>
+            <ol class="about-day">{% for step in about.day.steps or [] %}<li><time>{{ step.time }}</time><div><h3>{{ step.title }}</h3><p>{{ step.description }}</p></div></li>{% endfor %}</ol>
+        </div>
+        <div class="about-safety"><h2>{{ about.safety.title }}</h2>{% for item in about.safety.get('items', []) %}<article><h3>{{ item.title }}</h3><p>{{ item.description }}</p></article>{% endfor %}</div>
+    </section>
+    <section class="about-section about-documents">
+        <div class="about-section-heading"><h2>{{ about.documents.title }}</h2><p>{{ about.documents.subtitle }}</p></div>
+        {% for item in about.documents.get('items', []) %}<details><summary>{{ item.title }}</summary><p>{{ item.description }}</p>{% if item.link and item.link != '#' %}<a href="{{ item.link }}">Открыть документ →</a>{% endif %}</details>{% endfor %}
+    </section>
+</div>
+{% if about.contact %}{% with block=about.contact %}{% include 'components/render_block.html' %}{% endwith %}{% endif %}

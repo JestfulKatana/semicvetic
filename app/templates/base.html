@@ -18,13 +18,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% if page and page.slug == 'o-centre' %}<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">{% endif %}
     {% if program_landing_e %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/program-landing.css') }}">
     {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/typography.css') }}">
     {% if page_schema %}
     <script type="application/ld+json">{{ page_schema|tojson }}</script>
     {% endif %}
-    {% set ym_id = site_settings.get('yandex_metrika_id', '') %}
+    {% set ym_id = metrika_id %}
     {% if ym_id %}
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -37,11 +39,10 @@
             clickmap:true,
             trackLinks:true,
             accurateTrackBounce:true,
-            webvisor:true
+            webvisor:false
        });
     </script>
     <script>window._ymId = {{ ym_id }};</script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/{{ ym_id }}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
     {% endif %}
 </head>
@@ -79,6 +80,7 @@
 {% set cta_anchor = '/kontakty/#contact-lead-form' %}
 {% endif %}
 <body class="{{ body_page_class }}{% if has_floating_cta %} has-floating-cta{% endif %}">
+    {% if ym_id %}<noscript><div><img src="https://mc.yandex.ru/watch/{{ ym_id }}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>{% endif %}
     <a class="skip-link" href="#main-content">Перейти к содержанию</a>
     <div class="site-shell">
         <header class="site-header">
