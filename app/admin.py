@@ -19,6 +19,7 @@ from .models import (
     ScheduleSlot,
     SiteSetting,
     Teacher,
+    TelegramDelivery,
 )
 
 
@@ -72,6 +73,18 @@ class EventAdminView(JsonModelView):
     form_excluded_columns = ("body_html",)
 
 
+class LeadView(JsonModelView):
+    can_delete = False
+
+
+class TelegramDeliveryView(SecureModelView):
+    can_create = False
+    can_edit = False
+    can_delete = False
+    column_list = ("lead_id", "chat_id", "attempts", "sent_at", "next_attempt_at", "last_error")
+    column_default_sort = ("id", True)
+
+
 def init_admin() -> None:
     if any(getattr(view, "name", "") == "Настройки" for view in admin._views):
         return
@@ -84,5 +97,6 @@ def init_admin() -> None:
     admin.add_view(JsonModelView(Teacher, db.session, name="Педагоги"))
     admin.add_view(JsonModelView(Review, db.session, name="Отзывы"))
     admin.add_view(EventAdminView(Event, db.session, name="События и статьи"))
-    admin.add_view(JsonModelView(Lead, db.session, name="Заявки"))
+    admin.add_view(LeadView(Lead, db.session, name="Заявки"))
+    admin.add_view(TelegramDeliveryView(TelegramDelivery, db.session, name="Доставка заявок"))
     admin.add_view(AdminUserView(AdminUser, db.session, name="Админы"))

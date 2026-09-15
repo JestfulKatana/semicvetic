@@ -7,13 +7,12 @@ from prometheus_client import Counter
 
 from ..extensions import db, limiter
 from ..models import Lead
-from ..utils.telegram import send_lead_notification
+from ..utils.telegram import queue_lead_notifications
 
 
 bp = Blueprint("api", __name__, url_prefix="/api")
 
 leads_total = Counter("semicvetik_leads_total", "Total leads", ["source_page", "source_block"])
-telegram_total = Counter("semicvetik_leads_telegram_sent_total", "Telegram notifications sent")
 
 
 def normalize_phone(raw_phone: str) -> str:
@@ -49,10 +48,9 @@ def create_lead():
         utm_campaign=(payload.get("utm_campaign") or request.args.get("utm_campaign") or "").strip() or None,
     )
     db.session.add(lead)
+    queue_lead_notifications(lead)
     db.session.commit()
 
     leads_total.labels(lead.source_page or "unknown", lead.source_block or "unknown").inc()
-    if send_lead_notification(lead):
-        telegram_total.inc()
 
     return jsonify({"ok": True, "message": "Спасибо, перезвоним в ближайшее время"})

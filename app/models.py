@@ -197,6 +197,18 @@ class Lead(db.Model):
     note = db.Column(db.Text, nullable=True)
 
 
+class TelegramDelivery(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    lead_id = db.Column(db.Integer, db.ForeignKey("lead.id"), nullable=False, index=True)
+    chat_id = db.Column(db.String(64), nullable=False)
+    attempts = db.Column(db.Integer, nullable=False, default=0)
+    next_attempt_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    sent_at = db.Column(db.DateTime, nullable=True)
+    last_error = db.Column(db.String(80), nullable=True)
+    lead = db.relationship("Lead")
+    __table_args__ = (db.UniqueConstraint("lead_id", "chat_id", name="uq_lead_recipient"),)
+
+
 class Event(TimestampMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(20), nullable=False)

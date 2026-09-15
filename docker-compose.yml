@@ -13,6 +13,21 @@ services:
     expose:
       - "5000"
 
+  telegram-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["flask", "--app", "wsgi.py", "telegram-worker"]
+    profiles: ["telegram"]
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: sqlite:////app/data/semicvetik.db
+      AUTO_SEED: "false"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
   nginx:
     image: nginx:alpine
     depends_on:
